@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AdSync Pro — Create Campaign</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0f; --card: #13131a; --card2: #1a1a24;
+      --border: #2a2a3a; --accent: #ff6b35; --accent2: #ffb347;
+      --text: #f0f0f5; --muted: #7070a0; --success: #4ade80;
+      --error: #f87171; --sidebar: 240px;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
+    .sidebar { width: var(--sidebar); background: var(--card); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 30px 0; position: fixed; height: 100vh; z-index: 100; }
+    .sidebar-logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); padding: 0 24px 30px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .sidebar-logo span { color: var(--accent); }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: var(--muted); cursor: pointer; transition: all 0.2s; font-size: 14px; font-weight: 500; text-decoration: none; border-left: 3px solid transparent; }
+    .nav-item:hover { color: var(--text); background: var(--card2); }
+    .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(255,107,53,0.08); }
+    .nav-icon { font-size: 18px; width: 20px; text-align: center; }
+    .sidebar-bottom { margin-top: auto; padding: 20px 24px; border-top: 1px solid var(--border); }
+    .user-info { display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; color: white; }
+    .user-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .user-plan { font-size: 11px; color: var(--accent); text-transform: uppercase; }
+    .main { margin-left: var(--sidebar); flex: 1; padding: 40px; max-width: 900px; }
+    .page-header { margin-bottom: 35px; }
+    .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); text-decoration: none; font-size: 14px; margin-bottom: 16px; transition: color 0.2s; }
+    .back-btn:hover { color: var(--text); }
+    .page-header h1 { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; }
+    .page-header p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+    .form-section { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+    .section-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .section-icon { font-size: 20px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group:last-child { margin-bottom: 0; }
+    label { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase; }
+    input, select, textarea { width: 100%; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; transition: all 0.2s; outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,107,53,0.15); }
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+    select option { background: var(--card); }
+    textarea { resize: vertical; min-height: 100px; }
+    .checkbox-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .checkbox-item { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+    .checkbox-item:hover { border-color: var(--accent); }
+    .checkbox-item input[type="checkbox"] { width: auto; padding: 0; accent-color: var(--accent); }
+    .checkbox-item label { margin: 0; text-transform: capitalize; font-size: 13px; cursor: pointer; color: var(--text); letter-spacing: 0; }
+    .upload-area { border: 2px dashed var(--border); border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .upload-area:hover { border-color: var(--accent); background: rgba(255,107,53,0.05); }
+    .upload-icon { font-size: 40px; margin-bottom: 12px; }
+    .upload-text { font-size: 14px; color: var(--muted); }
+    .upload-text span { color: var(--accent); font-weight: 600; }
+    .btn-row { display: flex; gap: 16px; justify-content: flex-end; margin-top: 10px; }
+    .btn-secondary { padding: 12px 24px; background: transparent; color: var(--muted); border: 1px solid var(--border); border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .btn-secondary:hover { color: var(--text); border-color: var(--text); }
+    .btn-primary { padding: 12px 28px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,107,53,0.35); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .message { padding: 12px 16px; border-radius: 8px; font-size: 14px; margin-bottom: 20px; display: none; }
+    .message.error { background: rgba(248,113,113,0.1); border: 1px solid var(--error); color: var(--error); display: block; }
+    .message.success { background: rgba(74,222,128,0.1); border: 1px solid var(--success); color: var(--success); display: block; }
+    .times-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+    .time-tag { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(255,107,53,0.1); border: 1px solid var(--accent); border-radius: 20px; font-size: 13px; color: var(--accent); }
+    .time-tag button { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 16px; line-height: 1; padding: 0; }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-logo">AdSync<span>Pro</span></div>
+    <nav>
+      <a class="nav-item" href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+      <a class="nav-item active"><span class="nav-icon">➕</span> New Campaign</a>
+      <a class="nav-item"><span class="nav-icon">📅</span> Schedule</a>
+      <a class="nav-item"><span class="nav-icon">📈</span> Analytics</a>
+      <a class="nav-item"><span class="nav-icon">⚙️</span> Settings</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">M</div>
+        <div style="flex:1">
+          <div class="user-name" id="user-name">Loading...</div>
+          <div class="user-plan" id="user-plan">Free Plan</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-header">
+      <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+      <h1>Create New Campaign</h1>
+      <p>Fill in the details below to launch your ad campaign</p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <!-- SECTION 1: Basic Info -->
+    <div class="form-section">
+      <div class="section-title"><span class="section-icon">📝</span> Campaign Basics</div>
+      <div class="form-group">
+        <label>Campaign Name *</label>
+        <input type="text" id="name" placeholder="e.g. KhweziMart Summer Sale 2026"/>
+      </div>
+      <div class="form-group">
+        <label>Ad Copy (What your ad will say)</label>
+        <textarea id="adCopyText" placeholder="e.g. Big summer deals at KhweziMart! Shop now and save up to 50%..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Media Type</label>
+          <select id="mediaType">
+            <option value="image">🖼 Image</option>
+            <option value="video">🎥 Video</option>
+            <option value="text">📝 Text Only</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Campaign Status</label>
+          <select id="status">
+            <option value="draft">📋 Draft</option>
+            <option value="active">🟢 Active</option>
+            <option value="paused">⏸ Paused</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+  <label>Upload Ad Image</label>
+  <div class="upload-area" onclick="document.getElementById('fileInput').click()" style="cursor:pointer;">
+    <input type="file" id="fileInput" accept="image/*,video/mp4" style="display:none" onchange="handleFileSelect(this)"/>
+    <div id="upload-preview">
+      <div class="upload-icon">🖼️</div>
+      <div class="upload-text">Click to upload your ad image<br><span>JPG, PNG, GIF, WEBP up to 50MB</span></div>
+    </div>
+  </div>
+</div>
+
+    <!-- SECTION 2: Store Links -->
+    <div class="form-section">
+      <div class="section-title"><span class="section-icon">🔗</span> Store & Contact Links</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>🛒 Takealot Store URL</label>
+          <input type="url" id="takealotUrl" placeholder="https://takealot.com/your-store"/>
+        </div>
+        <div class="form-group">
+          <label>🟢 WhatsApp Number</label>
+          <input type="text" id="whatsappNumber" placeholder="+27 82 123 4567"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>🛍 Shopify Store URL</label>
+          <input type="url" id="shopifyUrl" placeholder="https://yourstore.myshopify.com"/>
+        </div>
+        <div class="form-group">
+          <label>📦 Amazon Store URL</label>
+          <input type="url" id="amazonUrl" placeholder="https://amazon.com/your-store"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>🌐 Website URL</label>
+        <input type="url" id="websiteUrl" placeholder="https://yourwebsite.com"/>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Platforms -->
+    <div class="form-section">
+      <div class="section-title"><span class="section-icon">📱</span> Platforms to Post On</div>
+      <div class="checkbox-grid">
+        <div class="checkbox-item">
+          <input type="checkbox" id="fb" value="facebook"/>
+          <label for="fb">📘 Facebook</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="ig" value="instagram"/>
+          <label for="ig">📸 Instagram</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="tt" value="tiktok"/>
+          <label for="tt">🎵 TikTok</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="tw" value="twitter"/>
+          <label for="tw">🐦 Twitter/X</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="li" value="linkedin"/>
+          <label for="li">💼 LinkedIn</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="wa" value="whatsapp"/>
+          <label for="wa">🟢 WhatsApp</label>
+        </div>
+      </div>
+    </div>
+   <!-- SECTION 4: Targeting -->
+    <div class="form-section">
+      <div class="section-title"><span class="section-icon">🎯</span> Target Audience</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Target Countries</label>
+          <select id="targetCountries">
+            <option value="ZA">🇿🇦 South Africa</option>
+            <option value="US">🇺🇸 United States</option>
+            <option value="GB">🇬🇧 United Kingdom</option>
+            <option value="NG">🇳🇬 Nigeria</option>
+            <option value="KE">🇰🇪 Kenya</option>
+            <option value="GH">🇬🇭 Ghana</option>
+            <option value="AU">🇦🇺 Australia</option>
+            <option value="CA">🇨🇦 Canada</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Target Gender</label>
+          <select id="targetGender">
+            <option value="all">👥 All Genders</option>
+            <option value="male">👨 Male</option>
+            <option value="female">👩 Female</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Minimum Age</label>
+          <input type="number" id="targetAgeMin" placeholder="18" min="13" max="100" value="18"/>
+        </div>
+        <div class="form-group">
+          <label>Maximum Age</label>
+          <input type="number" id="targetAgeMax" placeholder="65" min="13" max="100" value="65"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: Schedule -->
+    <div class="form-section">
+      <div class="section-title"><span class="section-icon">📅</span> Schedule</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="date" id="startDate"/>
+        </div>
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="date" id="endDate"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Frequency</label>
+          <select id="frequency">
+            <option value="daily">📆 Daily</option>
+            <option value="weekly">📅 Weekly</option>
+            <option value="monthly">🗓 Monthly</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Timezone</label>
+          <select id="timezone">
+            <option value="Africa/Johannesburg">🇿🇦 Johannesburg (SAST)</option>
+            <option value="UTC">🌍 UTC</option>
+            <option value="America/New_York">🇺🇸 New York (EST)</option>
+            <option value="Europe/London">🇬🇧 London (GMT)</option>
+            <option value="Australia/Sydney">🇦🇺 Sydney (AEST)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Post Times (click + to add)</label>
+        <div style="display:flex; gap:10px; margin-bottom:12px;">
+          <input type="time" id="timeInput" style="flex:1"/>
+          <button type="button" onclick="addTime()" style="padding: 12px 20px; background: var(--accent); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 18px;">+</button>
+        </div>
+        <div class="times-grid" id="times-grid"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 6: Budget -->
+    <div class="form-section">
+      <div class="section-title"><span class="section-icon">💰</span> Budget</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Total Budget</label>
+          <input type="number" id="budgetTotal" placeholder="e.g. 500" min="0"/>
+        </div>
+        <div class="form-group">
+          <label>Currency</label>
+          <select id="budgetCurrency">
+            <option value="ZAR">🇿🇦 ZAR — South African Rand</option>
+            <option value="USD">🇺🇸 USD — US Dollar</option>
+            <option value="GBP">🇬🇧 GBP — British Pound</option>
+            <option value="NGN">🇳🇬 NGN — Nigerian Naira</option>
+            <option value="KES">🇰🇪 KES — Kenyan Shilling</option>
+            <option value="AUD">🇦🇺 AUD — Australian Dollar</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <a href="dashboard.html" class="btn-secondary">Cancel</a>
+      <button class="btn-primary" id="submit-btn" onclick="submitCampaign()">🚀 Launch Campaign</button>
+    </div>
+  </main>
+  <script>
+    const API = 'http://localhost:5000/api';
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    if (!token) window.location.href = 'login.html';
+
+    if (user.firstName) {
+      document.getElementById('user-name').textContent = `${user.firstName} ${user.lastName || ''}`;
+      document.getElementById('user-avatar').textContent = user.firstName[0].toUpperCase();
+      document.getElementById('user-plan').textContent = (user.subscriptionPlan || 'free').charAt(0).toUpperCase() + (user.subscriptionPlan || 'free').slice(1) + ' Plan';
+    }
+
+    let uploadedFileUrl = null;
+
+async function handleFileSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const preview = document.getElementById('upload-preview');
+  preview.innerHTML = `<div class="upload-text">⏳ Uploading <span>${file.name}</span>...</div>`;
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const res = await fetch('http://localhost:5000/api/upload', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
+    });
+    const data = await res.json();
+    if (data.success) {
+      uploadedFileUrl = data.url;
+      preview.innerHTML = `<img src="${data.url}" style="max-height:200px; border-radius:8px; margin-top:10px;"/><div class="upload-text" style="margin-top:8px;">✅ <span>${file.name}</span> uploaded!</div>`;
+    } else {
+      preview.innerHTML = `<div class="upload-text">❌ Upload failed. Try again.</div>`;
+    }
+  } catch(err) {
+    preview.innerHTML = `<div class="upload-text">❌ Cannot connect to server.</div>`;
+  }
+}
+
+    let scheduledTimes = [];
+
+    function addTime() {
+      const val = document.getElementById('timeInput').value;
+      if (!val) return;
+      if (scheduledTimes.includes(val)) return;
+      scheduledTimes.push(val);
+      renderTimes();
+      document.getElementById('timeInput').value = '';
+    }
+
+    function removeTime(t) {
+      scheduledTimes = scheduledTimes.filter(x => x !== t);
+      renderTimes();
+    }
+
+    function renderTimes() {
+      const grid = document.getElementById('times-grid');
+      grid.innerHTML = scheduledTimes.map(t => `
+        <div class="time-tag">
+          ⏰ ${t}
+          <button onclick="removeTime('${t}')">&times;</button>
+        </div>`).join('');
+    }
+
+    function getCheckedPlatforms() {
+      const ids = ['fb','ig','tt','tw','li','wa'];
+      return ids.filter(id => document.getElementById(id).checked)
+                .map(id => document.getElementById(id).value);
+    }
+
+    function showMessage(text, type) {
+      const msg = document.getElementById('message');
+      msg.textContent = text;
+      msg.className = 'message ' + type;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function submitCampaign() {
+      const name = document.getElementById('name').value.trim();
+      if (!name) { showMessage('Please enter a campaign name!', 'error'); return; }
+
+      const platforms = getCheckedPlatforms();
+      if (platforms.length === 0) { showMessage('Please select at least one platform!', 'error'); return; }
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Creating...';
+
+      const body = {
+        name,
+        adCopyText: document.getElementById('adCopyText').value,
+        mediaUrl: uploadedFileUrl,
+        mediaType: document.getElementById('mediaType').value,
+        status: document.getElementById('status').value,
+        takealotUrl: document.getElementById('takealotUrl').value || null,
+        whatsappNumber: document.getElementById('whatsappNumber').value || null,
+        shopifyUrl: document.getElementById('shopifyUrl').value || null,
+        amazonUrl: document.getElementById('amazonUrl').value || null,
+        websiteUrl: document.getElementById('websiteUrl').value || null,
+        platforms,
+        targetCountries: [document.getElementById('targetCountries').value],
+        targetGender: document.getElementById('targetGender').value,
+        targetAgeMin: parseInt(document.getElementById('targetAgeMin').value) || 18,
+        targetAgeMax: parseInt(document.getElementById('targetAgeMax').value) || 65,
+        startDate: document.getElementById('startDate').value || null,
+        endDate: document.getElementById('endDate').value || null,
+        frequency: document.getElementById('frequency').value,
+        timezone: document.getElementById('timezone').value,
+        scheduledTimes: scheduledTimes.length > 0 ? scheduledTimes : ['09:00'],
+        budgetTotal: parseFloat(document.getElementById('budgetTotal').value) || null,
+        budgetCurrency: document.getElementById('budgetCurrency').value,
+      };
+
+      try {
+        const res = await fetch(`${API}/campaigns`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          showMessage('🎉 Campaign created successfully! Redirecting...', 'success');
+          setTimeout(() => window.location.href = 'dashboard.html', 1500);
+        } else {
+          showMessage(data.message || 'Something went wrong.', 'error');
+          btn.disabled = false;
+          btn.textContent = '🚀 Launch Campaign';
+        }
+      } catch (err) {
+        showMessage('Cannot connect to server. Is it running?', 'error');
+        btn.disabled = false;
+        btn.textContent = '🚀 Launch Campaign';
+      }
+    }
+  </script>
+</body>
+</html>
+ 
