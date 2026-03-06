@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pricing - AdSync Pro</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #fff; min-height: 100vh; }
+
+    /* NAV */
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .logo { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #ff6b35, #f7931e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-btn { background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; border: none; padding: 10px 24px; border-radius: 25px; cursor: pointer; font-weight: 600; text-decoration: none; }
+
+    /* HERO */
+    .hero { text-align: center; padding: 60px 20px 40px; }
+    .hero h1 { font-size: 48px; font-weight: 800; margin-bottom: 16px; }
+    .hero h1 span { background: linear-gradient(135deg, #ff6b35, #f7931e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 18px; color: #aaa; max-width: 500px; margin: 0 auto; }
+
+    /* PLANS */
+    .plans { display: flex; justify-content: center; gap: 30px; padding: 40px 20px 80px; flex-wrap: wrap; max-width: 1100px; margin: 0 auto; }
+
+    .plan-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 40px 30px; width: 320px; position: relative; transition: transform 0.3s, border-color 0.3s; }
+    .plan-card:hover { transform: translateY(-8px); border-color: #ff6b35; }
+    .plan-card.popular { border-color: #ff6b35; background: rgba(255,107,53,0.08); }
+
+    .popular-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+
+    .plan-name { font-size: 14px; font-weight: 600; color: #ff6b35; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .plan-price { font-size: 52px; font-weight: 800; margin-bottom: 4px; }
+    .plan-price span { font-size: 20px; font-weight: 400; color: #aaa; }
+    .plan-desc { color: #888; font-size: 14px; margin-bottom: 30px; }
+
+    .features { list-style: none; margin-bottom: 35px; }
+    .features li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 15px; color: #ccc; display: flex; align-items: center; gap: 10px; }
+    .features li:last-child { border-bottom: none; }
+    .check { color: #4ade80; font-size: 16px; }
+    .cross { color: #666; font-size: 16px; }
+
+    .plan-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; border: none; transition: all 0.3s; }
+    .plan-btn.free { background: rgba(255,255,255,0.1); color: white; }
+    .plan-btn.free:hover { background: rgba(255,255,255,0.2); }
+    .plan-btn.paid { background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; }
+    .plan-btn.paid:hover { opacity: 0.9; transform: scale(1.02); }
+    .plan-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* CURRENT PLAN BANNER */
+    #current-plan-banner { text-align: center; margin: 0 auto 10px; max-width: 400px; background: rgba(74,222,128,0.1); border: 1px solid #4ade80; border-radius: 12px; padding: 12px 20px; color: #4ade80; font-weight: 600; display: none; }
+
+    /* SUCCESS MESSAGE */
+    .success-msg { background: rgba(74,222,128,0.1); border: 1px solid #4ade80; color: #4ade80; padding: 16px 24px; border-radius: 12px; text-align: center; max-width: 500px; margin: 20px auto; display: none; font-weight: 600; }
+
+    /* LOADING */
+    .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* WATERMARK */
+    .watermark { text-align: center; color: #555; font-size: 12px; padding-bottom: 20px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">⚡ AdSync Pro</div>
+  <a href="dashboard.html" class="nav-btn">← Dashboard</a>
+</nav>
+
+<div class="hero">
+  <h1>Simple, <span>Transparent</span> Pricing</h1>
+  <p>Start free. Upgrade when you're ready to scale your ad campaigns.</p>
+</div>
+
+<div id="current-plan-banner">🎉 You are currently on the <span id="plan-name-display"></span> plan!</div>
+<div class="success-msg" id="success-msg">✅ Payment successful! Your plan has been upgraded!</div>
+
+<div class="plans">
+
+  <!-- FREE -->
+  <div class="plan-card" id="card-free">
+    <div class="plan-name">Free</div>
+    <div class="plan-price">$0 <span>/month</span></div>
+    <div class="plan-desc">Perfect to get started</div>
+    <ul class="features">
+      <li><span class="check">✓</span> 3 ad campaigns/month</li>
+      <li><span class="check">✓</span> Basic analytics</li>
+      <li><span class="check">✓</span> Manual ad creation</li>
+      <li><span class="cross">✗</span> AI ad generation</li>
+      <li><span class="cross">✗</span> Scheduling</li>
+      <li><span class="cross">✗</span> Email support</li>
+    </ul>
+    <button class="plan-btn free" id="btn-free" onclick="selectFree()">Get Started Free</button>
+  </div>
+
+  <!-- PRO -->
+  <div class="plan-card popular" id="card-pro">
+    <div class="popular-badge">⭐ MOST POPULAR</div>
+    <div class="plan-name">Pro</div>
+    <div class="plan-price">$29 <span>/month</span></div>
+    <div class="plan-desc">For serious store owners</div>
+    <ul class="features">
+      <li><span class="check">✓</span> 12 ad campaigns/month</li>
+      <li><span class="check">✓</span> Full analytics dashboard</li>
+      <li><span class="check">✓</span> AI ad generation</li>
+      <li><span class="check">✓</span> Manual + AI options</li>
+      <li><span class="check">✓</span> Scheduling</li>
+      <li><span class="check">✓</span> Email support</li>
+    </ul>
+    <button class="plan-btn paid" id="btn-pro" onclick="subscribe('pro')">Upgrade to Pro</button>
+  </div>
+
+  <!-- BUSINESS -->
+  <div class="plan-card" id="card-business">
+    <div class="plan-name">Business</div>
+    <div class="plan-price">$99 <span>/month</span></div>
+    <div class="plan-desc">For power sellers & agencies</div>
+    <ul class="features">
+      <li><span class="check">✓</span> Unlimited ad campaigns</li>
+      <li><span class="check">✓</span> Advanced analytics + export</li>
+      <li><span class="check">✓</span> AI ad generation</li>
+      <li><span class="check">✓</span> Multi-store support</li>
+      <li><span class="check">✓</span> Custom automation rules</li>
+      <li><span class="check">✓</span> Priority support</li>
+    </ul>
+    <button class="plan-btn paid" id="btn-business" onclick="subscribe('business')">Upgrade to Business</button>
+  </div>
+
+</div>
+
+<div class="watermark">© 2026 AdSync Pro · Payments secured by Paystack 🔒</div>
+
+<script>
+  const API = 'http://localhost:5000/api';
+
+  // Check if coming back from successful payment
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('payment') === 'success') {
+    document.getElementById('success-msg').style.display = 'block';
+    const ref = urlParams.get('reference');
+    if (ref) verifyPayment(ref);
+  }
+
+  // Load current plan on page load
+  window.onload = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    try {
+      const res = await fetch(`${API}/subscriptions/my-plan`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.plan) highlightCurrentPlan(data.plan);
+    } catch (e) {}
+  };
+
+  function highlightCurrentPlan(plan) {
+    const banner = document.getElementById('current-plan-banner');
+    const nameDisplay = document.getElementById('plan-name-display');
+    nameDisplay.textContent = plan.toUpperCase();
+    banner.style.display = 'block';
+
+    // Disable current plan button
+    const btnMap = { free: 'btn-free', pro: 'btn-pro', business: 'btn-business' };
+    const btn = document.getElementById(btnMap[plan]);
+    if (btn) { btn.textContent = '✓ Current Plan'; btn.disabled = true; }
+  }
+
+  function selectFree() {
+    window.location.href = 'dashboard.html';
+  }
+
+  async function subscribe(plan) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please login first!');
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const btnId = plan === 'pro' ? 'btn-pro' : 'btn-business';
+    const btn = document.getElementById(btnId);
+    btn.innerHTML = '<span class="spinner"></span>Processing...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(`${API}/subscriptions/initialize`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ plan })
+      });
+      const data = await res.json();
+      if (data.authorization_url) {
+        window.location.href = data.authorization_url;
+      } else {
+        alert('Payment failed to initialize. Please try again.');
+        btn.innerHTML = `Upgrade to ${plan.charAt(0).toUpperCase() + plan.slice(1)}`;
+        btn.disabled = false;
+      }
+    } catch (e) {
+      alert('Something went wrong. Please try again.');
+      btn.innerHTML = `Upgrade to ${plan.charAt(0).toUpperCase() + plan.slice(1)}`;
+      btn.disabled = false;
+    }
+  }
+
+  async function verifyPayment(reference) {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    try {
+      await fetch(`${API}/subscriptions/verify/${reference}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      setTimeout(() => window.location.reload(), 3000);
+    } catch (e) {}
+  }
+</script>
+</body>
+</html>

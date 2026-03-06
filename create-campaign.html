@@ -437,9 +437,14 @@ async function handleFileSelect(input) {
           showMessage('🎉 Campaign created successfully! Redirecting...', 'success');
           setTimeout(() => window.location.href = 'dashboard.html', 1500);
         } else {
+        if (data.limitReached) {
+          showMessage('🔒 ' + data.message, 'error');
+          setTimeout(() => window.location.href = 'pricing.html', 2500);
+        } else {
           showMessage(data.message || 'Something went wrong.', 'error');
-          btn.disabled = false;
-          btn.textContent = '🚀 Launch Campaign';
+        }
+        btn.disabled = false;
+        btn.textContent = '🚀 Launch Campaign';
         }
       } catch (err) {
         showMessage('Cannot connect to server. Is it running?', 'error');
