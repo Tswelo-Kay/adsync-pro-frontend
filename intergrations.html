@@ -116,16 +116,15 @@
         <button class="connect-btn coming-soon" disabled>Coming Soon</button>
       </div>
 
-      <div class="integration-card">
+      <div class="integration-card available">
         <div class="card-header">
           <div class="card-logo" style="background:#e31837;">🛒</div>
-          <span class="status-badge coming-soon">Coming Soon</span>
+          <span class="status-badge available">✓ Available</span>
         </div>
         <div class="card-name">Takealot</div>
-        <div class="card-desc">South Africa's #1 marketplace. API integration launching soon.</div>
-        <button class="connect-btn coming-soon" disabled>Coming Soon</button>
+        <div class="card-desc">South Africa's #1 marketplace. Sync products, track orders and create ads for your Takealot store.</div>
+        <button class="connect-btn available" onclick="connectTakealot()">Connect Takealot</button>
       </div>
-
       <div class="integration-card">
         <div class="card-header">
           <div class="card-logo" style="background:#7f54b3;">🔵</div>
@@ -278,6 +277,12 @@
     const phone = prompt('Enter your WhatsApp Business phone number:\n(e.g. +27 81 234 5678)');
     if (phone) {
       alert(`✅ WhatsApp Business connection for "${phone}" will be set up!\n\nFull integration coming very soon.`);
+    }
+  }
+  function connectTakealot() {
+    const sellerId = prompt('Enter your Takealot Seller ID:\n(Found in your Takealot Seller Portal)');
+    if (sellerId) {
+      alert(`✅ Takealot connection for seller "${sellerId}" will be set up!\n\nFull sync integration coming very soon.`);
     }
   }
 </script>
