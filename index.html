@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AdSync Pro — The Smarter Way to Run Ads</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #fff; overflow-x: hidden; }
+
+    /* NAV */
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 60px; position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(15,15,26,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .logo { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #ff6b35, #f7931e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a { color: #aaa; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: #fff; }
+    .nav-btns { display: flex; gap: 12px; align-items: center; }
+    .btn-outline { padding: 10px 24px; border: 1px solid rgba(255,255,255,0.2); border-radius: 25px; color: #fff; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.3s; }
+    .btn-outline:hover { border-color: #ff6b35; color: #ff6b35; }
+    .btn-primary { padding: 10px 24px; background: linear-gradient(135deg, #ff6b35, #f7931e); border-radius: 25px; color: #fff; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; }
+    .btn-primary:hover { opacity: 0.9; transform: scale(1.03); }
+
+    /* HERO */
+    .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 120px 20px 80px; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,107,53,0.15) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.3); border-radius: 25px; padding: 8px 18px; font-size: 13px; color: #ff6b35; font-weight: 600; margin-bottom: 32px; }
+    .hero h1 { font-size: 64px; font-weight: 900; line-height: 1.1; margin-bottom: 24px; max-width: 800px; }
+    .hero h1 span { background: linear-gradient(135deg, #ff6b35, #f7931e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 20px; color: #888; max-width: 560px; line-height: 1.7; margin-bottom: 48px; }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 64px; }
+    .hero-btn-primary { padding: 16px 36px; background: linear-gradient(135deg, #ff6b35, #f7931e); border-radius: 30px; color: #fff; text-decoration: none; font-size: 16px; font-weight: 700; transition: all 0.3s; border: none; cursor: pointer; }
+    .hero-btn-primary:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 20px 40px rgba(255,107,53,0.3); }
+    .hero-btn-secondary { padding: 16px 36px; border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; color: #fff; text-decoration: none; font-size: 16px; font-weight: 600; transition: all 0.3s; }
+    .hero-btn-secondary:hover { border-color: #ff6b35; color: #ff6b35; }
+
+    /* PLATFORMS */
+    .platforms { display: flex; justify-content: center; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .platform-badge { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 25px; padding: 10px 18px; font-size: 13px; color: #aaa; font-weight: 500; }
+
+    /* STATS */
+    .stats { display: flex; justify-content: center; gap: 60px; padding: 60px 20px; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-number { font-size: 42px; font-weight: 900; background: linear-gradient(135deg, #ff6b35, #f7931e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-label { font-size: 14px; color: #666; margin-top: 4px; }
+
+    /* HOW IT WORKS */
+    .section { padding: 100px 60px; max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 13px; font-weight: 700; color: #ff6b35; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; text-align: center; }
+    .section-title { font-size: 42px; font-weight: 800; text-align: center; margin-bottom: 16px; }
+    .section-subtitle { font-size: 17px; color: #777; text-align: center; max-width: 500px; margin: 0 auto 64px; line-height: 1.7; }
+
+    .steps { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; }
+    .step { flex: 1; min-width: 220px; max-width: 260px; text-align: center; }
+    .step-number { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #ff6b35, #f7931e); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; margin: 0 auto 20px; }
+    .step-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .step-desc { font-size: 14px; color: #777; line-height: 1.7; }
+    .step-arrow { font-size: 24px; color: #333; align-self: center; padding-top: 0; display: flex; align-items: center; }
+
+    /* FEATURES */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .feature-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 32px; transition: all 0.3s; }
+    .feature-card:hover { border-color: rgba(255,107,53,0.3); transform: translateY(-4px); background: rgba(255,107,53,0.04); }
+    .feature-icon { font-size: 36px; margin-bottom: 16px; }
+    .feature-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .feature-desc { font-size: 14px; color: #777; line-height: 1.7; }
+
+    /* WAITLIST */
+    .waitlist-section { background: rgba(255,107,53,0.05); border-top: 1px solid rgba(255,107,53,0.1); border-bottom: 1px solid rgba(255,107,53,0.1); padding: 100px 20px; text-align: center; }
+    .waitlist-section h2 { font-size: 42px; font-weight: 800; margin-bottom: 16px; }
+    .waitlist-section p { font-size: 17px; color: #888; margin-bottom: 40px; }
+    .waitlist-form { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; max-width: 500px; margin: 0 auto; }
+    .waitlist-input { flex: 1; min-width: 250px; padding: 16px 24px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; color: #fff; font-size: 15px; outline: none; transition: border-color 0.3s; }
+    .waitlist-input:focus { border-color: #ff6b35; }
+    .waitlist-input::placeholder { color: #555; }
+    .waitlist-btn { padding: 16px 32px; background: linear-gradient(135deg, #ff6b35, #f7931e); border: none; border-radius: 30px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s; white-space: nowrap; }
+    .waitlist-btn:hover { opacity: 0.9; transform: scale(1.02); }
+    .waitlist-success { display: none; background: rgba(74,222,128,0.1); border: 1px solid #4ade80; border-radius: 12px; padding: 16px 24px; color: #4ade80; font-weight: 600; margin-top: 20px; }
+    .waitlist-count { font-size: 13px; color: #555; margin-top: 16px; }
+
+    /* FOOTER */
+    footer { padding: 40px 60px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+    .footer-logo { font-size: 18px; font-weight: 800; background: linear-gradient(135deg, #ff6b35, #f7931e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .footer-disclaimer { font-size: 11px; color: #444; max-width: 600px; line-height: 1.6; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { color: #555; text-decoration: none; font-size: 13px; transition: color 0.2s; }
+    .footer-links a:hover { color: #ff6b35; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">⚡ AdSync Pro</div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#waitlist">Pricing</a>
+  </div>
+  <div class="nav-btns">
+    <a href="login.html" class="btn-outline">Log In</a>
+    <a href="login.html" class="btn-primary">Get Started Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🚀 Now in Beta — Join the waitlist</div>
+  <h1>The <span>Smarter Way</span> to Run Ads for Your Store</h1>
+  <p>Create, launch and manage ads across Facebook, Instagram, TikTok and more — all from one powerful dashboard built for African sellers.</p>
+  <div class="hero-btns">
+    <a href="#waitlist" class="hero-btn-primary">🎉 Join the Waitlist</a>
+    <a href="login.html" class="hero-btn-secondary">Try the App →</a>
+  </div>
+  <div class="platforms">
+    <div class="platform-badge">📘 Facebook Ads</div>
+    <div class="platform-badge">📸 Instagram</div>
+    <div class="platform-badge">🎵 TikTok Ads</div>
+    <div class="platform-badge">🛍️ Shopify</div>
+    <div class="platform-badge">🛒 Takealot</div>
+    <div class="platform-badge">💬 WhatsApp</div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-number">3+</div>
+    <div class="stat-label">Ad Platforms</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">$0</div>
+    <div class="stat-label">To Get Started</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">30s</div>
+    <div class="stat-label">To Launch a Campaign</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">24/7</div>
+    <div class="stat-label">Automated Running</div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div id="how-it-works">
+  <div class="section">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">Launch Ads in 4 Simple Steps</h2>
+    <p class="section-subtitle">No experience needed. AdSync Pro makes advertising simple for every seller.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-title">Connect Your Store</div>
+        <div class="step-desc">Link your Shopify or Takealot store in seconds using your API key.</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-title">Create a Campaign</div>
+        <div class="step-desc">Pick your product, set your budget, target audience and schedule.</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-title">Launch Everywhere</div>
+        <div class="step-desc">AdSync Pro pushes your ad to Facebook, Instagram and TikTok simultaneously.</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-title">Track Results</div>
+        <div class="step-desc">See clicks, impressions and sales all in your live dashboard.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div id="features" style="background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.05);">
+  <div class="section">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything You Need to Scale</h2>
+    <p class="section-subtitle">Powerful tools built specifically for e-commerce sellers in Africa and beyond.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📢</div>
+        <div class="feature-title">Multi-Platform Ads</div>
+        <div class="feature-desc">Launch one campaign across Facebook, Instagram and TikTok simultaneously with a single click.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛒</div>
+        <div class="feature-title">Store Sync</div>
+        <div class="feature-desc">Connect your Shopify or Takealot store and automatically pull product data for your ads.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Live Analytics</div>
+        <div class="feature-desc">Track impressions, clicks, spend and conversions in real time on your dashboard.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⏰</div>
+        <div class="feature-title">Campaign Scheduler</div>
+        <div class="feature-desc">Schedule your ads to run at the perfect time and stop automatically when the budget is reached.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <div class="feature-title">WhatsApp Integration</div>
+        <div class="feature-desc">Add WhatsApp click-to-chat buttons to your ads so customers can reach you instantly.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-title">Secure & Private</div>
+        <div class="feature-desc">Your API keys and data are encrypted and never shared. You stay in full control at all times.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WAITLIST -->
+<div id="waitlist" class="waitlist-section">
+  <h2>Be First When We Launch 🚀</h2>
+  <p>Join hundreds of sellers already on the waitlist. Get early access and 3 months free on Pro.</p>
+  <div class="waitlist-form">
+    <input type="email" class="waitlist-input" id="waitlist-email" placeholder="Enter your email address" />
+    <button class="waitlist-btn" onclick="joinWaitlist()">Join Waitlist →</button>
+  </div>
+  <div class="waitlist-success" id="waitlist-success">
+    🎉 You're on the list! We'll contact you when we launch.
+  </div>
+  <div class="waitlist-count">🔥 Join the growing list of sellers waiting for access</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">⚡ AdSync Pro</div>
+  <div class="footer-disclaimer">AdSync Pro is an independent tool and is not affiliated with, endorsed by, or sponsored by Takealot, Shopify, Meta, TikTok, Google, or any other platform. All trademarks belong to their respective owners.</div>
+  <div class="footer-links">
+    <a href="login.html">Login</a>
+    <a href="login.html">Sign Up</a>
+    <a href="pricing.html">Pricing</a>
+  </div>
+</footer>
+
+<script>
+  function joinWaitlist() {
+    const email = document.getElementById('waitlist-email').value.trim();
+    if (!email || !email.includes('@')) {
+      alert('Please enter a valid email address!');
+      return;
+    }
+    // Save to localStorage for now
+    const waitlist = JSON.parse(localStorage.getItem('waitlist') || '[]');
+    waitlist.push({ email, date: new Date().toISOString() });
+    localStorage.setItem('waitlist', JSON.stringify(waitlist));
+
+    document.getElementById('waitlist-success').style.display = 'block';
+    document.getElementById('waitlist-email').value = '';
+    document.querySelector('.waitlist-count').textContent = `🔥 ${waitlist.length} seller${waitlist.length > 1 ? 's' : ''} on the waitlist!`;
+  }
+</script>
+</body>
+</html>
