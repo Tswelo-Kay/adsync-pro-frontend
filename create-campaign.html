@@ -308,7 +308,7 @@
     </div>
   </main>
   <script>
-    const API = 'http://localhost:5000/api';
+    const API = 'https://adsync-pro-backend-production.up.railway.app/api';
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -330,7 +330,7 @@ async function handleFileSelect(input) {
   const formData = new FormData();
   formData.append('file', file);
   try {
-    const res = await fetch('http://localhost:5000/api/upload', {
+    const res = await fetch('https://adsync-pro-backend-production.up.railway.app/api/upload', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${token}` },
       body: formData
