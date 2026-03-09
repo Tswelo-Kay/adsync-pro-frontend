@@ -3,219 +3,271 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pricing - AdSync Pro</title>
+  <title>Pricing — AdSync Pro</title>
+  <link rel="stylesheet" href="styles.css"/>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #fff; min-height: 100vh; }
+    body { display: flex; }
 
-    /* NAV */
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .logo { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #ff6b35, #f7931e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .nav-btn { background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; border: none; padding: 10px 24px; border-radius: 25px; cursor: pointer; font-weight: 600; text-decoration: none; }
+    .price-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      position: relative;
+      transition: all 0.3s;
+      display: flex; flex-direction: column;
+    }
+    .price-card:hover { transform: translateY(-4px); }
+    .price-card.free:hover { border-color: var(--border); box-shadow: none; }
+    .price-card.pro { border-color: var(--blue); box-shadow: var(--shadow-blue); }
+    .price-card.business { border-color: var(--border-gold); }
+    .price-card.business:hover { box-shadow: var(--shadow-gold); }
 
-    /* HERO */
-    .hero { text-align: center; padding: 60px 20px 40px; }
-    .hero h1 { font-size: 48px; font-weight: 800; margin-bottom: 16px; }
-    .hero h1 span { background: linear-gradient(135deg, #ff6b35, #f7931e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .hero p { font-size: 18px; color: #aaa; max-width: 500px; margin: 0 auto; }
+    .popular-tag {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--blue); color: #fff;
+      font-size: 10px; font-weight: 800; letter-spacing: 2px;
+      padding: 5px 18px; border-radius: 20px;
+      white-space: nowrap; text-transform: uppercase;
+    }
 
-    /* PLANS */
-    .plans { display: flex; justify-content: center; gap: 30px; padding: 40px 20px 80px; flex-wrap: wrap; max-width: 1100px; margin: 0 auto; }
+    .plan-name { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-secondary); margin-bottom: 12px; }
+    .plan-price { font-family: var(--font-display); font-size: 52px; font-weight: 800; letter-spacing: -2px; line-height: 1; margin-bottom: 6px; }
+    .plan-price sub { font-size: 20px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0; }
+    .plan-period { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+    .plan-tagline { font-size: 14px; color: var(--text-secondary); margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
 
-    .plan-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 40px 30px; width: 320px; position: relative; transition: transform 0.3s, border-color 0.3s; }
-    .plan-card:hover { transform: translateY(-8px); border-color: #ff6b35; }
-    .plan-card.popular { border-color: #ff6b35; background: rgba(255,107,53,0.08); }
+    .features-list { list-style: none; flex: 1; margin-bottom: 28px; }
+    .features-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 9px 0;
+      font-size: 13px; color: var(--text-secondary);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .features-list li:last-child { border-bottom: none; }
+    .features-list li .check { color: var(--blue-bright); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .features-list li .lock { font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+    .features-list li.included { color: var(--text-primary); }
+    .features-list li.locked { color: var(--text-muted); }
 
-    .popular-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+    .plan-btn { width: 100%; justify-content: center; padding: 15px; font-size: 14px; border-radius: var(--radius); }
 
-    .plan-name { font-size: 14px; font-weight: 600; color: #ff6b35; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
-    .plan-price { font-size: 52px; font-weight: 800; margin-bottom: 4px; }
-    .plan-price span { font-size: 20px; font-weight: 400; color: #aaa; }
-    .plan-desc { color: #888; font-size: 14px; margin-bottom: 30px; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0; cursor: pointer;
+    }
+    .faq-q { display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: 600; }
+    .faq-a { font-size: 13px; color: var(--text-secondary); margin-top: 12px; line-height: 1.7; display: none; }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-arrow { transition: transform 0.3s; color: var(--text-muted); }
 
-    .features { list-style: none; margin-bottom: 35px; }
-    .features li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 15px; color: #ccc; display: flex; align-items: center; gap: 10px; }
-    .features li:last-child { border-bottom: none; }
-    .check { color: #4ade80; font-size: 16px; }
-    .cross { color: #666; font-size: 16px; }
-
-    .plan-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; border: none; transition: all 0.3s; }
-    .plan-btn.free { background: rgba(255,255,255,0.1); color: white; }
-    .plan-btn.free:hover { background: rgba(255,255,255,0.2); }
-    .plan-btn.paid { background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; }
-    .plan-btn.paid:hover { opacity: 0.9; transform: scale(1.02); }
-    .plan-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* CURRENT PLAN BANNER */
-    #current-plan-banner { text-align: center; margin: 0 auto 10px; max-width: 400px; background: rgba(74,222,128,0.1); border: 1px solid #4ade80; border-radius: 12px; padding: 12px 20px; color: #4ade80; font-weight: 600; display: none; }
-
-    /* SUCCESS MESSAGE */
-    .success-msg { background: rgba(74,222,128,0.1); border: 1px solid #4ade80; color: #4ade80; padding: 16px 24px; border-radius: 12px; text-align: center; max-width: 500px; margin: 20px auto; display: none; font-weight: 600; }
-
-    /* LOADING */
-    .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* WATERMARK */
-    .watermark { text-align: center; color: #555; font-size: 12px; padding-bottom: 20px; }
+    .compare-table { width: 100%; border-collapse: collapse; }
+    .compare-table th { text-align: center; padding: 14px 16px; font-size: 13px; font-weight: 700; border-bottom: 1px solid var(--border); }
+    .compare-table th:first-child { text-align: left; color: var(--text-secondary); }
+    .compare-table td { text-align: center; padding: 12px 16px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-secondary); }
+    .compare-table td:first-child { text-align: left; font-weight: 500; color: var(--text-primary); }
+    .compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .yes { color: var(--success); font-size: 16px; }
+    .no { color: var(--text-muted); font-size: 16px; }
   </style>
 </head>
 <body>
 
-<nav>
-  <div class="logo">⚡ AdSync Pro</div>
-  <a href="dashboard.html" class="nav-btn">← Dashboard</a>
-</nav>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">⚡</div>
+    <div class="sidebar-logo-text">AdSync <span>Pro</span></div>
+  </div>
+  <nav>
+    <div class="nav-section-label">Main</div>
+    <a class="nav-item" href="dashboard.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" href="create-campaign.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      New Campaign
+    </a>
+    <a class="nav-item" href="integrations.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+      Integrations
+    </a>
+    <div class="nav-section-label" style="margin-top:8px;">Account</div>
+    <a class="nav-item" href="settings.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      Settings
+    </a>
+    <a class="nav-item active" href="pricing.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+      Upgrade Plan
+    </a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="user-avatar" id="user-avatar">M</div>
+      <div>
+        <div class="user-name" id="user-name">Loading...</div>
+        <div class="user-plan" id="user-plan">FREE PLAN</div>
+      </div>
+    </div>
+  </div>
+</aside>
 
-<div class="hero">
-  <h1>Simple, <span>Transparent</span> Pricing</h1>
-  <p>Start free. Upgrade when you're ready to scale your ad campaigns.</p>
+<!-- MAIN -->
+<div class="main">
+  <div class="top-bar">
+    <div>
+      <div class="page-title">Upgrade Plan</div>
+      <div class="page-subtitle">Choose the plan that fits your business</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- PRICING CARDS -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:60px;">
+
+      <!-- FREE -->
+      <div class="price-card free">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0 <sub>/mo</sub></div>
+        <div class="plan-tagline">Perfect to explore AdSync Pro</div>
+        <ul class="features-list">
+          <li class="included"><span class="check">✓</span> 3 campaigns per month</li>
+          <li class="included"><span class="check">✓</span> Basic dashboard</li>
+          <li class="included"><span class="check">✓</span> Preview ad templates</li>
+          <li class="included"><span class="check">✓</span> Email support</li>
+          <li class="locked"><span class="lock">🔒</span> AI Ad Generator</li>
+          <li class="locked"><span class="lock">🔒</span> Store sync</li>
+          <li class="locked"><span class="lock">🔒</span> WhatsApp API</li>
+          <li class="locked"><span class="lock">🔒</span> Full template library</li>
+        </ul>
+        <button class="btn-outline plan-btn" id="free-btn" onclick="selectPlan('free')">Current Plan</button>
+      </div>
+
+      <!-- PRO -->
+      <div class="price-card pro">
+        <div class="popular-tag">⭐ Most Popular</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price" style="color:var(--blue-bright);">$29 <sub>/mo</sub></div>
+        <div class="plan-tagline">For sellers ready to scale their ads</div>
+        <ul class="features-list">
+          <li class="included"><span class="check">✓</span> 12 campaigns per month</li>
+          <li class="included"><span class="check">✓</span> 🤖 AI Ad Generator</li>
+          <li class="included"><span class="check">✓</span> Takealot + Shopify sync</li>
+          <li class="included"><span class="check">✓</span> Full template library</li>
+          <li class="included"><span class="check">✓</span> All ad categories</li>
+          <li class="included"><span class="check">✓</span> Analytics dashboard</li>
+          <li class="included"><span class="check">✓</span> Priority email support</li>
+          <li class="locked"><span class="lock">🔒</span> WhatsApp Business API</li>
+        </ul>
+        <button class="btn-primary plan-btn" id="pro-btn" onclick="selectPlan('pro')">Upgrade to Pro →</button>
+      </div>
+
+      <!-- BUSINESS -->
+      <div class="price-card business">
+        <div class="plan-name">Business</div>
+        <div class="plan-price" style="color:var(--gold);">$99 <sub>/mo</sub></div>
+        <div class="plan-tagline">For serious sellers who want everything</div>
+        <ul class="features-list">
+          <li class="included"><span class="check" style="color:var(--gold);">✓</span> Unlimited campaigns</li>
+          <li class="included"><span class="check" style="color:var(--gold);">✓</span> Everything in Pro</li>
+          <li class="included"><span class="check" style="color:var(--gold);">✓</span> 💬 WhatsApp Business API</li>
+          <li class="included"><span class="check" style="color:var(--gold);">✓</span> Custom brand templates</li>
+          <li class="included"><span class="check" style="color:var(--gold);">✓</span> Multi-store management</li>
+          <li class="included"><span class="check" style="color:var(--gold);">✓</span> Advanced analytics + ROI</li>
+          <li class="included"><span class="check" style="color:var(--gold);">✓</span> WhatsApp broadcast campaigns</li>
+          <li class="included"><span class="check" style="color:var(--gold);">✓</span> Dedicated support</li>
+        </ul>
+        <button class="btn-gold plan-btn" id="business-btn" onclick="selectPlan('business')">Go Business →</button>
+      </div>
+    </div>
+
+    <!-- COMPARISON TABLE -->
+    <div class="card" style="padding:28px;margin-bottom:48px;">
+      <div style="font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:24px;letter-spacing:-0.5px;">Full Comparison</div>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Free</th>
+            <th style="color:var(--blue-bright);">Pro</th>
+            <th style="color:var(--gold);">Business</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Campaigns / month</td><td>3</td><td>12</td><td>Unlimited</td></tr>
+          <tr><td>AI Ad Generator</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Ad Templates</td><td>Preview only</td><td class="yes">✓ All</td><td class="yes">✓ + Custom</td></tr>
+          <tr><td>Takealot Store Sync</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Shopify Store Sync</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>WhatsApp Business API</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td></tr>
+          <tr><td>Analytics Dashboard</td><td>Basic</td><td>Advanced</td><td>Advanced + ROI</td></tr>
+          <tr><td>Multi-store Management</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td></tr>
+          <tr><td>Support</td><td>Email</td><td>Priority Email</td><td>Dedicated</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FAQ -->
+    <div style="max-width:700px;margin:0 auto 48px;">
+      <div style="font-family:var(--font-display);font-size:28px;font-weight:800;text-align:center;margin-bottom:32px;letter-spacing:-0.5px;">Frequently Asked Questions</div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Can I cancel anytime? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Yes, you can cancel your subscription at any time. You'll keep access until the end of your billing period with no extra charges.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">What payment methods do you accept? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">We accept all major credit/debit cards, and we use Paystack for secure South African payments including local bank cards.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Do you offer a free trial on paid plans? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">The Free plan is yours forever with no credit card required. We're also offering 3 months free on Pro for waitlist members at launch.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Is my store data safe? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Absolutely. Your API keys and store data are encrypted and stored securely. We never share your data with third parties and you can delete your account at any time.</div>
+      </div>
+    </div>
+
+  </div>
 </div>
-
-<div id="current-plan-banner">🎉 You are currently on the <span id="plan-name-display"></span> plan!</div>
-<div class="success-msg" id="success-msg">✅ Payment successful! Your plan has been upgraded!</div>
-
-<div class="plans">
-
-  <!-- FREE -->
-  <div class="plan-card" id="card-free">
-    <div class="plan-name">Free</div>
-    <div class="plan-price">$0 <span>/month</span></div>
-    <div class="plan-desc">Perfect to get started</div>
-    <ul class="features">
-      <li><span class="check">✓</span> 3 ad campaigns/month</li>
-      <li><span class="check">✓</span> Basic analytics</li>
-      <li><span class="check">✓</span> Manual ad creation</li>
-      <li><span class="cross">✗</span> AI ad generation</li>
-      <li><span class="cross">✗</span> Scheduling</li>
-      <li><span class="cross">✗</span> Email support</li>
-    </ul>
-    <button class="plan-btn free" id="btn-free" onclick="selectFree()">Get Started Free</button>
-  </div>
-
-  <!-- PRO -->
-  <div class="plan-card popular" id="card-pro">
-    <div class="popular-badge">⭐ MOST POPULAR</div>
-    <div class="plan-name">Pro</div>
-    <div class="plan-price">$29 <span>/month</span></div>
-    <div class="plan-desc">For serious store owners</div>
-    <ul class="features">
-      <li><span class="check">✓</span> 12 ad campaigns/month</li>
-      <li><span class="check">✓</span> Full analytics dashboard</li>
-      <li><span class="check">✓</span> AI ad generation</li>
-      <li><span class="check">✓</span> Manual + AI options</li>
-      <li><span class="check">✓</span> Scheduling</li>
-      <li><span class="check">✓</span> Email support</li>
-    </ul>
-    <button class="plan-btn paid" id="btn-pro" onclick="subscribe('pro')">Upgrade to Pro</button>
-  </div>
-
-  <!-- BUSINESS -->
-  <div class="plan-card" id="card-business">
-    <div class="plan-name">Business</div>
-    <div class="plan-price">$99 <span>/month</span></div>
-    <div class="plan-desc">For power sellers & agencies</div>
-    <ul class="features">
-      <li><span class="check">✓</span> Unlimited ad campaigns</li>
-      <li><span class="check">✓</span> Advanced analytics + export</li>
-      <li><span class="check">✓</span> AI ad generation</li>
-      <li><span class="check">✓</span> Multi-store support</li>
-      <li><span class="check">✓</span> Custom automation rules</li>
-      <li><span class="check">✓</span> Priority support</li>
-    </ul>
-    <button class="plan-btn paid" id="btn-business" onclick="subscribe('business')">Upgrade to Business</button>
-  </div>
-
-</div>
-
-<div class="watermark">© 2026 AdSync Pro · Payments secured by Paystack 🔒</div>
 
 <script>
-  const API = 'https://adsync-pro-backend-production.up.railway.app/api';
+  const API = 'https://adsync-pro-backend-production.up.railway.app';
+  const token = localStorage.getItem('token');
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  if (!token) window.location.href = 'login.html';
 
-  // Check if coming back from successful payment
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('payment') === 'success') {
-    document.getElementById('success-msg').style.display = 'block';
-    const ref = urlParams.get('reference');
-    if (ref) verifyPayment(ref);
+  if (user.firstName) {
+    document.getElementById('user-name').textContent = `${user.firstName} ${user.lastName || ''}`;
+    document.getElementById('user-avatar').textContent = user.firstName[0].toUpperCase();
+    const plan = (user.subscriptionPlan || 'free');
+    document.getElementById('user-plan').textContent = plan.toUpperCase() + ' PLAN';
+    if (plan === 'pro') { document.getElementById('pro-btn').textContent = '✓ Current Plan'; document.getElementById('pro-btn').disabled = true; }
+    if (plan === 'business') { document.getElementById('business-btn').textContent = '✓ Current Plan'; document.getElementById('business-btn').disabled = true; }
   }
 
-  // Load current plan on page load
-  window.onload = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) return;
+  async function selectPlan(plan) {
+    if (plan === 'free') return;
     try {
-      const res = await fetch(`${API}/subscriptions/my-plan`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      if (data.plan) highlightCurrentPlan(data.plan);
-    } catch (e) {}
-  };
-
-  function highlightCurrentPlan(plan) {
-    const banner = document.getElementById('current-plan-banner');
-    const nameDisplay = document.getElementById('plan-name-display');
-    nameDisplay.textContent = plan.toUpperCase();
-    banner.style.display = 'block';
-
-    // Disable current plan button
-    const btnMap = { free: 'btn-free', pro: 'btn-pro', business: 'btn-business' };
-    const btn = document.getElementById(btnMap[plan]);
-    if (btn) { btn.textContent = '✓ Current Plan'; btn.disabled = true; }
-  }
-
-  function selectFree() {
-    window.location.href = 'dashboard.html';
-  }
-
-  async function subscribe(plan) {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('Please login first!');
-      window.location.href = 'login.html';
-      return;
-    }
-
-    const btnId = plan === 'pro' ? 'btn-pro' : 'btn-business';
-    const btn = document.getElementById(btnId);
-    btn.innerHTML = '<span class="spinner"></span>Processing...';
-    btn.disabled = true;
-
-    try {
-      const res = await fetch(`${API}/subscriptions/initialize`, {
+      const res = await fetch(`${API}/api/subscriptions/upgrade`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ plan })
       });
       const data = await res.json();
-      if (data.authorization_url) {
-        window.location.href = data.authorization_url;
-      } else {
-        alert('Payment failed to initialize. Please try again.');
-        btn.innerHTML = `Upgrade to ${plan.charAt(0).toUpperCase() + plan.slice(1)}`;
-        btn.disabled = false;
-      }
+      if (data.paymentUrl) window.location.href = data.paymentUrl;
+      else alert(data.message || 'Redirecting to payment...');
     } catch (e) {
-      alert('Something went wrong. Please try again.');
-      btn.innerHTML = `Upgrade to ${plan.charAt(0).toUpperCase() + plan.slice(1)}`;
-      btn.disabled = false;
+      alert('Payment system coming soon! Contact us to upgrade manually.');
     }
   }
 
-  async function verifyPayment(reference) {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-    try {
-      await fetch(`${API}/subscriptions/verify/${reference}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      setTimeout(() => window.location.reload(), 3000);
-    } catch (e) {}
+  function toggleFaq(el) {
+    el.classList.toggle('open');
   }
 </script>
 </body>

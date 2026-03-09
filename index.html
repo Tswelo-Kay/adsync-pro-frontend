@@ -3,260 +3,218 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AdSync Pro — The Smarter Way to Run Ads</title>
+  <title>AdSync Pro — Built for African Sellers. Ready for the World.</title>
+  <link rel="stylesheet" href="styles.css"/>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #fff; overflow-x: hidden; }
+    .nav { display:flex; justify-content:space-between; align-items:center; padding:0 60px; height:70px; position:fixed; top:0; width:100%; z-index:100; background:rgba(4,4,10,0.8); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); transition:all 0.3s; }
+    .nav.scrolled { background:rgba(4,4,10,0.97); }
+    .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+    .nav-logo-icon { width:34px; height:34px; background:var(--blue); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:0 0 20px rgba(0,102,255,0.6); }
+    .nav-logo-text { font-family:var(--font-display); font-size:18px; font-weight:800; color:#fff; }
+    .nav-logo-text span { color:var(--gold); }
+    .nav-links { display:flex; gap:36px; }
+    .nav-links a { color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:color 0.2s; }
+    .nav-links a:hover { color:#fff; }
+    .nav-btns { display:flex; gap:10px; align-items:center; }
 
-    /* NAV */
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 60px; position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(15,15,26,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.06); }
-    .logo { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #ff6b35, #f7931e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .nav-links { display: flex; gap: 32px; }
-    .nav-links a { color: #aaa; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover { color: #fff; }
-    .nav-btns { display: flex; gap: 12px; align-items: center; }
-    .btn-outline { padding: 10px 24px; border: 1px solid rgba(255,255,255,0.2); border-radius: 25px; color: #fff; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.3s; }
-    .btn-outline:hover { border-color: #ff6b35; color: #ff6b35; }
-    .btn-primary { padding: 10px 24px; background: linear-gradient(135deg, #ff6b35, #f7931e); border-radius: 25px; color: #fff; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; }
-    .btn-primary:hover { opacity: 0.9; transform: scale(1.03); }
+    .hero { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:130px 20px 80px; position:relative; overflow:hidden; }
+    .hero-grid { position:absolute; inset:0; pointer-events:none; background-image:linear-gradient(rgba(0,102,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,102,255,0.05) 1px, transparent 1px); background-size:70px 70px; mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 75%); }
+    .orb { position:absolute; border-radius:50%; pointer-events:none; filter:blur(80px); animation:orbFloat 8s ease-in-out infinite; }
+    .orb-1 { width:500px; height:500px; background:radial-gradient(circle, rgba(0,102,255,0.18) 0%, transparent 70%); top:-100px; left:-100px; animation-duration:10s; }
+    .orb-2 { width:400px; height:400px; background:radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%); bottom:-50px; right:-50px; animation-delay:-4s; animation-duration:12s; }
+    .orb-3 { width:300px; height:300px; background:radial-gradient(circle, rgba(0,102,255,0.12) 0%, transparent 70%); top:40%; right:10%; animation-delay:-2s; animation-duration:9s; }
+    .orb-4 { width:250px; height:250px; background:radial-gradient(circle, rgba(77,148,255,0.1) 0%, transparent 70%); top:20%; left:5%; animation-delay:-6s; animation-duration:11s; }
+    @keyframes orbFloat { 0%,100%{transform:translate(0,0) scale(1);} 33%{transform:translate(30px,-20px) scale(1.05);} 66%{transform:translate(-20px,15px) scale(0.95);} }
 
-    /* HERO */
-    .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 120px 20px 80px; position: relative; overflow: hidden; }
-    .hero::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,107,53,0.15) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
-    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.3); border-radius: 25px; padding: 8px 18px; font-size: 13px; color: #ff6b35; font-weight: 600; margin-bottom: 32px; }
-    .hero h1 { font-size: 64px; font-weight: 900; line-height: 1.1; margin-bottom: 24px; max-width: 800px; }
-    .hero h1 span { background: linear-gradient(135deg, #ff6b35, #f7931e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .hero p { font-size: 20px; color: #888; max-width: 560px; line-height: 1.7; margin-bottom: 48px; }
-    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 64px; }
-    .hero-btn-primary { padding: 16px 36px; background: linear-gradient(135deg, #ff6b35, #f7931e); border-radius: 30px; color: #fff; text-decoration: none; font-size: 16px; font-weight: 700; transition: all 0.3s; border: none; cursor: pointer; }
-    .hero-btn-primary:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 20px 40px rgba(255,107,53,0.3); }
-    .hero-btn-secondary { padding: 16px 36px; border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; color: #fff; text-decoration: none; font-size: 16px; font-weight: 600; transition: all 0.3s; }
-    .hero-btn-secondary:hover { border-color: #ff6b35; color: #ff6b35; }
+    .float-logo { position:absolute; width:52px; height:52px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:24px; backdrop-filter:blur(10px); animation:logoFloat 6s ease-in-out infinite; box-shadow:0 8px 32px rgba(0,0,0,0.3); transition:all 0.3s; pointer-events:all; cursor:default; }
+    .float-logo:hover { transform:scale(1.15) translateY(0px) !important; border-color:var(--blue); box-shadow:0 0 24px rgba(0,102,255,0.4); }
+    .fl-fb { top:22%; left:8%; animation-delay:0s; animation-duration:7s; }
+    .fl-ig { top:55%; left:5%; animation-delay:-1.5s; animation-duration:8s; }
+    .fl-tt { top:30%; right:7%; animation-delay:-0.8s; animation-duration:6.5s; }
+    .fl-wa { top:62%; right:9%; animation-delay:-2.5s; animation-duration:9s; }
+    .fl-sh { top:12%; right:18%; animation-delay:-1s; animation-duration:7.5s; }
+    .fl-tak { top:12%; left:20%; animation-delay:-3s; animation-duration:8.5s; }
+    .fl-gg { top:72%; left:18%; animation-delay:-2s; animation-duration:7s; }
+    .fl-t2 { top:75%; right:20%; animation-delay:-4s; animation-duration:9.5s; }
+    @keyframes logoFloat { 0%,100%{transform:translateY(0px) rotate(0deg);} 25%{transform:translateY(-12px) rotate(2deg);} 75%{transform:translateY(8px) rotate(-2deg);} }
 
-    /* PLATFORMS */
-    .platforms { display: flex; justify-content: center; align-items: center; gap: 24px; flex-wrap: wrap; }
-    .platform-badge { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 25px; padding: 10px 18px; font-size: 13px; color: #aaa; font-weight: 500; }
+    .hero-content { position:relative; z-index:10; max-width:860px; }
+    .hero-eyebrow { display:inline-flex; align-items:center; gap:8px; background:rgba(0,102,255,0.1); border:1px solid rgba(0,102,255,0.3); border-radius:30px; padding:8px 18px; font-size:12px; font-weight:700; color:var(--blue-bright); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:28px; animation:fadeInDown 0.8s ease both; }
+    .pulse-dot { width:7px; height:7px; border-radius:50%; background:var(--blue-bright); animation:pulseDot 2s ease infinite; }
+    @keyframes pulseDot { 0%,100%{box-shadow:0 0 0 0 rgba(77,148,255,0.6);} 50%{box-shadow:0 0 0 6px rgba(77,148,255,0);} }
+    .hero h1 { font-family:var(--font-display); font-size:clamp(46px,7.5vw,86px); font-weight:800; line-height:1.04; letter-spacing:-3px; margin-bottom:10px; animation:fadeInUp 0.9s ease 0.1s both; }
+    .hero h1 .blue { color:var(--blue-bright); }
+    .hero h1 .gold { color:var(--gold); }
+    .hero-tagline { font-size:clamp(14px,2vw,18px); color:var(--text-secondary); margin-bottom:12px; font-weight:500; animation:fadeInUp 0.9s ease 0.2s both; }
+    .hero-tagline strong { color:var(--gold); font-weight:700; }
+    .hero-sub { font-size:17px; color:var(--text-secondary); max-width:540px; line-height:1.75; margin:0 auto 44px; animation:fadeInUp 0.9s ease 0.3s both; }
+    .hero-cta { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:56px; animation:fadeInUp 0.9s ease 0.4s both; }
+    .hero-cta .btn-gold { padding:16px 38px; font-size:15px; border-radius:40px; }
+    .hero-cta .btn-outline { padding:16px 38px; font-size:15px; border-radius:40px; }
+    .trusted-row { display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap; animation:fadeInUp 0.9s ease 0.5s both; }
+    .trusted-label { font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.5px; margin-right:4px; }
+    .trusted-chip { display:flex; align-items:center; gap:6px; padding:7px 13px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:20px; font-size:12px; font-weight:600; color:var(--text-secondary); transition:all 0.3s; }
+    .trusted-chip:hover { border-color:var(--border-blue); color:#fff; }
+    @keyframes fadeInDown { from{opacity:0;transform:translateY(-20px);} to{opacity:1;transform:translateY(0);} }
+    @keyframes fadeInUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
 
-    /* STATS */
-    .stats { display: flex; justify-content: center; gap: 60px; padding: 60px 20px; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap; }
-    .stat { text-align: center; }
-    .stat-number { font-size: 42px; font-weight: 900; background: linear-gradient(135deg, #ff6b35, #f7931e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .stat-label { font-size: 14px; color: #666; margin-top: 4px; }
+    .marquee-wrap { border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:18px 0; overflow:hidden; background:rgba(255,255,255,0.01); position:relative; }
+    .marquee-wrap::before,.marquee-wrap::after { content:''; position:absolute; top:0; bottom:0; width:120px; z-index:2; }
+    .marquee-wrap::before { left:0; background:linear-gradient(90deg,var(--bg-primary),transparent); }
+    .marquee-wrap::after { right:0; background:linear-gradient(-90deg,var(--bg-primary),transparent); }
+    .marquee-track { display:flex; gap:48px; align-items:center; animation:marquee 28s linear infinite; width:max-content; }
+    .marquee-track:hover { animation-play-state:paused; }
+    @keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+    .mq-item { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:600; color:var(--text-muted); white-space:nowrap; }
+    .mq-item span { font-size:18px; }
 
-    /* HOW IT WORKS */
-    .section { padding: 100px 60px; max-width: 1200px; margin: 0 auto; }
-    .section-label { font-size: 13px; font-weight: 700; color: #ff6b35; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; text-align: center; }
-    .section-title { font-size: 42px; font-weight: 800; text-align: center; margin-bottom: 16px; }
-    .section-subtitle { font-size: 17px; color: #777; text-align: center; max-width: 500px; margin: 0 auto 64px; line-height: 1.7; }
+    .stats-bar { display:flex; justify-content:center; border-bottom:1px solid var(--border); }
+    .stat-item { flex:1; min-width:150px; max-width:260px; padding:48px 20px; text-align:center; border-right:1px solid var(--border); transition:background 0.3s; }
+    .stat-item:hover { background:rgba(0,102,255,0.04); }
+    .stat-item:last-child { border-right:none; }
+    .stat-num { font-family:var(--font-display); font-size:48px; font-weight:800; background:linear-gradient(135deg,var(--blue-bright),#fff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; line-height:1; }
+    .stat-num.gold { background:linear-gradient(135deg,var(--gold),#fff9aa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .stat-lbl { font-size:12px; color:var(--text-muted); margin-top:8px; text-transform:uppercase; letter-spacing:1.5px; }
 
-    .steps { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; }
-    .step { flex: 1; min-width: 220px; max-width: 260px; text-align: center; }
-    .step-number { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #ff6b35, #f7931e); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; margin: 0 auto 20px; }
-    .step-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
-    .step-desc { font-size: 14px; color: #777; line-height: 1.7; }
-    .step-arrow { font-size: 24px; color: #333; align-self: center; padding-top: 0; display: flex; align-items: center; }
+    .section { padding:100px 80px; max-width:1280px; margin:0 auto; }
+    .sec-eye { display:inline-block; font-size:11px; font-weight:700; color:var(--blue-bright); text-transform:uppercase; letter-spacing:2.5px; margin-bottom:14px; padding:5px 14px; background:rgba(0,102,255,0.08); border:1px solid var(--border-blue); border-radius:20px; }
+    .sec-title { font-family:var(--font-display); font-size:clamp(32px,4vw,50px); font-weight:800; letter-spacing:-1.5px; margin-bottom:14px; line-height:1.1; }
+    .sec-sub { font-size:16px; color:var(--text-secondary); max-width:480px; line-height:1.75; margin-bottom:56px; }
 
-    /* FEATURES */
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-    .feature-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 32px; transition: all 0.3s; }
-    .feature-card:hover { border-color: rgba(255,107,53,0.3); transform: translateY(-4px); background: rgba(255,107,53,0.04); }
-    .feature-icon { font-size: 36px; margin-bottom: 16px; }
-    .feature-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
-    .feature-desc { font-size: 14px; color: #777; line-height: 1.7; }
+    .steps-grid { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+    .step { padding:36px 28px; border-right:1px solid var(--border); transition:background 0.3s; }
+    .step:last-child { border-right:none; }
+    .step:hover { background:rgba(0,102,255,0.04); }
+    .step-num { font-family:var(--font-display); font-size:11px; font-weight:800; color:var(--blue-bright); text-transform:uppercase; letter-spacing:2px; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+    .step-num::before { content:''; width:24px; height:1px; background:var(--blue); }
+    .step-title { font-size:17px; font-weight:700; margin-bottom:10px; }
+    .step-desc { font-size:13px; color:var(--text-secondary); line-height:1.7; }
 
-    /* WAITLIST */
-    .waitlist-section { background: rgba(255,107,53,0.05); border-top: 1px solid rgba(255,107,53,0.1); border-bottom: 1px solid rgba(255,107,53,0.1); padding: 100px 20px; text-align: center; }
-    .waitlist-section h2 { font-size: 42px; font-weight: 800; margin-bottom: 16px; }
-    .waitlist-section p { font-size: 17px; color: #888; margin-bottom: 40px; }
-    .waitlist-form { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; max-width: 500px; margin: 0 auto; }
-    .waitlist-input { flex: 1; min-width: 250px; padding: 16px 24px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; color: #fff; font-size: 15px; outline: none; transition: border-color 0.3s; }
-    .waitlist-input:focus { border-color: #ff6b35; }
-    .waitlist-input::placeholder { color: #555; }
-    .waitlist-btn { padding: 16px 32px; background: linear-gradient(135deg, #ff6b35, #f7931e); border: none; border-radius: 30px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s; white-space: nowrap; }
-    .waitlist-btn:hover { opacity: 0.9; transform: scale(1.02); }
-    .waitlist-success { display: none; background: rgba(74,222,128,0.1); border: 1px solid #4ade80; border-radius: 12px; padding: 16px 24px; color: #4ade80; font-weight: 600; margin-top: 20px; }
-    .waitlist-count { font-size: 13px; color: #555; margin-top: 16px; }
+    .features-bg { background:rgba(255,255,255,0.015); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+    .feat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+    .feat { background:var(--bg-primary); padding:36px 32px; transition:background 0.3s; position:relative; overflow:hidden; }
+    .feat::before { content:''; position:absolute; width:120px; height:120px; border-radius:50%; background:radial-gradient(circle,rgba(0,102,255,0.08) 0%,transparent 70%); top:-30px; right:-30px; opacity:0; transition:opacity 0.4s; }
+    .feat:hover { background:rgba(0,102,255,0.04); }
+    .feat:hover::before { opacity:1; }
+    .feat-icon { width:48px; height:48px; border-radius:14px; background:rgba(0,102,255,0.1); border:1px solid rgba(0,102,255,0.2); display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:18px; }
+    .feat.gf .feat-icon { background:var(--gold-glow); border-color:rgba(255,215,0,0.2); }
+    .feat-title { font-size:16px; font-weight:700; margin-bottom:10px; }
+    .feat-desc { font-size:13px; color:var(--text-secondary); line-height:1.7; }
+    .feat-unique { display:inline-block; margin-top:12px; font-size:10px; font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:1.5px; }
 
-    /* FOOTER */
-    footer { padding: 40px 60px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
-    .footer-logo { font-size: 18px; font-weight: 800; background: linear-gradient(135deg, #ff6b35, #f7931e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .footer-disclaimer { font-size: 11px; color: #444; max-width: 600px; line-height: 1.6; }
-    .footer-links { display: flex; gap: 24px; }
-    .footer-links a { color: #555; text-decoration: none; font-size: 13px; transition: color 0.2s; }
-    .footer-links a:hover { color: #ff6b35; }
+    .sa-section { padding:80px 80px; background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(0,102,255,0.06) 0%,transparent 70%); border-top:1px solid var(--border); text-align:center; }
+    .sa-badge { display:inline-flex; align-items:center; gap:14px; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px 32px; margin-bottom:28px; }
+    .sa-main { font-family:var(--font-display); font-size:22px; font-weight:800; letter-spacing:-0.5px; }
+    .sa-sub { font-size:13px; color:var(--text-secondary); margin-top:3px; }
+
+    .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:960px; }
+    .price-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:36px 28px; position:relative; transition:all 0.3s; display:flex; flex-direction:column; }
+    .price-card.pro { border-color:var(--blue); box-shadow:0 0 50px rgba(0,102,255,0.15); }
+    .price-card.biz { border-color:rgba(255,215,0,0.25); }
+    .pop-tag { position:absolute; top:-13px; left:50%; transform:translateX(-50%); background:var(--blue); color:#fff; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:4px 16px; border-radius:20px; white-space:nowrap; }
+    .pl-name { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--text-muted); margin-bottom:10px; }
+    .pl-price { font-family:var(--font-display); font-size:54px; font-weight:800; letter-spacing:-2px; line-height:1; }
+    .pl-price sub { font-size:18px; font-weight:500; color:var(--text-secondary); letter-spacing:0; vertical-align:baseline; }
+    .pl-tag { font-size:13px; color:var(--text-secondary); margin:10px 0 24px; padding-bottom:20px; border-bottom:1px solid var(--border); }
+    .pl-feats { list-style:none; flex:1; margin-bottom:24px; }
+    .pl-feats li { display:flex; gap:10px; padding:8px 0; font-size:13px; border-bottom:1px solid rgba(255,255,255,0.03); }
+    .pl-feats li:last-child { border-bottom:none; }
+    .pl-feats li.on { color:var(--text-primary); }
+    .pl-feats li.off { color:var(--text-muted); }
+    .ck { color:var(--blue-bright); font-weight:700; flex-shrink:0; }
+    .ck.gk { color:var(--gold); }
+    .lk { font-size:11px; flex-shrink:0; }
+    .pl-btn { width:100%; justify-content:center; padding:14px; font-size:14px; border-radius:var(--radius); }
+
+    .waitlist-section { padding:100px 20px; text-align:center; background:radial-gradient(ellipse 70% 60% at 50% 100%,rgba(0,102,255,0.08) 0%,transparent 70%); border-top:1px solid var(--border); }
+    .waitlist-section h2 { font-family:var(--font-display); font-size:52px; font-weight:800; letter-spacing:-2px; margin-bottom:12px; }
+    .waitlist-section h2 span { color:var(--blue-bright); }
+    .wl-form { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; max-width:480px; margin:0 auto 16px; }
+    .wl-input { flex:1; min-width:240px; padding:16px 22px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:40px; color:#fff; font-family:var(--font-body); font-size:14px; outline:none; transition:all 0.3s; }
+    .wl-input:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(0,102,255,0.1); }
+    .wl-input::placeholder { color:var(--text-muted); }
+    .wl-success { display:none; background:var(--success-bg); border:1px solid rgba(0,255,136,0.3); border-radius:var(--radius); padding:14px 20px; color:var(--success); font-weight:600; font-size:14px; max-width:400px; margin:0 auto; }
+
+    footer { padding:40px 60px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
+    .ft-disc { font-size:11px; color:var(--text-muted); max-width:560px; line-height:1.7; }
+    .ft-links { display:flex; gap:24px; }
+    .ft-links a { color:var(--text-muted); text-decoration:none; font-size:13px; transition:color 0.2s; }
+    .ft-links a:hover { color:var(--blue-bright); }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="logo">⚡ AdSync Pro</div>
+<nav class="nav" id="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">⚡</div>
+    <span class="nav-logo-text">AdSync <span>Pro</span></span>
+  </a>
   <div class="nav-links">
     <a href="#features">Features</a>
     <a href="#how-it-works">How It Works</a>
-    <a href="#waitlist">Pricing</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="integrations.html">Integrations</a>
   </div>
   <div class="nav-btns">
     <a href="login.html" class="btn-outline">Log In</a>
-    <a href="login.html" class="btn-primary">Get Started Free</a>
+    <a href="login.html" class="btn-gold">Get Started Free</a>
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
-  <div class="hero-badge">🚀 Now in Beta — Join the waitlist</div>
-  <h1>The <span>Smarter Way</span> to Run Ads for Your Store</h1>
-  <p>Create, launch and manage ads across Facebook, Instagram, TikTok and more — all from one powerful dashboard built for African sellers.</p>
-  <div class="hero-btns">
-    <a href="#waitlist" class="hero-btn-primary">🎉 Join the Waitlist</a>
-    <a href="login.html" class="hero-btn-secondary">Try the App →</a>
-  </div>
-  <div class="platforms">
-    <div class="platform-badge">📘 Facebook Ads</div>
-    <div class="platform-badge">📸 Instagram</div>
-    <div class="platform-badge">🎵 TikTok Ads</div>
-    <div class="platform-badge">🛍️ Shopify</div>
-    <div class="platform-badge">🛒 Takealot</div>
-    <div class="platform-badge">💬 WhatsApp</div>
+  <div class="hero-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+  <div class="float-logo fl-fb">📘</div>
+  <div class="float-logo fl-ig">📸</div>
+  <div class="float-logo fl-tt">🎵</div>
+  <div class="float-logo fl-wa">💬</div>
+  <div class="float-logo fl-sh">🛍️</div>
+  <div class="float-logo fl-tak">🛒</div>
+  <div class="float-logo fl-gg">🔍</div>
+  <div class="float-logo fl-t2">📱</div>
+  <div class="hero-content">
+    <div class="hero-eyebrow"><div class="pulse-dot"></div>Now in Beta · Join the Waitlist</div>
+    <h1>Run <span class="blue">Smarter</span> Ads.<br/>Sell <span class="gold">More</span>. Everywhere.</h1>
+    <div class="hero-tagline"><strong>Built for African sellers. Ready for the world.</strong></div>
+    <p class="hero-sub">Create AI-powered ads, launch across Facebook, Instagram & TikTok, and automate WhatsApp — all from one dashboard. Built for Takealot & Shopify sellers.</p>
+    <div class="hero-cta">
+      <a href="#waitlist" class="btn-gold">🚀 Join the Waitlist</a>
+      <a href="login.html" class="btn-outline">Try the App →</a>
+    </div>
+    <div class="trusted-row">
+      <span class="trusted-label">Works with</span>
+      <div class="trusted-chip">📘 Facebook Ads</div>
+      <div class="trusted-chip">📸 Instagram</div>
+      <div class="trusted-chip">🎵 TikTok</div>
+      <div class="trusted-chip">🛒 Takealot</div>
+      <div class="trusted-chip">🛍️ Shopify</div>
+      <div class="trusted-chip">💬 WhatsApp</div>
+    </div>
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats">
-  <div class="stat">
-    <div class="stat-number">3+</div>
-    <div class="stat-label">Ad Platforms</div>
-  </div>
-  <div class="stat">
-    <div class="stat-number">$0</div>
-    <div class="stat-label">To Get Started</div>
-  </div>
-  <div class="stat">
-    <div class="stat-number">30s</div>
-    <div class="stat-label">To Launch a Campaign</div>
-  </div>
-  <div class="stat">
-    <div class="stat-number">24/7</div>
-    <div class="stat-label">Automated Running</div>
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="mq-item"><span>🤖</span>AI Ad Generator</div><div class="mq-item"><span>📢</span>Multi-Platform Launch</div><div class="mq-item"><span>🛒</span>Takealot Store Sync</div><div class="mq-item"><span>💬</span>WhatsApp Automation</div><div class="mq-item"><span>📊</span>Live Analytics</div><div class="mq-item"><span>🎨</span>Ad Templates</div><div class="mq-item"><span>⚡</span>Instant Campaign Launch</div><div class="mq-item"><span>🛍️</span>Shopify Integration</div><div class="mq-item"><span>🔒</span>Secure & Encrypted</div><div class="mq-item"><span>📱</span>Mobile Ready</div>
+    <div class="mq-item"><span>🤖</span>AI Ad Generator</div><div class="mq-item"><span>📢</span>Multi-Platform Launch</div><div class="mq-item"><span>🛒</span>Takealot Store Sync</div><div class="mq-item"><span>💬</span>WhatsApp Automation</div><div class="mq-item"><span>📊</span>Live Analytics</div><div class="mq-item"><span>🎨</span>Ad Templates</div><div class="mq-item"><span>⚡</span>Instant Campaign Launch</div><div class="mq-item"><span>🛍️</span>Shopify Integration</div><div class="mq-item"><span>🔒</span>Secure & Encrypted</div><div class="mq-item"><span>📱</span>Mobile Ready</div>
   </div>
 </div>
 
-<!-- HOW IT WORKS -->
-<div id="how-it-works">
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">6+</div><div class="stat-lbl">Ad Platforms</div></div>
+  <div class="stat-item"><div class="stat-num gold">$0</div><div class="stat-lbl">To Get Started</div></div>
+  <div class="stat-item"><div class="stat-num">30s</div><div class="stat-lbl">To Launch a Campaign</div></div>
+  <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-lbl">Automated Running</div></div>
+  <div class="stat-item"><div class="stat-num gold">98%</div><div class="stat-lbl">WhatsApp Open Rate</div></div>
+</div>
+
+<div id="how-it-works" style="border-bottom:1px solid var(--border);">
   <div class="section">
-    <div class="section-label">How It Works</div>
-    <h2 class="section-title">Launch Ads in 4 Simple Steps</h2>
-    <p class="section-subtitle">No experience needed. AdSync Pro makes advertising simple for every seller.</p>
-    <div class="steps">
-      <div class="step">
-        <div class="step-number">1</div>
-        <div class="step-title">Connect Your Store</div>
-        <div class="step-desc">Link your Shopify or Takealot store in seconds using your API key.</div>
-      </div>
-      <div class="step-arrow">→</div>
-      <div class="step">
-        <div class="step-number">2</div>
-        <div class="step-title">Create a Campaign</div>
-        <div class="step-desc">Pick your product, set your budget, target audience and schedule.</div>
-      </div>
-      <div class="step-arrow">→</div>
-      <div class="step">
-        <div class="step-number">3</div>
-        <div class="step-title">Launch Everywhere</div>
-        <div class="step-desc">AdSync Pro pushes your ad to Facebook, Instagram and TikTok simultaneously.</div>
-      </div>
-      <div class="step-arrow">→</div>
-      <div class="step">
-        <div class="step-number">4</div>
-        <div class="step-title">Track Results</div>
-        <div class="step-desc">See clicks, impressions and sales all in your live dashboard.</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- FEATURES -->
-<div id="features" style="background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.05);">
-  <div class="section">
-    <div class="section-label">Features</div>
-    <h2 class="section-title">Everything You Need to Scale</h2>
-    <p class="section-subtitle">Powerful tools built specifically for e-commerce sellers in Africa and beyond.</p>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">📢</div>
-        <div class="feature-title">Multi-Platform Ads</div>
-        <div class="feature-desc">Launch one campaign across Facebook, Instagram and TikTok simultaneously with a single click.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🛒</div>
-        <div class="feature-title">Store Sync</div>
-        <div class="feature-desc">Connect your Shopify or Takealot store and automatically pull product data for your ads.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">📊</div>
-        <div class="feature-title">Live Analytics</div>
-        <div class="feature-desc">Track impressions, clicks, spend and conversions in real time on your dashboard.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">⏰</div>
-        <div class="feature-title">Campaign Scheduler</div>
-        <div class="feature-desc">Schedule your ads to run at the perfect time and stop automatically when the budget is reached.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">💬</div>
-        <div class="feature-title">WhatsApp Integration</div>
-        <div class="feature-desc">Add WhatsApp click-to-chat buttons to your ads so customers can reach you instantly.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔒</div>
-        <div class="feature-title">Secure & Private</div>
-        <div class="feature-desc">Your API keys and data are encrypted and never shared. You stay in full control at all times.</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- WAITLIST -->
-<div id="waitlist" class="waitlist-section">
-  <h2>Be First When We Launch 🚀</h2>
-  <p>Join hundreds of sellers already on the waitlist. Get early access and 3 months free on Pro.</p>
-  <div class="waitlist-form">
-    <input type="email" class="waitlist-input" id="waitlist-email" placeholder="Enter your email address" />
-    <button class="waitlist-btn" onclick="joinWaitlist()">Join Waitlist →</button>
-  </div>
-  <div class="waitlist-success" id="waitlist-success">
-    🎉 You're on the list! We'll contact you when we launch.
-  </div>
-  <div class="waitlist-count">🔥 Join the growing list of sellers waiting for access</div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">⚡ AdSync Pro</div>
-  <div class="footer-disclaimer">AdSync Pro is an independent tool and is not affiliated with, endorsed by, or sponsored by Takealot, Shopify, Meta, TikTok, Google, or any other platform. All trademarks belong to their respective owners.</div>
-  <div class="footer-links">
-    <a href="login.html">Login</a>
-    <a href="login.html">Sign Up</a>
-    <a href="pricing.html">Pricing</a>
-  </div>
-</footer>
-
-<script>
-  function joinWaitlist() {
-    const email = document.getElementById('waitlist-email').value.trim();
-    if (!email || !email.includes('@')) {
-      alert('Please enter a valid email address!');
-      return;
-    }
-    // Save to localStorage for now
-    const waitlist = JSON.parse(localStorage.getItem('waitlist') || '[]');
-    waitlist.push({ email, date: new Date().toISOString() });
-    localStorage.setItem('waitlist', JSON.stringify(waitlist));
-
-    document.getElementById('waitlist-success').style.display = 'block';
-    document.getElementById('waitlist-email').value = '';
-    document.querySelector('.waitlist-count').textContent = `🔥 ${waitlist.length} seller${waitlist.length > 1 ? 's' : ''} on the waitlist!`;
-  }
-</script>
-</body>
-</html>
+    <div class="sec-eye">How It Works</div>
+    <h2 class="sec-title">Launch Ads in<br/>4 Simple Steps</h2>
+    <p class="sec-sub">No experience needed. AdSync Pro makes advertising simple for every seller.</p>
+    <div class="steps-grid">
+      <div class="step"><div class="step-num">Step 01</div><div class="step-title">Connect Your Store</div><div class="step-desc">Link your Shopify or Takealot store in seconds using your API key. Your products sync 

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Ad Generator — AdSync Pro</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+
+    body { display: flex; min-height: 100vh; }
+
+    /* ── GENERATOR LAYOUT ── */
+    .gen-layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 0;
+      flex: 1;
+    }
+
+    /* ── INPUT PANEL (LEFT) ── */
+    .input-panel {
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      height: calc(100vh - 0px);
+      position: sticky; top: 0;
+      overflow-y: auto;
+    }
+
+    .panel-header {
+      padding: 28px 28px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: 18px; font-weight: 800;
+      margin-bottom: 4px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .panel-title .ai-badge {
+      font-size: 10px; font-weight: 700;
+      background: linear-gradient(135deg, var(--blue), #0044cc);
+      color: #fff; padding: 3px 10px; border-radius: 20px;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .panel-sub { font-size: 13px; color: var(--text-secondary); }
+
+    .panel-body { padding: 24px 28px; flex: 1; display: flex; flex-direction: column; gap: 18px; }
+
+    /* FORM ELEMENTS */
+    .fgroup { display: flex; flex-direction: column; gap: 7px; }
+    .flabel {
+      font-size: 11px; font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase; letter-spacing: 1.5px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .flabel .tip {
+      font-size: 10px; color: var(--text-muted);
+      font-weight: 500; text-transform: none; letter-spacing: 0;
+    }
+    .finput {
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px; color: #fff;
+      font-family: var(--font-body); font-size: 13px;
+      outline: none; transition: all 0.3s; width: 100%;
+    }
+    .finput:focus { border-color: var(--blue); background: rgba(0,102,255,0.06); box-shadow: 0 0 0 3px rgba(0,102,255,0.1); }
+    .finput::placeholder { color: var(--text-muted); }
+    textarea.finput { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+    /* PLATFORM TOGGLES */
+    .platform-toggles { display: flex; gap: 8px; flex-wrap: wrap; }
+    .ptoggle {
+      display: flex; align-items: center; gap: 7px;
+      padding: 8px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 20px; cursor: pointer;
+      font-size: 12px; font-weight: 600;
+      color: var(--text-secondary);
+      transition: all 0.2s; user-select: none;
+    }
+    .ptoggle.selected {
+      background: rgba(0,102,255,0.12);
+      border-color: var(--blue);
+      color: var(--blue-bright);
+    }
+    .ptoggle input { display: none; }
+
+    /* TONE SELECTOR */
+    .tone-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .tone-btn {
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px; cursor: pointer;
+      font-size: 12px; font-weight: 600;
+      color: var(--text-secondary);
+      transition: all 0.2s; text-align: center;
+    }
+    .tone-btn.selected { background: rgba(0,102,255,0.1); border-color: var(--blue); color: var(--blue-bright); }
+
+    /* GENERATE BUTTON */
+    .gen-btn {
+      width: 100%; padding: 16px;
+      background: var(--blue);
+      color: #fff; border: none;
+      border-radius: 12px;
+      font-family: var(--font-body);
+      font-size: 15px; font-weight: 800;
+      cursor: pointer; transition: all 0.3s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      position: relative; overflow: hidden;
+      margin-top: auto;
+    }
+    .gen-btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .gen-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(0,102,255,0.5); }
+    .gen-btn:hover::before { opacity: 1; }
+    .gen-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+    .gen-btn.loading { background: var(--bg-card); border: 1px solid var(--border); }
+
+    /* SPINNER */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── OUTPUT PANEL (RIGHT) ── */
+    .output-panel {
+      flex: 1;
+      padding: 32px 36px;
+      overflow-y: auto;
+      display: flex; flex-direction: column; gap: 24px;
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 60px 20px;
+    }
+    .empty-icon {
+      width: 80px; height: 80px;
+      background: rgba(0,102,255,0.08);
+      border: 1px solid var(--border-blue);
+      border-radius: 24px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; margin: 0 auto 20px;
+      animation: emptyFloat 3s ease-in-out infinite;
+    }
+    @keyframes emptyFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+    .empty-title { font-family: var(--font-display); font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .empty-sub { font-size: 14px; color: var(--text-secondary); max-width: 340px; line-height: 1.7; }
+
+    .hint-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 24px; }
+    .hint-chip {
+      padding: 7px 14px;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; font-size: 12px; color: var(--text-muted);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .hint-chip:hover { border-color: var(--border-blue); color: var(--blue-bright); background: rgba(0,102,255,0.06); }
+
+    /* OUTPUT HEADER */
+    .output-header {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .output-title { font-family: var(--font-display); font-size: 20px; font-weight: 800; }
+    .output-meta { font-size: 13px; color: var(--text-secondary); }
+
+    /* AD CARD */
+    .ad-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: all 0.3s;
+      animation: adCardIn 0.5s ease both;
+    }
+    @keyframes adCardIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .ad-card:nth-child(2) { animation-delay: 0.1s; }
+    .ad-card:nth-child(3) { animation-delay: 0.2s; }
+    .ad-card:hover { border-color: var(--border-blue); box-shadow: var(--shadow-blue); }
+
+    .ad-card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255,255,255,0.02);
+    }
+    .platform-tag {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 700;
+    }
+    .platform-icon { font-size: 20px; }
+
+    .ad-actions { display: flex; gap: 8px; }
+    .ad-action-btn {
+      padding: 6px 14px;
+      border-radius: 20px; border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-secondary);
+      font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      font-family: var(--font-body);
+    }
+    .ad-action-btn:hover { border-color: var(--blue); color: var(--blue-bright); background: rgba(0,102,255,0.08); }
+    .ad-action-btn.copied { border-color: var(--success); color: var(--success); background: var(--success-bg); }
+
+    .ad-card-body { padding: 20px; }
+
+    /* AD SECTIONS */
+    .ad-section { margin-bottom: 16px; }
+    .ad-section:last-child { margin-bottom: 0; }
+    .ad-section-label {
+      font-size: 10px; font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+    .ad-section-content {
+      font-size: 14px; line-height: 1.7;
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px; padding: 12px 14px;
+      cursor: text;
+      /* Make editable */
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .ad-section-content:focus { border-color: var(--border-blue); }
+    .ad-section-content.headline { font-size: 16px; font-weight: 700; }
+    .ad-section-content.cta {
+      color: var(--blue-bright); font-weight: 700;
+      display: inline-block; width: auto;
+    }
+
+    /* HASHTAGS */
+    .hashtag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+    .hashtag {
+      font-size: 12px; font-weight: 600; color: var(--blue-bright);
+      background: rgba(0,102,255,0.08); border: 1px solid var(--border-blue);
+      padding: 3px 10px; border-radius: 12px;
+    }
+
+    /* AD PREVIEW MOCKUP */
+    .ad-preview {
+      margin-top: 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .preview-topbar {
+      background: rgba(255,255,255,0.04);
+      padding: 10px 14px;
+      display: flex; align-items: center; gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .preview-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .preview-name { font-size: 12px; font-weight: 700; }
+    .preview-sponsored { font-size: 10px; color: var(--text-muted); }
+    .preview-body { padding: 12px 14px; font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+    .preview-img {
+      width: 100%; height: 120px;
+      background: linear-gradient(135deg, rgba(0,102,255,0.2), rgba(255,215,0,0.1));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; color: rgba(255,255,255,0.3);
+    }
+    .preview-cta-bar {
+      padding: 10px 14px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .preview-cta-text { font-size: 11px; color: var(--text-muted); }
+    .preview-cta-btn {
+      padding: 6px 16px; background: var(--blue);
+      color: #fff; border-radius: 6px;
+      font-size: 12px; font-weight: 700; border: none;
+    }
+
+    /* LOADING SKELETON */
+    .skeleton {
+      background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+
+    /* CREDITS USED */
+    .credits-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px;
+      background: rgba(255,215,0,0.05);
+      border: 1px solid rgba(255,215,0,0.15);
+      border-radius: 10px;
+      font-size: 12px;
+    }
+    .credits-label { color: var(--gold); font-weight: 600; }
+    .credits-count { color: var(--text-muted); }
+
+    /* MOBILE */
+    @media (max-width: 900px) {
+      .gen-layout { grid-template-columns: 1fr; }
+      .input-panel { height: auto; position: static; }
+      .output-panel { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">⚡</div>
+    <div class="sidebar-logo-text">AdSync <span>Pro</span></div>
+  </div>
+  <nav>
+    <div class="nav-section-label">Main</div>
+    <a class="nav-item" href="dashboard.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item active" href="ai-generator.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+      AI Ad Generator
+    </a>
+    <a class="nav-item" href="create-campaign.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      New Campaign
+    </a>
+    <a class="nav-item" href="integrations.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+      Integrations
+    </a>
+    <div class="nav-section-label" style="margin-top:8px;">Account</div>
+    <a class="nav-item" href="settings.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      Settings
+    </a>
+    <a class="nav-item" href="pricing.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+      Upgrade Plan
+    </a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="user-avatar" id="user-avatar">M</div>
+      <div>
+        <div class="user-name" id="user-name">Loading...</div>
+        <div class="user-plan" id="user-plan">FREE PLAN</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main" style="display:flex;flex-direction:column;">
+
+  <div class="top-bar">
+    <div>
+      <div class="page-title">🤖 AI Ad Generator</div>
+      <div class="page-subtitle">Describe your product — AI writes your ads instantly</div>
+    </div>
+    <div class="badge badge-gold">✦ Pro Feature</div>
+  </div>
+
+  <div class="gen-layout" style="flex:1;">
+
+    <!-- INPUT PANEL -->
+    <div class="input-panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          Product Details
+          <span class="ai-badge">AI Powered</span>
+        </div>
+        <div class="panel-sub">Fill in the details and let AI do the rest</div>
+      </div>
+
+      <div class="panel-body">
+
+        <!-- PRODUCT NAME -->
+        <div class="fgroup">
+          <label class="flabel">Product Name</label>
+          <input type="text" class="finput" id="productName" placeholder="e.g. Nike Air Max 270 Sneakers"/>
+        </div>
+
+        <!-- PRODUCT DESCRIPTION -->
+        <div class="fgroup">
+          <label class="flabel">
+            What makes it great?
+            <span class="tip">— be specific for better ads</span>
+          </label>
+          <textarea class="finput" id="productDesc" placeholder="e.g. Lightweight running shoes with Air cushioning, perfect for gym and everyday wear. Available in 5 colours. Genuine Nike, fast delivery."></textarea>
+        </div>
+
+        <!-- PRICE -->
+        <div class="fgroup">
+          <label class="flabel">Price</label>
+          <input type="text" class="finput" id="productPrice" placeholder="e.g. R899 or $49"/>
+        </div>
+
+        <!-- TARGET AUDIENCE -->
+        <div class="fgroup">
+          <label class="flabel">Target Audience <span class="tip">— who should see this ad?</span></label>
+          <input type="text" class="finput" id="targetAudience" placeholder="e.g. Men 18–35 who love gym & streetwear"/>
+        </div>
+
+        <!-- PLATFORMS -->
+        <div class="fgroup">
+          <label class="flabel">Generate Ads For</label>
+          <div class="platform-toggles">
+            <label class="ptoggle selected" id="pt-fb">
+              <input type="checkbox" checked onchange="togglePlatform('fb', this)"/>
+              📘 Facebook
+            </label>
+            <label class="ptoggle selected" id="pt-ig">
+              <input type="checkbox" checked onchange="togglePlatform('ig', this)"/>
+              📸 Instagram
+            </label>
+            <label class="ptoggle selected" id="pt-tt">
+              <input type="checkbox" checked onchange="togglePlatform('tt', this)"/>
+              🎵 TikTok
+            </label>
+            <label class="ptoggle" id="pt-wa">
+              <input type="checkbox" onchange="togglePlatform('wa', this)"/>
+              💬 WhatsApp
+            </label>
+          </div>
+        </div>
+
+        <!-- TONE -->
+        <div class="fgroup">
+          <label class="flabel">Ad Tone</label>
+          <div class="tone-grid">
+            <div class="tone-btn selected" onclick="selectTone(this, 'energetic')">⚡ Energetic</div>
+            <div class="tone-btn" onclick="selectTone(this, 'professional')">💼 Professional</div>
+            <div class="tone-btn" onclick="selectTone(this, 'funny')">😂 Funny</div>
+            <div class="tone-btn" onclick="selectTone(this, 'luxury')">✨ Luxury</div>
+            <div class="tone-btn" onclick="selectTone(this, 'urgent')">🔥 Urgent</div>
+            <div class="tone-btn" onclick="selectTone(this, 'friendly')">😊 Friendly</div>
+          </div>
+        </div>
+
+        <!-- SPECIAL OFFER -->
+        <div class="fgroup">
+          <label class="flabel">Special Offer <span class="tip">— optional</span></label>
+          <input type="text" class="finput" id="specialOffer" placeholder="e.g. Free delivery this weekend only!"/>
+        </div>
+
+        <!-- GENERATE BUTTON -->
+        <button class="gen-btn" id="gen-btn" onclick="generateAds()">
+          <span id="gen-btn-icon">✨</span>
+          <span id="gen-btn-text">Generate My Ads</span>
+        </button>
+
+        <!-- PRO LOCK NOTE -->
+        <div id="pro-lock" style="display:none;text-align:center;">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">AI Generator is a Pro feature</div>
+          <a href="pricing.html" class="btn-gold" style="width:100%;justify-content:center;border-radius:12px;padding:12px;">Upgrade to Pro →</a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- OUTPUT PANEL -->
+    <div class="output-panel" id="output-panel">
+
+      <!-- EMPTY STATE (default) -->
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">🤖</div>
+        <div class="empty-title">Your ads will appear here</div>
+        <div class="empty-sub">Fill in your product details on the left and hit Generate. AI will write platform-specific ads in seconds.</div>
+        <div class="hint-row">
+          <div class="hint-chip" onclick="fillExample('sneakers')">👟 Sneakers example</div>

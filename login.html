@@ -3,442 +3,299 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AdSync Pro — Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <title>Login — AdSync Pro</title>
+  <link rel="stylesheet" href="styles.css"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #0a0a0f;
-      --card: #13131a;
-      --border: #2a2a3a;
-      --accent: #ff6b35;
-      --accent2: #ffb347;
-      --text: #f0f0f5;
-      --muted: #7070a0;
-      --success: #4ade80;
-      --error: #f87171;
-    }
 
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      padding: 20px;
+      background:
+        radial-gradient(ellipse 120% 80% at 50% -10%, rgba(0,102,255,0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 90% 90%, rgba(0,60,180,0.2) 0%, transparent 60%),
+        linear-gradient(160deg, #0a0e1a 0%, #0d1525 40%, #080d1c 100%);
     }
 
-    /* Animated background blobs */
-    .bg-blob {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.15;
-      animation: float 8s ease-in-out infinite;
+    .bg-orb {
+      position: fixed; border-radius: 50%;
+      pointer-events: none; filter: blur(100px); z-index: 0;
+      animation: bgOrb 12s ease-in-out infinite;
+    }
+    .bg-orb-1 { width:600px; height:600px; background:rgba(0,102,255,0.15); top:-200px; left:-200px; }
+    .bg-orb-2 { width:400px; height:400px; background:rgba(0,40,160,0.2); bottom:-100px; right:-100px; animation-delay:-6s; }
+    @keyframes bgOrb { 0%,100%{transform:translate(0,0);} 50%{transform:translate(40px,-30px);} }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(0,102,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,102,255,0.06) 1px, transparent 1px);
+      background-size: 50px 50px;
+      mask-image: radial-gradient(ellipse at 50% 0%, black 20%, transparent 70%);
       pointer-events: none;
     }
-    .blob1 { width: 500px; height: 500px; background: var(--accent); top: -100px; left: -100px; animation-delay: 0s; }
-    .blob2 { width: 400px; height: 400px; background: #6c63ff; bottom: -100px; right: -100px; animation-delay: 3s; }
-    .blob3 { width: 300px; height: 300px; background: var(--accent2); top: 50%; left: 50%; animation-delay: 1.5s; }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) scale(1); }
-      50% { transform: translateY(-30px) scale(1.05); }
+    /* WRAPPER */
+    .login-wrapper {
+      width: 100%; max-width: 460px;
+      display: flex; flex-direction: column; align-items: center;
+      position: relative; z-index: 10;
     }
 
-    .container {
-      display: flex;
+    /* CARD */
+    .login-card {
       width: 100%;
-      max-width: 1000px;
-      min-height: 580px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: 24px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: 0 40px 100px rgba(0,0,0,0.6);
-      position: relative;
-      z-index: 1;
-      animation: slideUp 0.6s ease both;
+      padding: 40px 36px;
+      backdrop-filter: blur(20px);
+      box-shadow:
+        0 0 0 1px rgba(0,102,255,0.15),
+        0 32px 80px rgba(0,0,0,0.5),
+        0 0 100px rgba(0,102,255,0.08);
     }
 
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* LOGO */
+    .logo-row {
+      display: flex; align-items: center; gap: 10px;
+      justify-content: center; margin-bottom: 28px;
+    }
+    .logo-icon {
+      width: 38px; height: 38px; background: var(--blue);
+      border-radius: 11px; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; box-shadow: 0 0 24px rgba(0,102,255,0.6);
+    }
+    .logo-text { font-family: var(--font-display); font-size: 22px; font-weight: 800; }
+    .logo-text span { color: var(--gold); }
+
+    /* HEADING */
+    .card-title { font-family:var(--font-display); font-size:26px; font-weight:800; text-align:center; margin-bottom:6px; letter-spacing:-0.5px; }
+    .card-sub { font-size:14px; color:rgba(255,255,255,0.4); text-align:center; margin-bottom:28px; }
+
+    /* FORM */
+    .form-group { margin-bottom: 16px; }
+    .flabel { display:block; font-size:11px; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
+    .label-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+    .forgot-link { font-size:12px; color:var(--blue-bright); text-decoration:none; font-weight:600; transition:opacity 0.2s; }
+    .forgot-link:hover { opacity:0.75; }
+    .input-wrap { position:relative; }
+    .input-icon { position:absolute; left:16px; top:50%; transform:translateY(-50%); font-size:16px; pointer-events:none; opacity:0.45; }
+    .field {
+      width:100%; padding:14px 16px 14px 46px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:12px; color:#fff;
+      font-family:var(--font-body); font-size:14px;
+      outline:none; transition:all 0.3s;
+    }
+    .field:focus { border-color:var(--blue); background:rgba(0,102,255,0.08); box-shadow:0 0 0 3px rgba(0,102,255,0.15); }
+    .field::placeholder { color:rgba(255,255,255,0.2); }
+
+    /* BUTTON */
+    .btn-submit {
+      width:100%; padding:15px;
+      background:var(--blue); color:#fff; border:none;
+      border-radius:12px; font-family:var(--font-body);
+      font-size:15px; font-weight:700;
+      cursor:pointer; transition:all 0.3s; margin-top:4px;
+      position:relative; overflow:hidden;
+    }
+    .btn-submit::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent); opacity:0; transition:opacity 0.3s; }
+    .btn-submit:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(0,102,255,0.45); }
+    .btn-submit:hover::before { opacity:1; }
+    .btn-submit:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+
+    /* DIVIDER */
+    .divider { display:flex; align-items:center; gap:12px; margin:20px 0; font-size:12px; color:rgba(255,255,255,0.2); }
+    .divider::before,.divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.08); }
+
+    /* REGISTER LINK */
+    .register-row { text-align:center; font-size:14px; color:rgba(255,255,255,0.4); margin-top:18px; }
+    .register-row a { color:var(--blue-bright); font-weight:700; text-decoration:none; }
+    .register-row a:hover { text-decoration:underline; }
+
+    /* ALERTS */
+    .alert { padding:12px 16px; border-radius:10px; font-size:13px; margin-bottom:14px; display:none; }
+    .alert-error { background:rgba(255,68,102,0.1); border:1px solid rgba(255,68,102,0.3); color:#ff7090; }
+    .alert-success { background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.3); color:#00ff88; }
+
+    /* FEATURE CHIPS — always shown below card */
+    .feature-chips { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:20px; }
+    .chip {
+      display:flex; align-items:center; gap:6px;
+      padding:7px 13px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px; font-size:12px; font-weight:600; color:rgba(255,255,255,0.35);
     }
 
-    /* Left panel */
-    .left-panel {
-      flex: 1;
-      background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 40%, #ffb347 100%);
-      padding: 50px 40px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
+    /* DESKTOP — show left panel alongside card */
+    @media (min-width: 900px) {
+      .login-wrapper {
+        flex-direction: row;
+        max-width: 960px;
+        gap: 60px;
+        align-items: center;
+      }
+      .left-side {
+        flex: 1; z-index: 10;
+        display: flex; flex-direction: column;
+      }
+      .right-side { width: 460px; flex-shrink: 0; }
+      .logo-row { justify-content: flex-start; }
+      .card-title { text-align: left; }
+      .card-sub { text-align: left; }
+      .feature-chips { display: none; }
     }
 
-    .left-panel::before {
-      content: '';
-      position: absolute;
-      width: 300px; height: 300px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.1);
-      top: -80px; right: -80px;
+    /* MOBILE */
+    @media (max-width: 899px) {
+      .left-side { display: none; }
+      .right-side { width: 100%; }
+      .login-card { padding: 32px 24px; }
     }
 
-    .left-panel::after {
-      content: '';
-      position: absolute;
-      width: 200px; height: 200px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.08);
-      bottom: -50px; left: -50px;
-    }
-
-    .brand {
-      position: relative; z-index: 1;
-    }
-
-    .brand-logo {
-      font-family: 'Syne', sans-serif;
-      font-size: 28px;
-      font-weight: 800;
-      color: white;
-      letter-spacing: -1px;
-    }
-
-    .brand-logo span {
-      color: rgba(255,255,255,0.6);
-      font-weight: 400;
-    }
-
-    .brand-tagline {
-      font-size: 13px;
-      color: rgba(255,255,255,0.75);
-      margin-top: 8px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .left-content { position: relative; z-index: 1; }
-
-    .left-content h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: 36px;
-      font-weight: 800;
-      color: white;
-      line-height: 1.2;
-      margin-bottom: 20px;
-    }
-
-    .left-content p {
-      color: rgba(255,255,255,0.8);
-      font-size: 15px;
-      line-height: 1.7;
-    }
-
-    .features {
-      margin-top: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      position: relative; z-index: 1;
-    }
-
-    .feature {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: rgba(255,255,255,0.9);
-      font-size: 14px;
-    }
-
-    .feature-dot {
-      width: 8px; height: 8px;
-      background: white;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    /* Right panel */
-    .right-panel {
-      flex: 1;
-      background: var(--card);
-      padding: 50px 45px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .form-header { margin-bottom: 35px; }
-
-    .form-header h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: 30px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .form-header p {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--muted);
-      margin-bottom: 8px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px 16px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      transition: all 0.2s;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
-    }
-
-    input::placeholder { color: var(--muted); }
-
-    .btn {
-      width: 100%;
-      padding: 15px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-family: 'Syne', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,107,53,0.4); }
-    .btn:active { transform: translateY(0); }
-
-    .btn.loading { opacity: 0.8; cursor: not-allowed; }
-
-    .divider {
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-      margin: 20px 0;
-      position: relative;
-    }
-
-    .divider::before, .divider::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      width: 40%;
-      height: 1px;
-      background: var(--border);
-    }
-    .divider::before { left: 0; }
-    .divider::after { right: 0; }
-
-    .switch-link {
-      text-align: center;
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .switch-link a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .switch-link a:hover { text-decoration: underline; }
-
-    .message {
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 14px;
-      margin-bottom: 20px;
-      display: none;
-    }
-
-    .message.error { background: rgba(248,113,113,0.1); border: 1px solid var(--error); color: var(--error); display: block; }
-    .message.success { background: rgba(74,222,128,0.1); border: 1px solid var(--success); color: var(--success); display: block; }
-
-    @media (max-width: 700px) {
-      .left-panel { display: none; }
-      .container { max-width: 420px; }
-    }
+    /* LEFT SIDE STYLES */
+    .left-tagline { font-family:var(--font-display); font-size:42px; font-weight:800; line-height:1.1; letter-spacing:-1.5px; margin-bottom:16px; }
+    .left-tagline .blue { color:var(--blue-bright); }
+    .left-tagline .gold { color:var(--gold); }
+    .left-desc { font-size:15px; color:rgba(255,255,255,0.4); line-height:1.75; margin-bottom:32px; max-width:360px; }
+    .feat-row { display:flex; flex-direction:column; gap:12px; }
+    .feat-item { display:flex; align-items:center; gap:12px; font-size:13px; color:rgba(255,255,255,0.5); }
+    .feat-item-icon { width:34px; height:34px; flex-shrink:0; background:rgba(0,102,255,0.1); border:1px solid rgba(0,102,255,0.25); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:15px; }
   </style>
 </head>
 <body>
 
-  <div class="bg-blob blob1"></div>
-  <div class="bg-blob blob2"></div>
-  <div class="bg-blob blob3"></div>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
 
-  <div class="container">
-    <!-- Left Panel -->
-    <div class="left-panel">
-      <div class="brand">
-        <div class="brand-logo">AdSync<span>Pro</span></div>
-        <div class="brand-tagline">Advertise Smarter. Sell More.</div>
-      </div>
+<div class="login-wrapper">
 
-      <div class="left-content">
-        <h2>One platform. Every marketplace.</h2>
-        <p>Run ads on Facebook, Instagram, TikTok and more — while connecting directly to your Takealot, Shopify, or Amazon store.</p>
-        <div class="features">
-          <div class="feature"><div class="feature-dot"></div>Post to all social platforms at once</div>
-          <div class="feature"><div class="feature-dot"></div>Takealot seller integration (SA exclusive)</div>
-          <div class="feature"><div class="feature-dot"></div>Schedule ads in any timezone</div>
-          <div class="feature"><div class="feature-dot"></div>Target by country, age & gender</div>
-        </div>
-      </div>
-
-      <div style="color: rgba(255,255,255,0.5); font-size: 12px; position: relative; z-index:1;">
-        © 2026 AdSync Pro. All rights reserved.
-      </div>
+  <!-- LEFT SIDE (desktop only) -->
+  <div class="left-side">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:44px;">
+      <div class="logo-icon">⚡</div>
+      <span style="font-family:var(--font-display);font-size:20px;font-weight:800;">AdSync <span style="color:var(--gold)">Pro</span></span>
     </div>
-
-    <!-- Right Panel -->
-    <div class="right-panel">
-      <div class="form-header">
-        <h1 id="form-title">Welcome back</h1>
-        <p id="form-subtitle">Sign in to your AdSync Pro account</p>
-      </div>
-
-      <div id="message" class="message"></div>
-
-      <form id="auth-form">
-        <div id="name-fields" style="display:none">
-          <div class="form-group">
-            <label>First Name</label>
-            <input type="text" id="firstName" placeholder="Molefe" />
-          </div>
-          <div class="form-group">
-            <label>Last Name</label>
-            <input type="text" id="lastName" placeholder="Maphala" />
-          </div>
-          <div class="form-group">
-            <label>Business Name</label>
-            <input type="text" id="businessName" placeholder="KhweziMart" />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" id="email" placeholder="you@example.com" />
-        </div>
-
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="password" placeholder="••••••••" />
-        </div>
-        <div style="text-align:right; margin-top:-10px; margin-bottom:16px;">
-  <a href="forgot-password.html" style="font-size:13px; color:#ff6b35; text-decoration:none;">Forgot password?</a>
-</div>
-
-        <button type="submit" class="btn" id="submit-btn">Sign In</button>
-      </form>
-
-      <div class="divider">or</div>
-
-      <div class="switch-link">
-        <span id="switch-text">Don't have an account?</span>
-        <a href="#" id="switch-btn" onclick="toggleMode()"> Sign up free</a>
-      </div>
+    <div class="left-tagline">
+      Run <span class="blue">Smarter</span><br/>Ads. Sell<br/><span class="gold">More</span>. Everywhere.
+    </div>
+    <div class="left-desc">
+      AI ad generation, multi-platform launching and WhatsApp automation — built for African sellers, ready for the world.
+    </div>
+    <div class="feat-row">
+      <div class="feat-item"><div class="feat-item-icon">🤖</div> AI-powered ad copy in seconds</div>
+      <div class="feat-item"><div class="feat-item-icon">📢</div> Launch on Facebook, TikTok & Instagram</div>
+      <div class="feat-item"><div class="feat-item-icon">🛒</div> Sync with Takealot & Shopify stores</div>
+      <div class="feat-item"><div class="feat-item-icon">💬</div> WhatsApp automation — 98% open rates</div>
     </div>
   </div>
 
-  <script>
-    const API = 'https://adsync-pro-backend-production.up.railway.app/api';
-    let isLogin = true;
+  <!-- RIGHT SIDE -->
+  <div class="right-side">
+    <div class="login-card">
+      <div class="logo-row">
+        <div class="logo-icon">⚡</div>
+        <span class="logo-text">AdSync <span>Pro</span></span>
+      </div>
 
-    function toggleMode() {
-      isLogin = !isLogin;
-      document.getElementById('form-title').textContent = isLogin ? 'Welcome back' : 'Create account';
-      document.getElementById('form-subtitle').textContent = isLogin ? 'Sign in to your AdSync Pro account' : 'Start advertising smarter today';
-      document.getElementById('name-fields').style.display = isLogin ? 'none' : 'block';
-      document.getElementById('submit-btn').textContent = isLogin ? 'Sign In' : 'Create Account';
-      document.getElementById('switch-text').textContent = isLogin ? "Don't have an account?" : 'Already have an account?';
-      document.getElementById('switch-btn').textContent = isLogin ? ' Sign up free' : ' Sign in';
-      document.getElementById('message').className = 'message';
+      <div class="card-title">Welcome back</div>
+      <div class="card-sub">Sign in to your account to continue</div>
+
+      <div class="alert alert-error" id="error-msg"></div>
+      <div class="alert alert-success" id="success-msg"></div>
+
+      <div class="form-group">
+        <label class="flabel">Email Address</label>
+        <div class="input-wrap">
+          <span class="input-icon">✉️</span>
+          <input type="email" class="field" id="email" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="label-row">
+          <label class="flabel" style="margin:0;">Password</label>
+          <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
+        </div>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" class="field" id="password" placeholder="Enter your password" autocomplete="current-password"/>
+        </div>
+      </div>
+
+      <button class="btn-submit" id="login-btn" onclick="handleLogin()">Sign In →</button>
+
+      <div class="divider">or</div>
+
+      <div class="register-row">
+        Don't have an account? <a href="register.html">Create one free</a>
+      </div>
+    </div>
+
+    <!-- Feature chips — mobile only -->
+    <div class="feature-chips">
+      <div class="chip">🤖 AI Ads</div>
+      <div class="chip">🛒 Takealot</div>
+      <div class="chip">🛍️ Shopify</div>
+      <div class="chip">💬 WhatsApp</div>
+      <div class="chip">📊 Analytics</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const API = 'https://adsync-pro-backend-production.up.railway.app';
+  if (localStorage.getItem('token')) window.location.href = 'dashboard.html';
+
+  async function handleLogin() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btn = document.getElementById('login-btn');
+    const err = document.getElementById('error-msg');
+    const suc = document.getElementById('success-msg');
+
+    err.style.display = 'none';
+    suc.style.display = 'none';
+
+    if (!email || !password) {
+      err.textContent = 'Please fill in all fields.';
+      err.style.display = 'block';
+      return;
     }
 
-    function showMessage(text, type) {
-      const msg = document.getElementById('message');
-      msg.textContent = text;
-      msg.className = 'message ' + type;
+    btn.textContent = 'Signing in...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(`${API}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Login failed');
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      suc.textContent = '✅ Login successful! Redirecting...';
+      suc.style.display = 'block';
+      setTimeout(() => window.location.href = 'dashboard.html', 1000);
+    } catch (e) {
+      err.textContent = e.message;
+      err.style.display = 'block';
+      btn.textContent = 'Sign In →';
+      btn.disabled = false;
     }
+  }
 
-    document.getElementById('auth-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('submit-btn');
-      btn.classList.add('loading');
-      btn.textContent = isLogin ? 'Signing in...' : 'Creating account...';
-
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      try {
-        let body = { email, password };
-        let url = API + '/auth/login';
-
-        if (!isLogin) {
-          body.firstName = document.getElementById('firstName').value;
-          body.lastName = document.getElementById('lastName').value;
-          body.businessName = document.getElementById('businessName').value;
-          url = API + '/auth/register';
-        }
-
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-
-        const data = await res.json();
-
-        if (data.success) {
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('user', JSON.stringify(data.user));
-          showMessage('Success! Redirecting...', 'success');
-          setTimeout(() => window.location.href = 'dashboard.html', 1000);
-        } else {
-          showMessage(data.message || 'Something went wrong.', 'error');
-          btn.classList.remove('loading');
-          btn.textContent = isLogin ? 'Sign In' : 'Create Account';
-        }
-      } catch (err) {
-        showMessage('Cannot connect to server. Is it running?', 'error');
-        btn.classList.remove('loading');
-        btn.textContent = isLogin ? 'Sign In' : 'Create Account';
-      }
-    });
-  </script>
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+</script>
 </body>
 </html>

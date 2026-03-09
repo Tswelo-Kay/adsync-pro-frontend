@@ -3,291 +3,286 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Integrations - AdSync Pro</title>
+  <title>Integrations — AdSync Pro</title>
+  <link rel="stylesheet" href="styles.css"/>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #fff; display: flex; min-height: 100vh; }
+    body { display: flex; }
 
-    /* SIDEBAR */
-    .sidebar { width: 240px; background: rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; padding: 24px 0; position: fixed; height: 100vh; }
-    .sidebar-logo { font-size: 20px; font-weight: 800; padding: 0 24px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); background: linear-gradient(135deg, #ff6b35, #f7931e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    nav { flex: 1; padding: 16px 0; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: #888; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.2s; cursor: pointer; }
-    .nav-item:hover, .nav-item.active { color: #fff; background: rgba(255,107,53,0.1); border-right: 3px solid #ff6b35; }
-    .sidebar-bottom { padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.08); }
-    .user-info { display: flex; align-items: center; gap: 10px; }
-    .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #ff6b35, #f7931e); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
-    .user-name { font-size: 13px; font-weight: 600; }
-    .user-plan { font-size: 11px; color: #ff6b35; text-transform: uppercase; }
+    .int-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex; flex-direction: column; gap: 16px;
+      transition: all 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .int-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--blue), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .int-card:hover { border-color: var(--border-blue); transform: translateY(-3px); box-shadow: var(--shadow-blue); }
+    .int-card:hover::before { opacity: 1; }
+    .int-card.available { border-color: rgba(0,255,136,0.15); }
+    .int-card.available:hover { border-color: rgba(0,255,136,0.4); box-shadow: 0 0 30px rgba(0,255,136,0.08); }
+    .int-card.coming { opacity: 0.7; }
+    .int-card.coming:hover { opacity: 1; border-color: var(--border); box-shadow: none; transform: none; }
 
-    /* MAIN */
-    .main { margin-left: 240px; flex: 1; padding: 40px; }
-    .page-header { margin-bottom: 40px; }
-    .page-header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
-    .page-header p { color: #888; font-size: 15px; }
+    .card-top { display: flex; align-items: center; justify-content: space-between; }
+    .int-logo {
+      width: 50px; height: 50px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; flex-shrink: 0;
+    }
+    .int-name { font-size: 16px; font-weight: 700; margin-top: 4px; }
+    .int-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; flex: 1; }
 
-    /* SECTION */
-    .section { margin-bottom: 48px; }
-    .section-title { font-size: 13px; font-weight: 700; color: #ff6b35; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .connect-btn {
+      width: 100%; padding: 11px;
+      border-radius: var(--radius-sm); font-size: 13px; font-weight: 700;
+      cursor: pointer; border: none; transition: all 0.3s; font-family: var(--font-body);
+    }
+    .connect-btn.avail { background: var(--blue); color: #fff; }
+    .connect-btn.avail:hover { box-shadow: 0 6px 20px rgba(0,102,255,0.4); transform: translateY(-1px); }
+    .connect-btn.soon { background: rgba(255,255,255,0.04); color: var(--text-muted); cursor: not-allowed; border: 1px solid var(--border); }
+    .connect-btn.connected { background: var(--success-bg); color: var(--success); border: 1px solid rgba(0,255,136,0.3); cursor: default; }
 
-    /* INTEGRATION CARDS GRID */
-    .integrations-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-
-    .integration-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 16px; transition: all 0.3s; }
-    .integration-card:hover { border-color: rgba(255,107,53,0.3); transform: translateY(-4px); }
-    .integration-card.available { border-color: rgba(74,222,128,0.2); }
-
-    .card-header { display: flex; align-items: center; justify-content: space-between; }
-    .card-logo { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-    .status-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; }
-    .status-badge.available { background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
-    .status-badge.coming-soon { background: rgba(255,255,255,0.05); color: #666; border: 1px solid rgba(255,255,255,0.1); }
-    .status-badge.connected { background: rgba(74,222,128,0.2); color: #4ade80; border: 1px solid #4ade80; }
-
-    .card-name { font-size: 17px; font-weight: 700; }
-    .card-desc { font-size: 13px; color: #777; line-height: 1.6; }
-
-    .connect-btn { width: 100%; padding: 11px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.3s; }
-    .connect-btn.available { background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; }
-    .connect-btn.available:hover { opacity: 0.9; transform: scale(1.02); }
-    .connect-btn.coming-soon { background: rgba(255,255,255,0.05); color: #555; cursor: not-allowed; }
-    .connect-btn.connected { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid #4ade80; cursor: default; }
-
-    /* INFO BANNER */
-    .info-banner { background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 32px; display: flex; align-items: center; gap: 12px; font-size: 14px; color: #ccc; }
+    .section-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 18px; margin-top: 36px;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    }
+    .section-header:first-of-type { margin-top: 0; }
+    .section-header-label { font-size: 11px; font-weight: 700; color: var(--blue-bright); text-transform: uppercase; letter-spacing: 2px; }
+    .section-header-line { flex: 1; height: 1px; background: var(--border); }
   </style>
 </head>
 <body>
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
-  <div class="sidebar-logo">⚡ AdSync Pro</div>
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">⚡</div>
+    <div class="sidebar-logo-text">AdSync <span>Pro</span></div>
+  </div>
   <nav>
-    <a class="nav-item" href="dashboard.html"><span style="font-size:18px">📊</span> Dashboard</a>
-    <a class="nav-item" href="create-campaign.html"><span style="font-size:18px">📢</span> Create Campaign</a>
-    <a class="nav-item active" href="integrations.html"><span style="font-size:18px">🔗</span> Integrations</a>
-    <a class="nav-item" href="settings.html"><span style="font-size:18px">⚙️</span> Settings</a>
-    <a class="nav-item" href="pricing.html"><span style="font-size:18px">💰</span> Upgrade Plan</a>
+    <div class="nav-section-label">Main</div>
+    <a class="nav-item" href="dashboard.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" href="create-campaign.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      New Campaign
+    </a>
+    <a class="nav-item active" href="integrations.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+      Integrations
+    </a>
+    <div class="nav-section-label" style="margin-top:8px;">Account</div>
+    <a class="nav-item" href="settings.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      Settings
+    </a>
+    <a class="nav-item" href="pricing.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+      Upgrade Plan
+    </a>
   </nav>
   <div class="sidebar-bottom">
-    <div class="user-info">
+    <div class="user-card">
       <div class="user-avatar" id="user-avatar">M</div>
       <div>
         <div class="user-name" id="user-name">Loading...</div>
-        <div class="user-plan" id="user-plan">Free</div>
+        <div class="user-plan" id="user-plan">FREE PLAN</div>
       </div>
     </div>
   </div>
 </aside>
 
 <!-- MAIN -->
-<main class="main">
-  <div class="page-header">
-    <h1>🔗 Integrations</h1>
-    <p>Connect your stores and ad platforms to supercharge your campaigns</p>
-  </div>
-
-  <div class="info-banner">
-    💡 <span>Connect your store to automatically sync products and create ads. Social media integrations are coming very soon!</span>
-  </div>
-
-  <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:16px 20px; margin-bottom:32px; font-size:12px; color:#555; line-height:1.8;">
-    ⚠️ <strong style="color:#666;">Disclaimer:</strong> AdSync Pro is an independent tool and is not affiliated with, endorsed by, or sponsored by Takealot, Shopify, Meta, TikTok, Google, or any other platform mentioned on this page. All trademarks and brand names belong to their respective owners. AdSync Pro does not sell products, handle payments, or process orders on behalf of any marketplace. Sellers retain full control of their own API keys and account data at all times.
-  </div>
-
-  <!-- STORE PLATFORMS -->
-  <div class="section">
-    <div class="section-title">🛒 Store Platforms</div>
-    <div class="integrations-grid">
-
-      <div class="integration-card available">
-        <div class="card-header">
-          <div class="card-logo" style="background:#96bf48;">🛍️</div>
-          <span class="status-badge available">✓ Available</span>
-        </div>
-        <div class="card-name">Shopify</div>
-        <div class="card-desc">Sync your Shopify products and automatically create ads for your store.</div>
-        <button class="connect-btn available" onclick="connectShopify()">Connect Shopify</button>
-      </div>
-
-      <div class="integration-card">
-        <div class="card-header">
-          <div class="card-logo" style="background:#ff9900;">📦</div>
-          <span class="status-badge coming-soon">Coming Soon</span>
-        </div>
-        <div class="card-name">Amazon</div>
-        <div class="card-desc">Connect your Amazon seller account to promote your listings.</div>
-        <button class="connect-btn coming-soon" disabled>Coming Soon</button>
-      </div>
-
-      <div class="integration-card available">
-        <div class="card-header">
-          <div class="card-logo" style="background:#e31837;">🛒</div>
-          <span class="status-badge available">✓ Available</span>
-        </div>
-        <div class="card-name">Takealot</div>
-        <div class="card-desc">South Africa's #1 marketplace. Sync products, track orders and create ads for your Takealot store.</div>
-        <button class="connect-btn available" onclick="connectTakealot()">Connect Takealot</button>
-      </div>
-      <div class="integration-card">
-        <div class="card-header">
-          <div class="card-logo" style="background:#7f54b3;">🔵</div>
-          <span class="status-badge coming-soon">Coming Soon</span>
-        </div>
-        <div class="card-name">WooCommerce</div>
-        <div class="card-desc">Connect your WordPress WooCommerce store to sync products.</div>
-        <button class="connect-btn coming-soon" disabled>Coming Soon</button>
-      </div>
-
+<div class="main">
+  <div class="top-bar">
+    <div>
+      <div class="page-title">Integrations</div>
+      <div class="page-subtitle">Connect your stores and ad platforms</div>
     </div>
   </div>
 
-  <!-- SOCIAL MEDIA -->
-  <div class="section">
-    <div class="section-title">📱 Social Media Platforms</div>
-    <div class="integrations-grid">
+  <div class="content">
 
-      <div class="integration-card">
-        <div class="card-header">
-          <div class="card-logo" style="background:#1877f2;">📘</div>
-          <span class="status-badge coming-soon">Coming Soon</span>
-        </div>
-        <div class="card-name">Facebook Ads</div>
-        <div class="card-desc">Launch and manage Facebook ad campaigns directly from AdSync Pro.</div>
-        <button class="connect-btn coming-soon" disabled>Coming Soon</button>
-      </div>
-
-      <div class="integration-card">
-        <div class="card-header">
-          <div class="card-logo" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">📸</div>
-          <span class="status-badge coming-soon">Coming Soon</span>
-        </div>
-        <div class="card-name">Instagram Ads</div>
-        <div class="card-desc">Run Instagram photo and video ads to reach your target audience.</div>
-        <button class="connect-btn coming-soon" disabled>Coming Soon</button>
-      </div>
-
-      <div class="integration-card">
-        <div class="card-header">
-          <div class="card-logo" style="background:#000;">🎵</div>
-          <span class="status-badge coming-soon">Coming Soon</span>
-        </div>
-        <div class="card-name">TikTok Ads</div>
-        <div class="card-desc">Create viral TikTok ad campaigns and reach millions of users.</div>
-        <button class="connect-btn coming-soon" disabled>Coming Soon</button>
-      </div>
-
-      <div class="integration-card">
-        <div class="card-header">
-          <div class="card-logo" style="background:#1da1f2;">🐦</div>
-          <span class="status-badge coming-soon">Coming Soon</span>
-        </div>
-        <div class="card-name">Twitter / X Ads</div>
-        <div class="card-desc">Promote your brand with Twitter/X ad campaigns.</div>
-        <button class="connect-btn coming-soon" disabled>Coming Soon</button>
-      </div>
-
+    <div class="alert alert-blue" style="margin-bottom:24px;">
+      💡 Connect your store to automatically sync products. API approvals for social platforms are in progress — coming very soon!
     </div>
-  </div>
 
-  <!-- MESSAGING -->
-  <div class="section">
-    <div class="section-title">💬 Messaging</div>
-    <div class="integrations-grid">
-
-      <div class="integration-card available">
-        <div class="card-header">
-          <div class="card-logo" style="background:#25d366;">💬</div>
-          <span class="status-badge available">✓ Available</span>
-        </div>
-        <div class="card-name">WhatsApp Business</div>
-        <div class="card-desc">Send promotional messages and campaign updates via WhatsApp Business API.</div>
-        <button class="connect-btn available" onclick="connectWhatsApp()">Connect WhatsApp</button>
-      </div>
-
+    <!-- STORE PLATFORMS -->
+    <div class="section-header">
+      <div class="section-header-label">🛒 Store Platforms</div>
+      <div class="section-header-line"></div>
     </div>
-  </div>
-
-  <!-- SEARCH & DISPLAY -->
-  <div class="section">
-    <div class="section-title">🔍 Search & Display Ads</div>
-    <div class="integrations-grid">
-
-      <div class="integration-card">
-        <div class="card-header">
-          <div class="card-logo" style="background:#4285f4;">🔍</div>
-          <span class="status-badge coming-soon">Coming Soon</span>
+    <div class="grid-auto">
+      <div class="int-card available">
+        <div class="card-top">
+          <div class="int-logo" style="background:#96bf4820;">🛍️</div>
+          <span class="badge badge-green">✓ Available</span>
         </div>
-        <div class="card-name">Google Ads</div>
-        <div class="card-desc">Show ads on Google Search when people search for your products.</div>
-        <button class="connect-btn coming-soon" disabled>Coming Soon</button>
+        <div class="int-name">Shopify</div>
+        <div class="int-desc">Sync your Shopify products and automatically create ads for your store.</div>
+        <button class="connect-btn avail" onclick="connectShopify()">Connect Shopify</button>
       </div>
 
-      <div class="integration-card">
-        <div class="card-header">
-          <div class="card-logo" style="background:#34a853;">📺</div>
-          <span class="status-badge coming-soon">Coming Soon</span>
+      <div class="int-card available">
+        <div class="card-top">
+          <div class="int-logo" style="background:#e3183720;">🛒</div>
+          <span class="badge badge-green">✓ Available</span>
         </div>
-        <div class="card-name">Google Display Network</div>
-        <div class="card-desc">Show banner ads across millions of websites, apps, and games.</div>
-        <button class="connect-btn coming-soon" disabled>Coming Soon</button>
+        <div class="int-name">Takealot</div>
+        <div class="int-desc">SA's #1 marketplace. Sync products, track orders and create ads for your Takealot store.</div>
+        <button class="connect-btn avail" onclick="connectTakealot()">Connect Takealot</button>
       </div>
 
-      <div class="integration-card">
-        <div class="card-header">
-          <div class="card-logo" style="background:#ff0000;">▶️</div>
-          <span class="status-badge coming-soon">Coming Soon</span>
+      <div class="int-card coming">
+        <div class="card-top">
+          <div class="int-logo" style="background:#7f54b320;">🔵</div>
+          <span class="badge badge-gray">Coming Soon</span>
         </div>
-        <div class="card-name">YouTube Ads</div>
-        <div class="card-desc">Run video ads before YouTube videos to reach your audience.</div>
-        <button class="connect-btn coming-soon" disabled>Coming Soon</button>
+        <div class="int-name">WooCommerce</div>
+        <div class="int-desc">Connect your WordPress WooCommerce store to sync products.</div>
+        <button class="connect-btn soon" disabled>Coming Soon</button>
       </div>
 
-      <div class="integration-card">
-        <div class="card-header">
-          <div class="card-logo" style="background:#ea4335;">🎮</div>
-          <span class="status-badge coming-soon">Coming Soon</span>
+      <div class="int-card coming">
+        <div class="card-top">
+          <div class="int-logo" style="background:#ff990020;">📦</div>
+          <span class="badge badge-gray">Coming Soon</span>
         </div>
-        <div class="card-name">Google AdMob</div>
-        <div class="card-desc">Place ads inside mobile games and apps to reach active users.</div>
-        <button class="connect-btn coming-soon" disabled>Coming Soon</button>
+        <div class="int-name">Amazon</div>
+        <div class="int-desc">Connect your Amazon seller account to promote your listings.</div>
+        <button class="connect-btn soon" disabled>Coming Soon</button>
       </div>
-
     </div>
-  </div>
 
-</main>
+    <!-- SOCIAL MEDIA -->
+    <div class="section-header">
+      <div class="section-header-label">📱 Social Media Platforms</div>
+      <div class="section-header-line"></div>
+    </div>
+    <div class="grid-auto">
+      <div class="int-card coming">
+        <div class="card-top">
+          <div class="int-logo" style="background:#1877f220;">📘</div>
+          <span class="badge badge-blue">API Pending</span>
+        </div>
+        <div class="int-name">Facebook Ads</div>
+        <div class="int-desc">Launch and manage Facebook ad campaigns directly from AdSync Pro.</div>
+        <button class="connect-btn soon" disabled>Awaiting Meta Approval</button>
+      </div>
+
+      <div class="int-card coming">
+        <div class="card-top">
+          <div class="int-logo" style="background:linear-gradient(45deg,#f0943320,#dc274320);">📸</div>
+          <span class="badge badge-blue">API Pending</span>
+        </div>
+        <div class="int-name">Instagram Ads</div>
+        <div class="int-desc">Run Instagram photo and video ads to reach your target audience.</div>
+        <button class="connect-btn soon" disabled>Awaiting Meta Approval</button>
+      </div>
+
+      <div class="int-card coming">
+        <div class="card-top">
+          <div class="int-logo" style="background:rgba(255,255,255,0.05);">🎵</div>
+          <span class="badge badge-blue">API Pending</span>
+        </div>
+        <div class="int-name">TikTok Ads</div>
+        <div class="int-desc">Create viral TikTok ad campaigns and reach millions of users.</div>
+        <button class="connect-btn soon" disabled>Awaiting TikTok Approval</button>
+      </div>
+
+      <div class="int-card coming">
+        <div class="card-top">
+          <div class="int-logo" style="background:#1da1f220;">🐦</div>
+          <span class="badge badge-gray">Coming Soon</span>
+        </div>
+        <div class="int-name">X (Twitter) Ads</div>
+        <div class="int-desc">Promote your brand with X ad campaigns.</div>
+        <button class="connect-btn soon" disabled>Coming Soon</button>
+      </div>
+    </div>
+
+    <!-- MESSAGING -->
+    <div class="section-header">
+      <div class="section-header-label">💬 Messaging</div>
+      <div class="section-header-line"></div>
+    </div>
+    <div class="grid-auto">
+      <div class="int-card available">
+        <div class="card-top">
+          <div class="int-logo" style="background:#25d36620;">💬</div>
+          <span class="badge badge-green">✓ Available</span>
+        </div>
+        <div class="int-name">WhatsApp Business</div>
+        <div class="int-desc">Send promotional messages, order updates and campaign alerts via WhatsApp Business API.</div>
+        <button class="connect-btn avail" onclick="connectWhatsApp()">Connect WhatsApp</button>
+      </div>
+    </div>
+
+    <!-- SEARCH & DISPLAY -->
+    <div class="section-header">
+      <div class="section-header-label">🔍 Search & Display</div>
+      <div class="section-header-line"></div>
+    </div>
+    <div class="grid-auto">
+      <div class="int-card coming">
+        <div class="card-top">
+          <div class="int-logo" style="background:#4285f420;">🔍</div>
+          <span class="badge badge-gray">Coming Soon</span>
+        </div>
+        <div class="int-name">Google Ads</div>
+        <div class="int-desc">Show ads on Google Search when people search for your products.</div>
+        <button class="connect-btn soon" disabled>Coming Soon</button>
+      </div>
+
+      <div class="int-card coming">
+        <div class="card-top">
+          <div class="int-logo" style="background:#ff000020;">▶️</div>
+          <span class="badge badge-gray">Coming Soon</span>
+        </div>
+        <div class="int-name">YouTube Ads</div>
+        <div class="int-desc">Run video ads before YouTube videos to reach your audience.</div>
+        <button class="connect-btn soon" disabled>Coming Soon</button>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div style="margin-top:36px;padding:14px 18px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius);font-size:11px;color:var(--text-muted);line-height:1.8;">
+      ⚠️ <strong style="color:var(--text-secondary);">Disclaimer:</strong> AdSync Pro is an independent tool not affiliated with, endorsed by, or sponsored by Takealot, Shopify, Meta, TikTok, Google, or any other platform. All trademarks belong to their respective owners. Sellers retain full control of their own API keys and account data at all times.
+    </div>
+
+  </div>
+</div>
 
 <script>
   const token = localStorage.getItem('token');
   const user = JSON.parse(localStorage.getItem('user') || '{}');
-
   if (!token) window.location.href = 'login.html';
-
   if (user.firstName) {
     document.getElementById('user-name').textContent = `${user.firstName} ${user.lastName || ''}`;
     document.getElementById('user-avatar').textContent = user.firstName[0].toUpperCase();
-    document.getElementById('user-plan').textContent = (user.subscriptionPlan || 'free').toUpperCase();
+    document.getElementById('user-plan').textContent = (user.subscriptionPlan || 'free').toUpperCase() + ' PLAN';
   }
 
   function connectShopify() {
     const store = prompt('Enter your Shopify store URL:\n(e.g. my-store.myshopify.com)');
-    if (store) {
-      alert(`✅ Shopify connection for "${store}" will be set up!\n\nFull integration coming very soon.`);
-    }
-  }
-
-  function connectWhatsApp() {
-    const phone = prompt('Enter your WhatsApp Business phone number:\n(e.g. +27 81 234 5678)');
-    if (phone) {
-      alert(`✅ WhatsApp Business connection for "${phone}" will be set up!\n\nFull integration coming very soon.`);
-    }
+    if (store) alert(`✅ Shopify connection for "${store}" will be set up!\n\nFull integration coming very soon.`);
   }
   function connectTakealot() {
-    const sellerId = prompt('Enter your Takealot Seller ID:\n(Found in your Takealot Seller Portal)');
-    if (sellerId) {
-      alert(`✅ Takealot connection for seller "${sellerId}" will be set up!\n\nFull sync integration coming very soon.`);
-    }
+    const id = prompt('Enter your Takealot Seller ID:\n(Found in your Takealot Seller Portal)');
+    if (id) alert(`✅ Takealot connection for seller "${id}" will be set up!\n\nFull sync integration coming very soon.`);
+  }
+  function connectWhatsApp() {
+    const phone = prompt('Enter your WhatsApp Business phone number:\n(e.g. +27 81 234 5678)');
+    if (phone) alert(`✅ WhatsApp Business connection for "${phone}" will be set up!\n\nFull integration coming very soon.`);
   }
 </script>
 </body>
