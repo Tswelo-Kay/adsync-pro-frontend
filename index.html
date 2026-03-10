@@ -269,6 +269,208 @@
   .wl-input { font-size: 12px; }
   
   footer { padding: 20px 16px; }
+ /* ═══════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE (768px and below)
+   ═══════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* NAV */
+  .nav { padding: 16px 20px; }
+  .nav-logo { gap: 6px; }
+  .nav-logo-icon { width: 28px; height: 28px; font-size: 14px; }
+  .nav-logo-text { font-size: 13px; }
+  .nav-btns { gap: 8px; }
+  .nav-btns a { padding: 8px 12px; font-size: 11px; }
+
+  /* HERO SECTION */
+  .hero { 
+    min-height: 70vh; 
+    padding: 0 16px;
+    overflow: hidden;
+  }
+  
+  .hero-content {
+    padding: 0 !important;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  h1 { 
+    font-size: 28px; 
+    line-height: 1.2;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .hero-eyebrow { 
+    font-size: 12px;
+    word-break: break-word;
+  }
+  
+  .hero-tagline { 
+    font-size: 13px;
+    word-break: break-word;
+    margin: 12px 0;
+  }
+  
+  .hero-sub { 
+    font-size: 12px; 
+    line-height: 1.6;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    margin-bottom: 20px;
+  }
+  
+  /* HIDE DECORATIVE ORBS */
+  .orb-1 { width: 100px; height: 100px; }
+  .orb-2 { width: 70px; height: 70px; }
+  .orb-3 { width: 50px; height: 50px; }
+  .orb-4 { width: 40px; height: 40px; }
+  
+  /* HIDE FLOAT LOGOS */
+  .float-logo { display: none; }
+  
+  /* HERO CTA */
+  .hero-cta { 
+    flex-direction: column; 
+    gap: 10px;
+    width: 100%;
+  }
+  .hero-cta a { 
+    width: 100%; 
+    padding: 12px 16px; 
+    font-size: 13px;
+  }
+  
+  /* TRUSTED ROW */
+  .trusted-row { 
+    flex-wrap: wrap; 
+    gap: 6px; 
+    justify-content: center;
+    word-break: break-word;
+  }
+  .trusted-label { font-size: 11px; }
+  .trusted-chip { 
+    font-size: 10px; 
+    padding: 5px 8px;
+    white-space: nowrap;
+  }
+  
+  /* MARQUEE */
+  .mq-item { 
+    font-size: 11px; 
+    padding: 8px 12px;
+  }
+  
+  /* STATS BAR */
+  .stats-bar { 
+    padding: 20px 16px; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 12px;
+  }
+  .stat-num { font-size: 20px; }
+  .stat-lbl { font-size: 10px; }
+  
+  /* SECTIONS */
+  .section { 
+    padding: 40px 16px;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  h2 { 
+    font-size: 24px;
+    word-break: break-word;
+  }
+  .sec-eye { font-size: 11px; }
+  .sec-sub { 
+    font-size: 12px;
+    word-break: break-word;
+  }
+  
+  /* STEPS GRID */
+  .steps-grid { 
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .step-num { font-size: 11px; }
+  .step-title { font-size: 15px; }
+  .step-desc { 
+    font-size: 12px;
+    word-break: break-word;
+  }
+  
+  /* FEATURES GRID */
+  .features-grid { grid-template-columns: 1fr; }
+  .feat-card { padding: 18px 16px; }
+  .feat-icon { font-size: 24px; }
+  .feat-name { font-size: 13px; }
+  .feat-desc { 
+    font-size: 11px;
+    word-break: break-word;
+  }
+  
+  /* PRICING */
+  .pricing-grid { 
+    grid-template-columns: 1fr; 
+    gap: 12px;
+    max-width: 100%;
+  }
+  .price-card { 
+    padding: 20px 16px;
+    width: 100%;
+  }
+  .pl-price { font-size: 32px; }
+  .pl-price sub { font-size: 12px; }
+  .pl-feats li { font-size: 11px; }
+  .pl-btn { 
+    padding: 11px; 
+    font-size: 12px;
+  }
+  
+  /* WAITLIST SECTION */
+  .waitlist-section { 
+    padding: 50px 16px;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  .waitlist-section h2 { 
+    font-size: 22px;
+    word-break: break-word;
+  }
+  .waitlist-section p { 
+    font-size: 12px;
+    word-break: break-word;
+  }
+  .wl-form { 
+    flex-direction: column; 
+    max-width: 100%;
+    gap: 10px;
+  }
+  .wl-input { 
+    min-width: 100%; 
+    padding: 12px 14px; 
+    font-size: 12px;
+  }
+  .btn-gold { 
+    padding: 11px 14px; 
+    font-size: 12px;
+  }
+  
+  /* FOOTER */
+  footer { 
+    padding: 24px 16px; 
+    flex-direction: column; 
+    text-align: center; 
+    gap: 14px;
+  }
+  .ft-disc { 
+    max-width: 100%; 
+    font-size: 10px;
+    word-break: break-word;
+  }
+  .ft-links { gap: 12px; }
+  .ft-links a { font-size: 11px; }
+} 
   </style>
 </head>
 <body>
@@ -346,4 +548,5 @@
     <h2 class="sec-title">Launch Ads in<br/>4 Simple Steps</h2>
     <p class="sec-sub">No experience needed. AdSync Pro makes advertising simple for every seller.</p>
     <div class="steps-grid">
-      <div class="step"><div class="step-num">Step 01</div><div class="step-title">Connect Your Store</div><div class="step-desc">Link your Shopify or Takealot store in seconds using your API key. Your products sync 
+      <div class="step"><div class="step-num">Step 01</div><div class="step-title">Connect Your Store</div><div class="step-desc">Link your Shopify or Takealot store in seconds using your API key. Your products sync}
+      </style>
