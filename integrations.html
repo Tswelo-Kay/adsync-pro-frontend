@@ -1,328 +1,407 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Integrations — AdSync Pro</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <style>
-    .integrations-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; padding: 32px; }
-    .integration-card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 28px; transition: border-color 0.3s; }
-    .integration-card:hover { border-color: #00C2FF; }
-    .integration-card.connected { border-color: #00FF88; }
-    .integration-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
-    .integration-logo { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-    .integration-logo.shopify { background: #96BF48; }
-    .integration-logo.takealot { background: #0A6EBD; }
-    .integration-logo.meta { background: linear-gradient(135deg, #0668E1, #00C2FF); }
-    .integration-logo.tiktok { background: #000; border: 1px solid #333; }
-    .integration-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: #fff; }
-    .integration-status { font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
-    .status-connected { background: rgba(0,255,136,0.15); color: #00FF88; }
-    .status-disconnected { background: rgba(255,255,255,0.08); color: #888; }
-    .status-coming-soon { background: rgba(255,193,7,0.15); color: #FFC107; }
-    .integration-desc { color: #888; font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
-    .btn-connect { background: linear-gradient(135deg, #00C2FF, #0A6EBD); color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 600; cursor: pointer; width: 100%; transition: opacity 0.2s; }
-    .btn-connect:hover { opacity: 0.9; }
-    .btn-disconnect { background: transparent; color: #ff4d4d; border: 1px solid #ff4d4d; padding: 10px 24px; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.2s; }
-    .btn-disconnect:hover { background: rgba(255,77,77,0.1); }
-    .btn-disabled { background: #222; color: #555; border: none; padding: 10px 24px; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 600; width: 100%; cursor: not-allowed; }
-
-    /* Shop Input Modal */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
-    .modal-overlay.active { display: flex; }
-    .modal { background: #111; border: 1px solid #333; border-radius: 20px; padding: 36px; width: 90%; max-width: 460px; }
-    .modal h3 { font-family: 'Syne', sans-serif; font-size: 22px; color: #fff; margin-bottom: 8px; }
-    .modal p { color: #888; font-size: 14px; margin-bottom: 24px; }
-    .modal input { width: 100%; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; padding: 14px 16px; color: #fff; font-family: 'Space Grotesk', sans-serif; font-size: 15px; outline: none; box-sizing: border-box; }
-    .modal input:focus { border-color: #00C2FF; }
-    .modal-hint { color: #555; font-size: 12px; margin-top: 8px; margin-bottom: 20px; }
-    .modal-actions { display: flex; gap: 12px; }
-    .modal-actions .btn-connect { flex: 1; }
-    .btn-cancel { flex: 1; background: transparent; color: #888; border: 1px solid #333; padding: 10px 24px; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 600; cursor: pointer; }
-
-    /* Store info */
-    .store-info { background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.2); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
-    .store-info p { color: #00FF88; font-size: 13px; margin: 0; }
-    .store-info span { color: #fff; font-weight: 600; }
-
-    /* Analytics mini */
-    .analytics-mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
-    .analytics-mini-item { background: #0a0a0a; border-radius: 8px; padding: 10px; text-align: center; }
-    .analytics-mini-item .value { font-size: 16px; font-weight: 700; color: #00C2FF; font-family: 'Syne', sans-serif; }
-    .analytics-mini-item .label { font-size: 10px; color: #555; margin-top: 2px; }
-
-    .page-header { padding: 32px 32px 0; }
-    .page-header h1 { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: #fff; }
-    .page-header p { color: #888; font-size: 15px; margin-top: 6px; }
-
-    .toast { position: fixed; bottom: 24px; right: 24px; background: #111; border: 1px solid #00FF88; color: #00FF88; padding: 14px 20px; border-radius: 12px; font-family: 'Space Grotesk', sans-serif; font-size: 14px; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
-    .toast.show { transform: translateY(0); opacity: 1; }
-    .toast.error { border-color: #ff4d4d; color: #ff4d4d; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Integrations — AdSync Pro</title>
+<link rel="stylesheet" href="styles.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+.integrations-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px;padding:32px}
+.integration-card{background:#111;border:1px solid #222;border-radius:16px;padding:28px;transition:border-color 0.3s}
+.integration-card:hover{border-color:#00C2FF}
+.integration-card.connected{border-color:#00FF88}
+.integration-card.error{border-color:#ff4d4d}
+.integration-header{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.integration-logo{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.integration-logo.shopify{background:#96BF48}
+.integration-logo.takealot{background:#0A6EBD}
+.integration-logo.meta{background:linear-gradient(135deg,#0668E1,#00C2FF)}
+.integration-logo.tiktok{background:#000;border:1px solid #333}
+.integration-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#fff}
+.integration-status{font-size:12px;padding:4px 10px;border-radius:20px;font-weight:600}
+.status-connected{background:rgba(0,255,136,0.15);color:#00FF88}
+.status-disconnected{background:rgba(255,255,255,0.08);color:#888}
+.status-coming-soon{background:rgba(255,193,7,0.15);color:#FFC107}
+.status-error{background:rgba(255,77,77,0.15);color:#ff4d4d}
+.integration-desc{color:#888;font-size:14px;line-height:1.6;margin-bottom:20px}
+.btn-connect{background:linear-gradient(135deg,#00C2FF,#0A6EBD);color:#fff;border:none;padding:10px 24px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:600;cursor:pointer;width:100%;transition:opacity 0.2s}
+.btn-connect:hover{opacity:0.9}
+.btn-connect:disabled{opacity:0.6;cursor:not-allowed}
+.btn-disconnect{background:transparent;color:#ff4d4d;border:1px solid #ff4d4d;padding:10px 24px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:600;cursor:pointer;width:100%}
+.btn-disabled{background:#222;color:#555;border:none;padding:10px 24px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:600;width:100%;cursor:not-allowed}
+.btn-test{background:transparent;color:#00C2FF;border:1px solid #00C2FF;padding:8px 16px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:600;cursor:pointer;font-size:13px;margin-bottom:8px;width:100%}
+.btn-test:disabled{opacity:0.5;cursor:not-allowed}
+.test-result{font-size:13px;padding:8px 12px;border-radius:8px;margin-bottom:12px;display:none}
+.test-result.success{background:rgba(0,255,136,0.1);color:#00FF88;border:1px solid rgba(0,255,136,0.2)}
+.test-result.error{background:rgba(255,77,77,0.1);color:#ff4d4d;border:1px solid rgba(255,77,77,0.2)}
+.key-expired-warning{background:rgba(255,77,77,0.08);border:1px solid rgba(255,77,77,0.3);border-radius:10px;padding:12px 14px;margin-bottom:16px}
+.key-expired-warning p{color:#ff4d4d;font-size:13px;margin:0}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:#111;border:1px solid #333;border-radius:20px;padding:36px;width:90%;max-width:460px}
+.modal h3{font-family:'Syne',sans-serif;font-size:22px;color:#fff;margin-bottom:8px}
+.modal p{color:#888;font-size:14px;margin-bottom:16px}
+.modal input{width:100%;background:#0a0a0a;border:1px solid #333;border-radius:10px;padding:14px 16px;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:15px;outline:none;box-sizing:border-box;margin-bottom:8px}
+.modal input:focus{border-color:#00C2FF}
+.modal-hint{background:rgba(0,194,255,0.06);border:1px solid rgba(0,194,255,0.15);border-radius:10px;padding:14px 16px;margin:4px 0 20px}
+.modal-hint p{color:#777;font-size:12px;margin:0 0 4px;line-height:1.6}
+.modal-hint p:last-child{margin:0}
+.modal-hint span{color:#00C2FF;font-weight:600}
+.modal-actions{display:flex;gap:12px}
+.modal-actions .btn-connect{flex:1}
+.btn-cancel{flex:1;background:transparent;color:#888;border:1px solid #333;padding:10px 24px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:600;cursor:pointer}
+.store-info{background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:14px 16px;margin-bottom:16px}
+.store-info p{color:#00FF88;font-size:13px;margin:0 0 4px}
+.store-info p:last-child{margin:0}
+.store-info span{color:#fff;font-weight:600}
+.analytics-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.analytics-mini-item{background:#0a0a0a;border-radius:8px;padding:10px;text-align:center}
+.analytics-mini-item .value{font-size:15px;font-weight:700;color:#00C2FF;font-family:'Syne',sans-serif}
+.analytics-mini-item .label{font-size:10px;color:#555;margin-top:2px}
+.page-header{padding:32px 32px 0}
+.page-header h1{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff}
+.page-header p{color:#888;font-size:15px;margin-top:6px}
+.toast{position:fixed;bottom:24px;right:24px;background:#111;border:1px solid #00FF88;color:#00FF88;padding:14px 20px;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-size:14px;z-index:9999;transform:translateY(100px);opacity:0;transition:all 0.3s}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.error{border-color:#ff4d4d;color:#ff4d4d}
+</style>
 </head>
 <body>
-  <!-- SIDEBAR (same as dashboard) -->
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-logo">
-      <span class="logo-text">AdSync<span class="logo-pro">Pro</span></span>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><span class="logo-text">AdSync<span class="logo-pro">Pro</span></span></div>
+  <nav class="sidebar-nav">
+    <a href="dashboard.html" class="nav-item"><span class="nav-icon">📊</span><span>Dashboard</span></a>
+    <a href="create-campaign.html" class="nav-item"><span class="nav-icon">➕</span><span>Create Campaign</span></a>
+    <a href="ai-generator.html" class="nav-item"><span class="nav-icon">🤖</span><span>AI Ad Generator</span></a>
+    <a href="integrations.html" class="nav-item active"><span class="nav-icon">🔗</span><span>Integrations</span></a>
+    <a href="pricing.html" class="nav-item"><span class="nav-icon">💎</span><span>Pricing</span></a>
+    <a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span>Settings</span></a>
+  </nav>
+  <div class="sidebar-footer"><button class="btn-logout" onclick="logout()">Logout</button></div>
+</div>
+
+<div class="main-content">
+  <div class="page-header">
+    <h1>Integrations</h1>
+    <p>Connect your stores and ad platforms to AdSync Pro</p>
+  </div>
+  <div class="integrations-grid">
+
+    <div class="integration-card" id="shopify-card">
+      <div class="integration-header">
+        <div class="integration-logo shopify">🛍️</div>
+        <div><div class="integration-title">Shopify</div><span class="integration-status status-disconnected" id="shopify-status">Not Connected</span></div>
+      </div>
+      <p class="integration-desc">Sync your Shopify products, pull sales analytics, and auto-generate ads from your product listings.</p>
+      <div id="shopify-store-info" style="display:none"></div>
+      <div id="shopify-analytics" style="display:none"></div>
+      <button class="btn-connect" id="shopify-btn" onclick="connectShopify()">Connect Shopify</button>
     </div>
-    <nav class="sidebar-nav">
-      <a href="dashboard.html" class="nav-item"><span class="nav-icon">📊</span><span>Dashboard</span></a>
-      <a href="create-campaign.html" class="nav-item"><span class="nav-icon">➕</span><span>Create Campaign</span></a>
-      <a href="ai-generator.html" class="nav-item"><span class="nav-icon">🤖</span><span>AI Ad Generator</span></a>
-      <a href="integrations.html" class="nav-item active"><span class="nav-icon">🔗</span><span>Integrations</span></a>
-      <a href="pricing.html" class="nav-item"><span class="nav-icon">💎</span><span>Pricing</span></a>
-      <a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span>Settings</span></a>
-    </nav>
-    <div class="sidebar-footer">
-      <button class="btn-logout" onclick="logout()">Logout</button>
+
+    <div class="integration-card" id="takealot-card">
+      <div class="integration-header">
+        <div class="integration-logo takealot">🛒</div>
+        <div><div class="integration-title">Takealot</div><span class="integration-status status-disconnected" id="takealot-status">Not Connected</span></div>
+      </div>
+      <p class="integration-desc">Connect your Takealot seller account to sync listings, track stock levels, and pull sales data.</p>
+      <div id="takealot-key-warning" style="display:none"></div>
+      <div id="takealot-store-info" style="display:none"></div>
+      <div id="takealot-analytics" style="display:none"></div>
+      <button class="btn-connect" id="takealot-btn" onclick="connectTakealot()">Connect Takealot</button>
+    </div>
+
+    <div class="integration-card">
+      <div class="integration-header">
+        <div class="integration-logo meta">📘</div>
+        <div><div class="integration-title">Meta (Facebook/Instagram)</div><span class="integration-status status-coming-soon">Pending Approval</span></div>
+      </div>
+      <p class="integration-desc">Run Facebook and Instagram ads directly from AdSync Pro. API approval in progress.</p>
+      <button class="btn-disabled" disabled>Pending API Approval</button>
+    </div>
+
+    <div class="integration-card">
+      <div class="integration-header">
+        <div class="integration-logo tiktok">🎵</div>
+        <div><div class="integration-title">TikTok Ads</div><span class="integration-status status-coming-soon">Pending Approval</span></div>
+      </div>
+      <p class="integration-desc">Launch TikTok ad campaigns targeting South African shoppers. API approval in progress.</p>
+      <button class="btn-disabled" disabled>Pending API Approval</button>
+    </div>
+
+    <div class="integration-card">
+      <div class="integration-header">
+        <div class="integration-logo" style="background:#25D366;">💬</div>
+        <div><div class="integration-title">WhatsApp Business</div><span class="integration-status status-coming-soon">Pending Approval</span></div>
+      </div>
+      <p class="integration-desc">Send promotional messages and campaign updates via WhatsApp to your customers.</p>
+      <button class="btn-disabled" disabled>Pending API Approval</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-overlay" id="shopify-modal">
+  <div class="modal">
+    <h3>Connect Your Shopify Store</h3>
+    <p>Enter your Shopify store domain to get started.</p>
+    <input type="text" id="shop-domain-input" placeholder="yourstore.myshopify.com"/>
+    <div class="modal-hint"><p>💡 Find your store domain in your <span>Shopify Admin URL</span></p></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('shopify-modal')">Cancel</button>
+      <button class="btn-connect" onclick="initiateShopifyOAuth()">Connect</button>
     </div>
   </div>
+</div>
 
-  <!-- MAIN -->
-  <div class="main-content">
-    <div class="page-header">
-      <h1>Integrations</h1>
-      <p>Connect your stores and ad platforms to AdSync Pro</p>
+<div class="modal-overlay" id="takealot-modal">
+  <div class="modal">
+    <h3>Connect Your Takealot Store</h3>
+    <p>Paste your Takealot Seller API key below. Your key is encrypted before storage.</p>
+    <input type="text" id="takealot-api-key-input" placeholder="Paste your API key here..."/>
+    <div class="modal-hint">
+      <p>🔑 <span>How to get your API key:</span></p>
+      <p>1. Go to <span>seller.takealot.com</span></p>
+      <p>2. Navigate to <span>Settings then API Access</span></p>
+      <p>3. Copy your API key and paste above</p>
+      <p>🔒 Stored with <span>AES-256 encryption</span></p>
     </div>
-
-    <div class="integrations-grid">
-
-      <!-- SHOPIFY -->
-      <div class="integration-card" id="shopify-card">
-        <div class="integration-header">
-          <div class="integration-logo shopify">🛍️</div>
-          <div>
-            <div class="integration-title">Shopify</div>
-            <span class="integration-status status-disconnected" id="shopify-status">Not Connected</span>
-          </div>
-        </div>
-        <p class="integration-desc">Sync your Shopify products, pull sales analytics, and auto-generate ads from your product listings.</p>
-        <div id="shopify-store-info" style="display:none"></div>
-        <div id="shopify-analytics" style="display:none"></div>
-        <button class="btn-connect" id="shopify-btn" onclick="connectShopify()">Connect Shopify</button>
-      </div>
-
-      <!-- TAKEALOT -->
-      <div class="integration-card">
-        <div class="integration-header">
-          <div class="integration-logo takealot">🛒</div>
-          <div>
-            <div class="integration-title">Takealot</div>
-            <span class="integration-status status-coming-soon">Coming Soon</span>
-          </div>
-        </div>
-        <p class="integration-desc">Sync your Takealot seller account to manage listings and track ad performance vs sales.</p>
-        <button class="btn-disabled" disabled>Coming Soon</button>
-      </div>
-
-      <!-- META -->
-      <div class="integration-card">
-        <div class="integration-header">
-          <div class="integration-logo meta">📘</div>
-          <div>
-            <div class="integration-title">Meta (Facebook/Instagram)</div>
-            <span class="integration-status status-coming-soon">Pending Approval</span>
-          </div>
-        </div>
-        <p class="integration-desc">Run Facebook and Instagram ads directly from AdSync Pro. API approval in progress.</p>
-        <button class="btn-disabled" disabled>Pending API Approval</button>
-      </div>
-
-      <!-- TIKTOK -->
-      <div class="integration-card">
-        <div class="integration-header">
-          <div class="integration-logo tiktok">🎵</div>
-          <div>
-            <div class="integration-title">TikTok Ads</div>
-            <span class="integration-status status-coming-soon">Pending Approval</span>
-          </div>
-        </div>
-        <p class="integration-desc">Launch TikTok ad campaigns targeting South African shoppers. API approval in progress.</p>
-        <button class="btn-disabled" disabled>Pending API Approval</button>
-      </div>
-
-      <!-- WHATSAPP -->
-      <div class="integration-card">
-        <div class="integration-header">
-          <div class="integration-logo" style="background:#25D366;">💬</div>
-          <div>
-            <div class="integration-title">WhatsApp Business</div>
-            <span class="integration-status status-coming-soon">Pending Approval</span>
-          </div>
-        </div>
-        <p class="integration-desc">Send promotional messages and campaign updates via WhatsApp to your customers.</p>
-        <button class="btn-disabled" disabled>Pending API Approval</button>
-      </div>
-
+    <div id="test-result" class="test-result"></div>
+    <button class="btn-test" id="test-btn" onclick="testTakealotKey()">🔍 Test Connection First</button>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('takealot-modal')">Cancel</button>
+      <button class="btn-connect" id="takealot-connect-btn" onclick="saveTakealotKey()">Connect</button>
     </div>
   </div>
+</div>
 
-  <!-- SHOPIFY CONNECT MODAL -->
-  <div class="modal-overlay" id="shopify-modal">
-    <div class="modal">
-      <h3>Connect Your Shopify Store</h3>
-      <p>Enter your Shopify store domain to get started.</p>
-      <input type="text" id="shop-domain-input" placeholder="yourstore.myshopify.com" />
-      <div class="modal-hint">💡 Find this in your Shopify admin URL</div>
-      <div class="modal-actions">
-        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-        <button class="btn-connect" onclick="initiateOAuth()">Connect →</button>
-      </div>
-    </div>
-  </div>
+<div class="toast" id="toast"></div>
+<script>
+var BACKEND = 'https://adsync-pro-backend-production.up.railway.app';
 
-  <!-- TOAST -->
-  <div class="toast" id="toast"></div>
+function getToken() { return localStorage.getItem('token'); }
 
-  <script>
-    const BACKEND = 'https://adsync-pro-backend-production.up.railway.app';
+function showToast(msg, isError) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(function() { t.className = 'toast'; }, 3500);
+}
 
-    function getToken() { return localStorage.getItem('token'); }
+function logout() { localStorage.clear(); window.location.href = 'login.html'; }
 
-    function showToast(msg, isError = false) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.className = 'toast show' + (isError ? ' error' : '');
-      setTimeout(() => t.className = 'toast', 3500);
-    }
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  document.getElementById('test-result').style.display = 'none';
+}
 
-    function logout() {
-      localStorage.clear();
-      window.location.href = 'login.html';
-    }
+var urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('shopify') === 'success') {
+  showToast('Shopify store connected successfully!');
+  window.history.replaceState({}, '', 'integrations.html');
+} else if (urlParams.get('shopify') === 'error') {
+  showToast('Failed to connect Shopify: ' + (urlParams.get('msg') || 'Unknown error'), true);
+  window.history.replaceState({}, '', 'integrations.html');
+}
 
-    // ── Check URL params for OAuth callback result ──
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('shopify') === 'success') {
-      showToast('✅ Shopify store connected successfully!');
-      window.history.replaceState({}, '', 'integrations.html');
-      loadShopifyStatus();
-    } else if (urlParams.get('shopify') === 'error') {
-      showToast('❌ Failed to connect Shopify: ' + (urlParams.get('msg') || 'Unknown error'), true);
-      window.history.replaceState({}, '', 'integrations.html');
-    }
-
-    // ── Load Shopify connection status ──
-    async function loadShopifyStatus() {
-      const token = getToken();
-      if (!token) return;
-      try {
-        const res = await fetch(`${BACKEND}/shopify/stores`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (data.stores && data.stores.length > 0) {
-          const store = data.stores[0];
-          setShopifyConnected(store);
-          loadShopifyAnalytics(store.shop_domain);
-        }
-      } catch (e) {
-        console.error('Failed to load Shopify status', e);
+function loadShopifyStatus() {
+  var token = getToken();
+  if (!token) return;
+  fetch(BACKEND + '/shopify/stores', { headers: { Authorization: 'Bearer ' + token } })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.stores && data.stores.length > 0) {
+        setShopifyConnected(data.stores[0]);
+        loadShopifyAnalytics(data.stores[0].shop_domain);
       }
-    }
+    }).catch(function(e) { console.error(e); });
+}
 
-    function setShopifyConnected(store) {
-      document.getElementById('shopify-card').classList.add('connected');
-      document.getElementById('shopify-status').textContent = 'Connected';
-      document.getElementById('shopify-status').className = 'integration-status status-connected';
+function setShopifyConnected(store) {
+  document.getElementById('shopify-card').classList.add('connected');
+  document.getElementById('shopify-status').textContent = 'Connected';
+  document.getElementById('shopify-status').className = 'integration-status status-connected';
+  var info = document.getElementById('shopify-store-info');
+  info.innerHTML = '<div class="store-info"><p>🏪 <span>' + store.shop_name + '</span></p><p>📧 <span>' + store.shop_email + '</span></p><p>💱 Currency: <span>' + store.currency + '</span></p></div>';
+  info.style.display = 'block';
+  var btn = document.getElementById('shopify-btn');
+  btn.textContent = 'Disconnect';
+  btn.className = 'btn-disconnect';
+  btn.onclick = function() { disconnectShopify(store.shop_domain); };
+}
 
-      const infoDiv = document.getElementById('shopify-store-info');
-      infoDiv.innerHTML = `
-        <div class="store-info">
-          <p>🏪 <span>${store.shop_name}</span></p>
-          <p>📧 <span>${store.shop_email}</span></p>
-          <p>💱 Currency: <span>${store.currency}</span></p>
-        </div>`;
-      infoDiv.style.display = 'block';
-
-      const btn = document.getElementById('shopify-btn');
-      btn.textContent = 'Disconnect';
-      btn.className = 'btn-disconnect';
-      btn.onclick = () => disconnectShopify(store.shop_domain);
-    }
-
-    async function loadShopifyAnalytics(shop) {
-      const token = getToken();
-      try {
-        const res = await fetch(`${BACKEND}/shopify/analytics?shop=${shop}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (data.analytics) {
-          const a = data.analytics;
-          const analyticsDiv = document.getElementById('shopify-analytics');
-          analyticsDiv.innerHTML = `
-            <div class="analytics-mini">
-              <div class="analytics-mini-item">
-                <div class="value">R${parseFloat(a.totalRevenue).toLocaleString()}</div>
-                <div class="label">Revenue (30d)</div>
-              </div>
-              <div class="analytics-mini-item">
-                <div class="value">${a.totalOrders}</div>
-                <div class="label">Orders</div>
-              </div>
-              <div class="analytics-mini-item">
-                <div class="value">R${a.avgOrderValue}</div>
-                <div class="label">Avg Order</div>
-              </div>
-            </div>`;
-          analyticsDiv.style.display = 'block';
-        }
-      } catch (e) {
-        console.error('Failed to load analytics', e);
+function loadShopifyAnalytics(shop) {
+  fetch(BACKEND + '/shopify/analytics?shop=' + shop, { headers: { Authorization: 'Bearer ' + getToken() } })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.analytics) {
+        var a = data.analytics;
+        var div = document.getElementById('shopify-analytics');
+        div.innerHTML = '<div class="analytics-mini"><div class="analytics-mini-item"><div class="value">R' + parseFloat(a.totalRevenue).toLocaleString() + '</div><div class="label">Revenue (30d)</div></div><div class="analytics-mini-item"><div class="value">' + a.totalOrders + '</div><div class="label">Orders</div></div><div class="analytics-mini-item"><div class="value">R' + a.avgOrderValue + '</div><div class="label">Avg Order</div></div></div>';
+        div.style.display = 'block';
       }
-    }
+    }).catch(function(e) { console.error(e); });
+}
 
-    // ── Connect flow ──
-    function connectShopify() {
-      document.getElementById('shopify-modal').classList.add('active');
-    }
+function connectShopify() { document.getElementById('shopify-modal').classList.add('active'); }
 
-    function closeModal() {
-      document.getElementById('shopify-modal').classList.remove('active');
-    }
+function initiateShopifyOAuth() {
+  var shop = document.getElementById('shop-domain-input').value.trim().toLowerCase();
+  if (!shop) return showToast('Please enter your store domain', true);
+  if (shop.indexOf('.myshopify.com') === -1) shop = shop + '.myshopify.com';
+  var token = getToken();
+  if (!token) return window.location.href = 'login.html';
+  fetch(BACKEND + '/auth/shopify?shop=' + shop + '&token=' + token)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.authUrl) { window.location.href = data.authUrl; }
+      else { showToast('Failed to initiate Shopify connection', true); }
+    }).catch(function() { showToast('Connection error. Please try again.', true); });
+}
 
-    async function initiateOAuth() {
-      let shop = document.getElementById('shop-domain-input').value.trim().toLowerCase();
-      if (!shop) return showToast('Please enter your store domain', true);
-      if (!shop.includes('.myshopify.com')) shop = shop + '.myshopify.com';
+function disconnectShopify(shop) {
+  if (!confirm('Disconnect this Shopify store?')) return;
+  fetch(BACKEND + '/shopify/stores/' + encodeURIComponent(shop), { method: 'DELETE', headers: { Authorization: 'Bearer ' + getToken() } })
+    .then(function() { showToast('Shopify store disconnected'); setTimeout(function() { window.location.reload(); }, 1000); })
+    .catch(function() { showToast('Failed to disconnect', true); });
+}
 
-      const token = getToken();
-      if (!token) return window.location.href = 'login.html';
-
-      try {
-        const res = await fetch(`${BACKEND}/auth/shopify?shop=${shop}&token=${token}`);
-        const data = await res.json();
-        if (data.authUrl) {
-          window.location.href = data.authUrl;
+function loadTakealotStatus() {
+  var token = getToken();
+  if (!token) return;
+  fetch(BACKEND + '/takealot/status', { headers: { Authorization: 'Bearer ' + token } })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.connected) {
+        if (data.store.status === 'key_expired') {
+          setTakealotExpired(data.store);
         } else {
-          showToast('Failed to initiate Shopify connection', true);
+          setTakealotConnected(data.store);
+          loadTakealotAnalytics();
         }
-      } catch (e) {
-        showToast('Connection error. Please try again.', true);
       }
-    }
+    }).catch(function(e) { console.error(e); });
+}
 
-    async function disconnectShopify(shop) {
-      if (!confirm('Disconnect this Shopify store?')) return;
-      const token = getToken();
-      try {
-        await fetch(`${BACKEND}/shopify/stores/${encodeURIComponent(shop)}`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        showToast('Shopify store disconnected');
-        setTimeout(() => window.location.reload(), 1000);
-      } catch {
-        showToast('Failed to disconnect', true);
+function setTakealotConnected(store) {
+  document.getElementById('takealot-card').classList.add('connected');
+  document.getElementById('takealot-card').classList.remove('error');
+  document.getElementById('takealot-status').textContent = 'Connected';
+  document.getElementById('takealot-status').className = 'integration-status status-connected';
+  var syncLine = store.last_sync ? '<p>🔄 Last sync: <span>' + new Date(store.last_sync).toLocaleString() + '</span></p>' : '';
+  var info = document.getElementById('takealot-store-info');
+  info.innerHTML = '<div class="store-info"><p>🛒 <span>' + store.seller_name + '</span></p><p>📅 Connected: <span>' + new Date(store.connected_at).toLocaleDateString() + '</span></p>' + syncLine + '</div>';
+  info.style.display = 'block';
+  document.getElementById('takealot-key-warning').style.display = 'none';
+  var btn = document.getElementById('takealot-btn');
+  btn.textContent = 'Disconnect';
+  btn.className = 'btn-disconnect';
+  btn.onclick = disconnectTakealot;
+}
+
+function setTakealotExpired(store) {
+  document.getElementById('takealot-card').classList.add('error');
+  document.getElementById('takealot-card').classList.remove('connected');
+  document.getElementById('takealot-status').textContent = 'Key Expired';
+  document.getElementById('takealot-status').className = 'integration-status status-error';
+  var warning = document.getElementById('takealot-key-warning');
+  warning.innerHTML = '<div class="key-expired-warning"><p>Your Takealot API key has expired. Please reconnect with a new key.</p></div>';
+  warning.style.display = 'block';
+  var btn = document.getElementById('takealot-btn');
+  btn.textContent = 'Reconnect Now';
+  btn.className = 'btn-connect';
+  btn.onclick = connectTakealot;
+}
+
+function loadTakealotAnalytics() {
+  fetch(BACKEND + '/takealot/analytics', { headers: { Authorization: 'Bearer ' + getToken() } })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.analytics) {
+        var a = data.analytics;
+        var div = document.getElementById('takealot-analytics');
+        div.innerHTML = '<div class="analytics-mini"><div class="analytics-mini-item"><div class="value">R' + parseFloat(a.totalRevenue).toLocaleString() + '</div><div class="label">Revenue</div></div><div class="analytics-mini-item"><div class="value">' + a.totalOrders + '</div><div class="label">Orders</div></div><div class="analytics-mini-item"><div class="value">' + a.totalProducts + '</div><div class="label">Products</div></div></div>';
+        div.style.display = 'block';
+        if (a.lowStockItems > 0) {
+          div.innerHTML += '<p style="color:#FFC107;font-size:12px;margin:0 0 12px;">⚠️ ' + a.lowStockItems + ' product(s) low on stock</p>';
+        }
       }
-    }
+    }).catch(function(e) { console.error(e); });
+}
 
-    // On page load
-    loadShopifyStatus();
-  </script>
+function connectTakealot() { document.getElementById('takealot-modal').classList.add('active'); }
+
+function testTakealotKey() {
+  var apiKey = document.getElementById('takealot-api-key-input').value.trim();
+  if (!apiKey) return showToast('Please enter your API key first', true);
+  var btn = document.getElementById('test-btn');
+  var resultDiv = document.getElementById('test-result');
+  btn.textContent = 'Testing...';
+  btn.disabled = true;
+  fetch(BACKEND + '/takealot/test', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + getToken() },
+    body: JSON.stringify({ api_key: apiKey })
+  }).then(function(r) { return r.json(); })
+    .then(function(data) {
+      resultDiv.style.display = 'block';
+      if (data.success) {
+        resultDiv.className = 'test-result success';
+        resultDiv.textContent = data.message;
+      } else {
+        resultDiv.className = 'test-result error';
+        resultDiv.textContent = data.error;
+      }
+      btn.textContent = '🔍 Test Connection';
+      btn.disabled = false;
+    }).catch(function() {
+      resultDiv.style.display = 'block';
+      resultDiv.className = 'test-result error';
+      resultDiv.textContent = 'Could not reach server.';
+      btn.textContent = '🔍 Test Connection';
+      btn.disabled = false;
+    });
+}
+
+function saveTakealotKey() {
+  var apiKey = document.getElementById('takealot-api-key-input').value.trim();
+  if (!apiKey) return showToast('Please enter your API key', true);
+  var token = getToken();
+  if (!token) return window.location.href = 'login.html';
+  var btn = document.getElementById('takealot-connect-btn');
+  btn.textContent = 'Connecting...';
+  btn.disabled = true;
+  fetch(BACKEND + '/takealot/connect', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+    body: JSON.stringify({ api_key: apiKey })
+  }).then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) {
+        closeModal('takealot-modal');
+        showToast('Takealot store connected!');
+        setTimeout(function() { window.location.reload(); }, 1000);
+      } else {
+        showToast(data.error || 'Failed to connect', true);
+        btn.textContent = 'Connect';
+        btn.disabled = false;
+      }
+    }).catch(function() {
+      showToast('Connection error. Please try again.', true);
+      btn.textContent = 'Connect';
+      btn.disabled = false;
+    });
+}
+
+function disconnectTakealot() {
+  if (!confirm('Disconnect your Takealot store?')) return;
+  fetch(BACKEND + '/takealot/disconnect', { method: 'DELETE', headers: { Authorization: 'Bearer ' + getToken() } })
+    .then(function() { showToast('Takealot store disconnected'); setTimeout(function() { window.location.reload(); }, 1000); })
+    .catch(function() { showToast('Failed to disconnect', true); });
+}
+
+loadShopifyStatus();
+loadTakealotStatus();
+</script>
 </body>
 </html>
