@@ -4,290 +4,325 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Integrations — AdSync Pro</title>
-  <link rel="stylesheet" href="styles.css"/>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
-    body { display: flex; }
+    .integrations-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; padding: 32px; }
+    .integration-card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 28px; transition: border-color 0.3s; }
+    .integration-card:hover { border-color: #00C2FF; }
+    .integration-card.connected { border-color: #00FF88; }
+    .integration-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .integration-logo { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    .integration-logo.shopify { background: #96BF48; }
+    .integration-logo.takealot { background: #0A6EBD; }
+    .integration-logo.meta { background: linear-gradient(135deg, #0668E1, #00C2FF); }
+    .integration-logo.tiktok { background: #000; border: 1px solid #333; }
+    .integration-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: #fff; }
+    .integration-status { font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+    .status-connected { background: rgba(0,255,136,0.15); color: #00FF88; }
+    .status-disconnected { background: rgba(255,255,255,0.08); color: #888; }
+    .status-coming-soon { background: rgba(255,193,7,0.15); color: #FFC107; }
+    .integration-desc { color: #888; font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+    .btn-connect { background: linear-gradient(135deg, #00C2FF, #0A6EBD); color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 600; cursor: pointer; width: 100%; transition: opacity 0.2s; }
+    .btn-connect:hover { opacity: 0.9; }
+    .btn-disconnect { background: transparent; color: #ff4d4d; border: 1px solid #ff4d4d; padding: 10px 24px; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.2s; }
+    .btn-disconnect:hover { background: rgba(255,77,77,0.1); }
+    .btn-disabled { background: #222; color: #555; border: none; padding: 10px 24px; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 600; width: 100%; cursor: not-allowed; }
 
-    .int-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      display: flex; flex-direction: column; gap: 16px;
-      transition: all 0.3s;
-      position: relative; overflow: hidden;
-    }
-    .int-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--blue), transparent);
-      opacity: 0; transition: opacity 0.3s;
-    }
-    .int-card:hover { border-color: var(--border-blue); transform: translateY(-3px); box-shadow: var(--shadow-blue); }
-    .int-card:hover::before { opacity: 1; }
-    .int-card.available { border-color: rgba(0,255,136,0.15); }
-    .int-card.available:hover { border-color: rgba(0,255,136,0.4); box-shadow: 0 0 30px rgba(0,255,136,0.08); }
-    .int-card.coming { opacity: 0.7; }
-    .int-card.coming:hover { opacity: 1; border-color: var(--border); box-shadow: none; transform: none; }
+    /* Shop Input Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: #111; border: 1px solid #333; border-radius: 20px; padding: 36px; width: 90%; max-width: 460px; }
+    .modal h3 { font-family: 'Syne', sans-serif; font-size: 22px; color: #fff; margin-bottom: 8px; }
+    .modal p { color: #888; font-size: 14px; margin-bottom: 24px; }
+    .modal input { width: 100%; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; padding: 14px 16px; color: #fff; font-family: 'Space Grotesk', sans-serif; font-size: 15px; outline: none; box-sizing: border-box; }
+    .modal input:focus { border-color: #00C2FF; }
+    .modal-hint { color: #555; font-size: 12px; margin-top: 8px; margin-bottom: 20px; }
+    .modal-actions { display: flex; gap: 12px; }
+    .modal-actions .btn-connect { flex: 1; }
+    .btn-cancel { flex: 1; background: transparent; color: #888; border: 1px solid #333; padding: 10px 24px; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 600; cursor: pointer; }
 
-    .card-top { display: flex; align-items: center; justify-content: space-between; }
-    .int-logo {
-      width: 50px; height: 50px; border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px; flex-shrink: 0;
-    }
-    .int-name { font-size: 16px; font-weight: 700; margin-top: 4px; }
-    .int-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; flex: 1; }
+    /* Store info */
+    .store-info { background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.2); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+    .store-info p { color: #00FF88; font-size: 13px; margin: 0; }
+    .store-info span { color: #fff; font-weight: 600; }
 
-    .connect-btn {
-      width: 100%; padding: 11px;
-      border-radius: var(--radius-sm); font-size: 13px; font-weight: 700;
-      cursor: pointer; border: none; transition: all 0.3s; font-family: var(--font-body);
-    }
-    .connect-btn.avail { background: var(--blue); color: #fff; }
-    .connect-btn.avail:hover { box-shadow: 0 6px 20px rgba(0,102,255,0.4); transform: translateY(-1px); }
-    .connect-btn.soon { background: rgba(255,255,255,0.04); color: var(--text-muted); cursor: not-allowed; border: 1px solid var(--border); }
-    .connect-btn.connected { background: var(--success-bg); color: var(--success); border: 1px solid rgba(0,255,136,0.3); cursor: default; }
+    /* Analytics mini */
+    .analytics-mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+    .analytics-mini-item { background: #0a0a0a; border-radius: 8px; padding: 10px; text-align: center; }
+    .analytics-mini-item .value { font-size: 16px; font-weight: 700; color: #00C2FF; font-family: 'Syne', sans-serif; }
+    .analytics-mini-item .label { font-size: 10px; color: #555; margin-top: 2px; }
 
-    .section-header {
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 18px; margin-top: 36px;
-      padding-bottom: 12px; border-bottom: 1px solid var(--border);
-    }
-    .section-header:first-of-type { margin-top: 0; }
-    .section-header-label { font-size: 11px; font-weight: 700; color: var(--blue-bright); text-transform: uppercase; letter-spacing: 2px; }
-    .section-header-line { flex: 1; height: 1px; background: var(--border); }
+    .page-header { padding: 32px 32px 0; }
+    .page-header h1 { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: #fff; }
+    .page-header p { color: #888; font-size: 15px; margin-top: 6px; }
+
+    .toast { position: fixed; bottom: 24px; right: 24px; background: #111; border: 1px solid #00FF88; color: #00FF88; padding: 14px 20px; border-radius: 12px; font-family: 'Space Grotesk', sans-serif; font-size: 14px; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { border-color: #ff4d4d; color: #ff4d4d; }
   </style>
 </head>
 <body>
-
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="sidebar-logo-icon">⚡</div>
-    <div class="sidebar-logo-text">AdSync <span>Pro</span></div>
-  </div>
-  <nav>
-    <div class="nav-section-label">Main</div>
-    <a class="nav-item" href="dashboard.html">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-      Dashboard
-    </a>
-    <a class="nav-item" href="create-campaign.html">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-      New Campaign
-    </a>
-    <a class="nav-item" href="ai-generator.html">
-  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-  🤖 AI Ad Generator
-</a>
-    <a class="nav-item active" href="integrations.html">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-      Integrations
-    </a>
-    <div class="nav-section-label" style="margin-top:8px;">Account</div>
-    <a class="nav-item" href="settings.html">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-      Settings
-    </a>
-    <a class="nav-item" href="pricing.html">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-      Upgrade Plan
-    </a>
-  </nav>
-  <div class="sidebar-bottom">
-    <div class="user-card">
-      <div class="user-avatar" id="user-avatar">M</div>
-      <div>
-        <div class="user-name" id="user-name">Loading...</div>
-        <div class="user-plan" id="user-plan">FREE PLAN</div>
-      </div>
+  <!-- SIDEBAR (same as dashboard) -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-text">AdSync<span class="logo-pro">Pro</span></span>
     </div>
-  </div>
-</aside>
-
-<!-- MAIN -->
-<div class="main">
-  <div class="top-bar">
-    <div>
-      <div class="page-title">Integrations</div>
-      <div class="page-subtitle">Connect your stores and ad platforms</div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">📊</span><span>Dashboard</span></a>
+      <a href="create-campaign.html" class="nav-item"><span class="nav-icon">➕</span><span>Create Campaign</span></a>
+      <a href="ai-generator.html" class="nav-item"><span class="nav-icon">🤖</span><span>AI Ad Generator</span></a>
+      <a href="integrations.html" class="nav-item active"><span class="nav-icon">🔗</span><span>Integrations</span></a>
+      <a href="pricing.html" class="nav-item"><span class="nav-icon">💎</span><span>Pricing</span></a>
+      <a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span>Settings</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="logout()">Logout</button>
     </div>
   </div>
 
-  <div class="content">
-
-    <div class="alert alert-blue" style="margin-bottom:24px;">
-      💡 Connect your store to automatically sync products. API approvals for social platforms are in progress — coming very soon!
+  <!-- MAIN -->
+  <div class="main-content">
+    <div class="page-header">
+      <h1>Integrations</h1>
+      <p>Connect your stores and ad platforms to AdSync Pro</p>
     </div>
 
-    <!-- STORE PLATFORMS -->
-    <div class="section-header">
-      <div class="section-header-label">🛒 Store Platforms</div>
-      <div class="section-header-line"></div>
+    <div class="integrations-grid">
+
+      <!-- SHOPIFY -->
+      <div class="integration-card" id="shopify-card">
+        <div class="integration-header">
+          <div class="integration-logo shopify">🛍️</div>
+          <div>
+            <div class="integration-title">Shopify</div>
+            <span class="integration-status status-disconnected" id="shopify-status">Not Connected</span>
+          </div>
+        </div>
+        <p class="integration-desc">Sync your Shopify products, pull sales analytics, and auto-generate ads from your product listings.</p>
+        <div id="shopify-store-info" style="display:none"></div>
+        <div id="shopify-analytics" style="display:none"></div>
+        <button class="btn-connect" id="shopify-btn" onclick="connectShopify()">Connect Shopify</button>
+      </div>
+
+      <!-- TAKEALOT -->
+      <div class="integration-card">
+        <div class="integration-header">
+          <div class="integration-logo takealot">🛒</div>
+          <div>
+            <div class="integration-title">Takealot</div>
+            <span class="integration-status status-coming-soon">Coming Soon</span>
+          </div>
+        </div>
+        <p class="integration-desc">Sync your Takealot seller account to manage listings and track ad performance vs sales.</p>
+        <button class="btn-disabled" disabled>Coming Soon</button>
+      </div>
+
+      <!-- META -->
+      <div class="integration-card">
+        <div class="integration-header">
+          <div class="integration-logo meta">📘</div>
+          <div>
+            <div class="integration-title">Meta (Facebook/Instagram)</div>
+            <span class="integration-status status-coming-soon">Pending Approval</span>
+          </div>
+        </div>
+        <p class="integration-desc">Run Facebook and Instagram ads directly from AdSync Pro. API approval in progress.</p>
+        <button class="btn-disabled" disabled>Pending API Approval</button>
+      </div>
+
+      <!-- TIKTOK -->
+      <div class="integration-card">
+        <div class="integration-header">
+          <div class="integration-logo tiktok">🎵</div>
+          <div>
+            <div class="integration-title">TikTok Ads</div>
+            <span class="integration-status status-coming-soon">Pending Approval</span>
+          </div>
+        </div>
+        <p class="integration-desc">Launch TikTok ad campaigns targeting South African shoppers. API approval in progress.</p>
+        <button class="btn-disabled" disabled>Pending API Approval</button>
+      </div>
+
+      <!-- WHATSAPP -->
+      <div class="integration-card">
+        <div class="integration-header">
+          <div class="integration-logo" style="background:#25D366;">💬</div>
+          <div>
+            <div class="integration-title">WhatsApp Business</div>
+            <span class="integration-status status-coming-soon">Pending Approval</span>
+          </div>
+        </div>
+        <p class="integration-desc">Send promotional messages and campaign updates via WhatsApp to your customers.</p>
+        <button class="btn-disabled" disabled>Pending API Approval</button>
+      </div>
+
     </div>
-    <div class="grid-auto">
-      <div class="int-card available">
-        <div class="card-top">
-          <div class="int-logo" style="background:#96bf4820;">🛍️</div>
-          <span class="badge badge-green">✓ Available</span>
-        </div>
-        <div class="int-name">Shopify</div>
-        <div class="int-desc">Sync your Shopify products and automatically create ads for your store.</div>
-        <button class="connect-btn avail" onclick="connectShopify()">Connect Shopify</button>
-      </div>
-
-      <div class="int-card available">
-        <div class="card-top">
-          <div class="int-logo" style="background:#e3183720;">🛒</div>
-          <span class="badge badge-green">✓ Available</span>
-        </div>
-        <div class="int-name">Takealot</div>
-        <div class="int-desc">SA's #1 marketplace. Sync products, track orders and create ads for your Takealot store.</div>
-        <button class="connect-btn avail" onclick="connectTakealot()">Connect Takealot</button>
-      </div>
-
-      <div class="int-card coming">
-        <div class="card-top">
-          <div class="int-logo" style="background:#7f54b320;">🔵</div>
-          <span class="badge badge-gray">Coming Soon</span>
-        </div>
-        <div class="int-name">WooCommerce</div>
-        <div class="int-desc">Connect your WordPress WooCommerce store to sync products.</div>
-        <button class="connect-btn soon" disabled>Coming Soon</button>
-      </div>
-
-      <div class="int-card coming">
-        <div class="card-top">
-          <div class="int-logo" style="background:#ff990020;">📦</div>
-          <span class="badge badge-gray">Coming Soon</span>
-        </div>
-        <div class="int-name">Amazon</div>
-        <div class="int-desc">Connect your Amazon seller account to promote your listings.</div>
-        <button class="connect-btn soon" disabled>Coming Soon</button>
-      </div>
-    </div>
-
-    <!-- SOCIAL MEDIA -->
-    <div class="section-header">
-      <div class="section-header-label">📱 Social Media Platforms</div>
-      <div class="section-header-line"></div>
-    </div>
-    <div class="grid-auto">
-      <div class="int-card coming">
-        <div class="card-top">
-          <div class="int-logo" style="background:#1877f220;">📘</div>
-          <span class="badge badge-blue">API Pending</span>
-        </div>
-        <div class="int-name">Facebook Ads</div>
-        <div class="int-desc">Launch and manage Facebook ad campaigns directly from AdSync Pro.</div>
-        <button class="connect-btn soon" disabled>Awaiting Meta Approval</button>
-      </div>
-
-      <div class="int-card coming">
-        <div class="card-top">
-          <div class="int-logo" style="background:linear-gradient(45deg,#f0943320,#dc274320);">📸</div>
-          <span class="badge badge-blue">API Pending</span>
-        </div>
-        <div class="int-name">Instagram Ads</div>
-        <div class="int-desc">Run Instagram photo and video ads to reach your target audience.</div>
-        <button class="connect-btn soon" disabled>Awaiting Meta Approval</button>
-      </div>
-
-      <div class="int-card coming">
-        <div class="card-top">
-          <div class="int-logo" style="background:rgba(255,255,255,0.05);">🎵</div>
-          <span class="badge badge-blue">API Pending</span>
-        </div>
-        <div class="int-name">TikTok Ads</div>
-        <div class="int-desc">Create viral TikTok ad campaigns and reach millions of users.</div>
-        <button class="connect-btn soon" disabled>Awaiting TikTok Approval</button>
-      </div>
-
-      <div class="int-card coming">
-        <div class="card-top">
-          <div class="int-logo" style="background:#1da1f220;">🐦</div>
-          <span class="badge badge-gray">Coming Soon</span>
-        </div>
-        <div class="int-name">X (Twitter) Ads</div>
-        <div class="int-desc">Promote your brand with X ad campaigns.</div>
-        <button class="connect-btn soon" disabled>Coming Soon</button>
-      </div>
-    </div>
-
-    <!-- MESSAGING -->
-    <div class="section-header">
-      <div class="section-header-label">💬 Messaging</div>
-      <div class="section-header-line"></div>
-    </div>
-    <div class="grid-auto">
-      <div class="int-card available">
-        <div class="card-top">
-          <div class="int-logo" style="background:#25d36620;">💬</div>
-          <span class="badge badge-green">✓ Available</span>
-        </div>
-        <div class="int-name">WhatsApp Business</div>
-        <div class="int-desc">Send promotional messages, order updates and campaign alerts via WhatsApp Business API.</div>
-        <button class="connect-btn avail" onclick="connectWhatsApp()">Connect WhatsApp</button>
-      </div>
-    </div>
-
-    <!-- SEARCH & DISPLAY -->
-    <div class="section-header">
-      <div class="section-header-label">🔍 Search & Display</div>
-      <div class="section-header-line"></div>
-    </div>
-    <div class="grid-auto">
-      <div class="int-card coming">
-        <div class="card-top">
-          <div class="int-logo" style="background:#4285f420;">🔍</div>
-          <span class="badge badge-gray">Coming Soon</span>
-        </div>
-        <div class="int-name">Google Ads</div>
-        <div class="int-desc">Show ads on Google Search when people search for your products.</div>
-        <button class="connect-btn soon" disabled>Coming Soon</button>
-      </div>
-
-      <div class="int-card coming">
-        <div class="card-top">
-          <div class="int-logo" style="background:#ff000020;">▶️</div>
-          <span class="badge badge-gray">Coming Soon</span>
-        </div>
-        <div class="int-name">YouTube Ads</div>
-        <div class="int-desc">Run video ads before YouTube videos to reach your audience.</div>
-        <button class="connect-btn soon" disabled>Coming Soon</button>
-      </div>
-    </div>
-
-    <!-- DISCLAIMER -->
-    <div style="margin-top:36px;padding:14px 18px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius);font-size:11px;color:var(--text-muted);line-height:1.8;">
-      ⚠️ <strong style="color:var(--text-secondary);">Disclaimer:</strong> AdSync Pro is an independent tool not affiliated with, endorsed by, or sponsored by Takealot, Shopify, Meta, TikTok, Google, or any other platform. All trademarks belong to their respective owners. Sellers retain full control of their own API keys and account data at all times.
-    </div>
-
   </div>
-</div>
 
-<script>
-  const token = localStorage.getItem('token');
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  if (!token) window.location.href = 'login.html';
-  if (user.firstName) {
-    document.getElementById('user-name').textContent = `${user.firstName} ${user.lastName || ''}`;
-    document.getElementById('user-avatar').textContent = user.firstName[0].toUpperCase();
-    document.getElementById('user-plan').textContent = (user.subscriptionPlan || 'free').toUpperCase() + ' PLAN';
-  }
+  <!-- SHOPIFY CONNECT MODAL -->
+  <div class="modal-overlay" id="shopify-modal">
+    <div class="modal">
+      <h3>Connect Your Shopify Store</h3>
+      <p>Enter your Shopify store domain to get started.</p>
+      <input type="text" id="shop-domain-input" placeholder="yourstore.myshopify.com" />
+      <div class="modal-hint">💡 Find this in your Shopify admin URL</div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-connect" onclick="initiateOAuth()">Connect →</button>
+      </div>
+    </div>
+  </div>
 
-  function connectShopify() {
-    const store = prompt('Enter your Shopify store URL:\n(e.g. my-store.myshopify.com)');
-    if (store) alert(`✅ Shopify connection for "${store}" will be set up!\n\nFull integration coming very soon.`);
-  }
-  function connectTakealot() {
-    const id = prompt('Enter your Takealot Seller ID:\n(Found in your Takealot Seller Portal)');
-    if (id) alert(`✅ Takealot connection for seller "${id}" will be set up!\n\nFull sync integration coming very soon.`);
-  }
-  function connectWhatsApp() {
-    const phone = prompt('Enter your WhatsApp Business phone number:\n(e.g. +27 81 234 5678)');
-    if (phone) alert(`✅ WhatsApp Business connection for "${phone}" will be set up!\n\nFull integration coming very soon.`);
-  }
-</script>
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const BACKEND = 'https://adsync-pro-backend-production.up.railway.app';
+
+    function getToken() { return localStorage.getItem('token'); }
+
+    function showToast(msg, isError = false) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast show' + (isError ? ' error' : '');
+      setTimeout(() => t.className = 'toast', 3500);
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = 'login.html';
+    }
+
+    // ── Check URL params for OAuth callback result ──
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('shopify') === 'success') {
+      showToast('✅ Shopify store connected successfully!');
+      window.history.replaceState({}, '', 'integrations.html');
+      loadShopifyStatus();
+    } else if (urlParams.get('shopify') === 'error') {
+      showToast('❌ Failed to connect Shopify: ' + (urlParams.get('msg') || 'Unknown error'), true);
+      window.history.replaceState({}, '', 'integrations.html');
+    }
+
+    // ── Load Shopify connection status ──
+    async function loadShopifyStatus() {
+      const token = getToken();
+      if (!token) return;
+      try {
+        const res = await fetch(`${BACKEND}/shopify/stores`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.stores && data.stores.length > 0) {
+          const store = data.stores[0];
+          setShopifyConnected(store);
+          loadShopifyAnalytics(store.shop_domain);
+        }
+      } catch (e) {
+        console.error('Failed to load Shopify status', e);
+      }
+    }
+
+    function setShopifyConnected(store) {
+      document.getElementById('shopify-card').classList.add('connected');
+      document.getElementById('shopify-status').textContent = 'Connected';
+      document.getElementById('shopify-status').className = 'integration-status status-connected';
+
+      const infoDiv = document.getElementById('shopify-store-info');
+      infoDiv.innerHTML = `
+        <div class="store-info">
+          <p>🏪 <span>${store.shop_name}</span></p>
+          <p>📧 <span>${store.shop_email}</span></p>
+          <p>💱 Currency: <span>${store.currency}</span></p>
+        </div>`;
+      infoDiv.style.display = 'block';
+
+      const btn = document.getElementById('shopify-btn');
+      btn.textContent = 'Disconnect';
+      btn.className = 'btn-disconnect';
+      btn.onclick = () => disconnectShopify(store.shop_domain);
+    }
+
+    async function loadShopifyAnalytics(shop) {
+      const token = getToken();
+      try {
+        const res = await fetch(`${BACKEND}/shopify/analytics?shop=${shop}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.analytics) {
+          const a = data.analytics;
+          const analyticsDiv = document.getElementById('shopify-analytics');
+          analyticsDiv.innerHTML = `
+            <div class="analytics-mini">
+              <div class="analytics-mini-item">
+                <div class="value">R${parseFloat(a.totalRevenue).toLocaleString()}</div>
+                <div class="label">Revenue (30d)</div>
+              </div>
+              <div class="analytics-mini-item">
+                <div class="value">${a.totalOrders}</div>
+                <div class="label">Orders</div>
+              </div>
+              <div class="analytics-mini-item">
+                <div class="value">R${a.avgOrderValue}</div>
+                <div class="label">Avg Order</div>
+              </div>
+            </div>`;
+          analyticsDiv.style.display = 'block';
+        }
+      } catch (e) {
+        console.error('Failed to load analytics', e);
+      }
+    }
+
+    // ── Connect flow ──
+    function connectShopify() {
+      document.getElementById('shopify-modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('shopify-modal').classList.remove('active');
+    }
+
+    async function initiateOAuth() {
+      let shop = document.getElementById('shop-domain-input').value.trim().toLowerCase();
+      if (!shop) return showToast('Please enter your store domain', true);
+      if (!shop.includes('.myshopify.com')) shop = shop + '.myshopify.com';
+
+      const token = getToken();
+      if (!token) return window.location.href = 'login.html';
+
+      try {
+        const res = await fetch(`${BACKEND}/auth/shopify?shop=${shop}&token=${token}`);
+        const data = await res.json();
+        if (data.authUrl) {
+          window.location.href = data.authUrl;
+        } else {
+          showToast('Failed to initiate Shopify connection', true);
+        }
+      } catch (e) {
+        showToast('Connection error. Please try again.', true);
+      }
+    }
+
+    async function disconnectShopify(shop) {
+      if (!confirm('Disconnect this Shopify store?')) return;
+      const token = getToken();
+      try {
+        await fetch(`${BACKEND}/shopify/stores/${encodeURIComponent(shop)}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        showToast('Shopify store disconnected');
+        setTimeout(() => window.location.reload(), 1000);
+      } catch {
+        showToast('Failed to disconnect', true);
+      }
+    }
+
+    // On page load
+    loadShopifyStatus();
+  </script>
 </body>
 </html>
