@@ -211,12 +211,12 @@ function closeModal(id) {
   document.getElementById('test-result').style.display = 'none';
 }
 
-var urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('shopify') === 'success') {
+var metaUrlParams = new URLSearchParams(window.location.search);
+if (metaUrlParams.get('shopify') === 'success') {
   showToast('Shopify store connected successfully!');
   window.history.replaceState({}, '', 'integrations.html');
-} else if (urlParams.get('shopify') === 'error') {
-  showToast('Failed to connect Shopify: ' + (urlParams.get('msg') || 'Unknown error'), true);
+} else if (metaUrlParams.get('shopify') === 'error') {
+  showToast('Failed to connect Shopify: ' + (metaUrlParams.get('msg') || 'Unknown error'), true);
   window.history.replaceState({}, '', 'integrations.html');
 }
 
@@ -477,8 +477,8 @@ async function checkMetaStatus() {
 }
 
 // Handle redirect back from Facebook
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('meta') === 'success') {
+const metaUrlParams = new URLSearchParams(window.location.search);
+if (metaUrlParams.get('meta') === 'success') {
   alert('✅ Meta account connected successfully!');
   window.history.replaceState({}, '', '/integrations.html');
 } else if (urlParams.get('meta') === 'error') {
