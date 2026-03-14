@@ -211,13 +211,11 @@ function closeModal(id) {
   document.getElementById('test-result').style.display = 'none';
 }
 
-var metaUrlParams = new URLSearchParams(window.location.search);
-if (metaUrlParams.get('shopify') === 'success') {
-  showToast('Shopify store connected successfully!');
-  window.history.replaceState({}, '', 'integrations.html');
-} else if (metaUrlParams.get('shopify') === 'error') {
-  showToast('Failed to connect Shopify: ' + (metaUrlParams.get('msg') || 'Unknown error'), true);
-  window.history.replaceState({}, '', 'integrations.html');
+var shopifyUrlParams = new URLSearchParams(window.location.search);
+if (shopifyUrlParams.get('shopify') === 'success') {
+} else if (shopifyUrlParams.get('shopify') === 'error') {
+showToast('Failed to connect Shopify: ' + shopifyUrlParams.get('msg') || 'Unknown error');
+window.history.replaceState({}, '', 'integrations.html');
 }
 
 function loadShopifyStatus() {
