@@ -481,7 +481,7 @@ const metaUrlParams = new URLSearchParams(window.location.search);
 if (metaUrlParams.get('meta') === 'success') {
   alert('✅ Meta account connected successfully!');
   window.history.replaceState({}, '', '/integrations.html');
-} else if (urlParams.get('meta') === 'error') {
+} else if (metaUrlParams.get('meta') === 'error') {
   alert('❌ Meta connection failed. Please try again.');
   window.history.replaceState({}, '', '/integrations.html');
 }
