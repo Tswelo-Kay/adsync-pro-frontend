@@ -112,14 +112,21 @@
       <button class="btn-connect" id="takealot-btn" onclick="connectTakealot()">Connect Takealot</button>
     </div>
 
-    <div class="integration-card">
-      <div class="integration-header">
-        <div class="integration-logo meta">📘</div>
-        <div><div class="integration-title">Meta (Facebook/Instagram)</div><span class="integration-status status-coming-soon">Pending Approval</span></div>
-      </div>
-      <p class="integration-desc">Run Facebook and Instagram ads directly from AdSync Pro. API approval in progress.</p>
-      <button class="btn-disabled" disabled>Pending API Approval</button>
+    <div class="integration-card" id="meta-card">
+  <div class="integration-header">
+    <div class="integration-logo meta"> 🟦 </div>
+    <div>
+      <div class="integration-title">Meta (Facebook/Instagram)</div>
+      <span class="integration-status" id="meta-status-badge">Not Connected</span>
     </div>
+  </div>
+  <p class="integration-desc" id="meta-desc">Run Facebook and Instagram ads directly from AdSync Pro.</p>
+  <div id="meta-account-info" style="display:none; margin-bottom:10px; font-size:0.85rem; color:#a0aec0;">
+    Connected as: <strong id="meta-account-name"></strong>
+  </div>
+  <button class="btn-connect" id="meta-btn" onclick="connectMeta()">Connect Meta</button>
+  <button class="btn-disabled" id="meta-disconnect-btn" style="display:none;" onclick="disconnectMeta()">Disconnect</button>
+</div>
     <div class="integration-card">
       <div class="integration-header">
         <div class="integration-logo" style="background:linear-gradient(135deg,#4285F4,#34A853);">🎯</div>
@@ -411,6 +418,76 @@ function disconnectTakealot() {
 
 loadShopifyStatus();
 loadTakealotStatus();
+// ─── Meta Integration ───────────────────────────────────────────
+async function connectMeta() {
+  const token = localStorage.getItem('token');
+  const res = await fetch('https://adsync-pro-backend-production.up.railway.app/meta/auth', {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  const data = await res.json();
+  if (data.authUrl) {
+    window.location.href = data.authUrl;
+  } else {
+    alert('Could not start Meta connection. Try again.');
+  }
+}
+
+async function disconnectMeta() {
+  const token = localStorage.getItem('token');
+  await fetch('https://adsync-pro-backend-production.up.railway.app/meta/disconnect', {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  checkMetaStatus();
+}
+
+async function checkMetaStatus() {
+  const token = localStorage.getItem('token');
+  if (!token) return;
+
+  try {
+    const res = await fetch('https://adsync-pro-backend-production.up.railway.app/meta/status', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+
+    const badge = document.getElementById('meta-status-badge');
+    const btn = document.getElementById('meta-btn');
+    const disconnectBtn = document.getElementById('meta-disconnect-btn');
+    const accountInfo = document.getElementById('meta-account-info');
+    const accountName = document.getElementById('meta-account-name');
+
+    if (data.connected && data.isValid) {
+      badge.textContent = 'Connected';
+      badge.className = 'integration-status status-connected';
+      btn.style.display = 'none';
+      disconnectBtn.style.display = 'block';
+      accountInfo.style.display = 'block';
+      accountName.textContent = data.fbName;
+    } else {
+      badge.textContent = 'Not Connected';
+      badge.className = 'integration-status status-disconnected';
+      btn.style.display = 'block';
+      disconnectBtn.style.display = 'none';
+      accountInfo.style.display = 'none';
+    }
+  } catch (err) {
+    console.error('Meta status check failed:', err);
+  }
+}
+
+// Handle redirect back from Facebook
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('meta') === 'success') {
+  alert('✅ Meta account connected successfully!');
+  window.history.replaceState({}, '', '/integrations.html');
+} else if (urlParams.get('meta') === 'error') {
+  alert('❌ Meta connection failed. Please try again.');
+  window.history.replaceState({}, '', '/integrations.html');
+}
+
+// Check status on page load
+checkMetaStatus();
 </script>
 </body>
 </html>
