@@ -133,61 +133,59 @@
     <!-- PRICING CARDS -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:60px;">
 
-      <!-- FREE -->
-      <div class="price-card free">
-        <div class="plan-name">Free</div>
-        <div class="plan-price">$0 <sub>/mo</sub></div>
-        <div class="plan-tagline">Perfect to explore AdSync Pro</div>
-        <ul class="features-list">
-          <li class="included"><span class="check">✓</span> 3 campaigns per month</li>
-          <li class="included"><span class="check">✓</span> Basic dashboard</li>
-          <li class="included"><span class="check">✓</span> Preview ad templates</li>
-          <li class="included"><span class="check">✓</span> Email support</li>
-          <li class="locked"><span class="lock">🔒</span> AI Ad Generator</li>
-          <li class="locked"><span class="lock">🔒</span> Store sync</li>
-          <li class="locked"><span class="lock">🔒</span> WhatsApp API</li>
-          <li class="locked"><span class="lock">🔒</span> Full template library</li>
-        </ul>
-        <button class="btn-outline plan-btn" id="free-btn" onclick="selectPlan('free')">Current Plan</button>
-      </div>
+      <!-- STARTER -->
+<div class="price-card free">
+  <div class="plan-name">Starter</div>
+  <div class="plan-price">R499 <sub>/mo</sub></div>
+  <div class="plan-tagline">Perfect for sellers just getting started</div>
+  <ul class="features-list">
+    <li class="included"><span class="check">✓</span> 10 campaigns per month</li>
+    <li class="included"><span class="check">✓</span> 🤖 AI Ad Generator</li>
+    <li class="included"><span class="check">✓</span> 🛡️ Buy Box Guard (5 products)</li>
+    <li class="included"><span class="check">✓</span> Auto-pause losing ads</li>
+    <li class="included"><span class="check">✓</span> Auto-repricing (5 products max)</li>
+    <li class="included"><span class="check">✓</span> Basic analytics</li>
+    <li class="included"><span class="check">✓</span> Takealot + Shopify sync</li>
+    <li class="included"><span class="check">✓</span> Email support</li>
+  </ul>
+  <button class="btn-outline plan-btn" id="free-btn" onclick="selectPlan('starter')">Get Started →</button>
+</div>
+      <!-- GROWTH -->
+<div class="price-card pro">
+  <div class="popular-tag">⭐ Most Popular</div>
+  <div class="plan-name">Growth</div>
+  <div class="plan-price" style="color:var(--blue-bright);">R899 <sub>/mo</sub></div>
+  <div class="plan-tagline">For sellers ready to scale and dominate</div>
+  <ul class="features-list">
+    <li class="included"><span class="check">✓</span> 25 campaigns per month</li>
+    <li class="included"><span class="check">✓</span> 🤖 AI Ad Generator</li>
+    <li class="included"><span class="check">✓</span> 🛡️ Buy Box Guard (unlimited)</li>
+    <li class="included"><span class="check">✓</span> Auto-pause losing ads</li>
+    <li class="included"><span class="check">✓</span> Auto-repricing (10 products max)</li>
+    <li class="included"><span class="check">✓</span> Advanced analytics + ROI</li>
+    <li class="included"><span class="check">✓</span> A/B testing</li>
+    <li class="included"><span class="check">✓</span> Priority support</li>
+  </ul>
+  <button class="btn-primary plan-btn" id="pro-btn" onclick="selectPlan('growth')">Upgrade to Growth →</button>
+</div>
 
       <!-- PRO -->
-      <div class="price-card pro">
-        <div class="popular-tag">⭐ Most Popular</div>
-        <div class="plan-name">Pro</div>
-        <div class="plan-price" style="color:var(--blue-bright);">$29 <sub>/mo</sub></div>
-        <div class="plan-tagline">For sellers ready to scale their ads</div>
-        <ul class="features-list">
-          <li class="included"><span class="check">✓</span> 12 campaigns per month</li>
-          <li class="included"><span class="check">✓</span> 🤖 AI Ad Generator</li>
-          <li class="included"><span class="check">✓</span> Takealot + Shopify sync</li>
-          <li class="included"><span class="check">✓</span> Full template library</li>
-          <li class="included"><span class="check">✓</span> All ad categories</li>
-          <li class="included"><span class="check">✓</span> Analytics dashboard</li>
-          <li class="included"><span class="check">✓</span> Priority email support</li>
-          <li class="locked"><span class="lock">🔒</span> WhatsApp Business API</li>
-        </ul>
-        <button class="btn-primary plan-btn" id="pro-btn" onclick="selectPlan('pro')">Upgrade to Pro →</button>
-      </div>
-
-      <!-- BUSINESS -->
-      <div class="price-card business">
-        <div class="plan-name">Business</div>
-        <div class="plan-price" style="color:var(--gold);">$99 <sub>/mo</sub></div>
-        <div class="plan-tagline">For serious sellers who want everything</div>
-        <ul class="features-list">
-          <li class="included"><span class="check" style="color:var(--gold);">✓</span> Unlimited campaigns</li>
-          <li class="included"><span class="check" style="color:var(--gold);">✓</span> Everything in Pro</li>
-          <li class="included"><span class="check" style="color:var(--gold);">✓</span> 💬 WhatsApp Business API</li>
-          <li class="included"><span class="check" style="color:var(--gold);">✓</span> Custom brand templates</li>
-          <li class="included"><span class="check" style="color:var(--gold);">✓</span> Multi-store management</li>
-          <li class="included"><span class="check" style="color:var(--gold);">✓</span> Advanced analytics + ROI</li>
-          <li class="included"><span class="check" style="color:var(--gold);">✓</span> WhatsApp broadcast campaigns</li>
-          <li class="included"><span class="check" style="color:var(--gold);">✓</span> Dedicated support</li>
-        </ul>
-        <button class="btn-gold plan-btn" id="business-btn" onclick="selectPlan('business')">Go Business →</button>
-      </div>
-    </div>
+<div class="price-card business">
+  <div class="plan-name">Pro</div>
+  <div class="plan-price" style="color:var(--gold);">R1200 <sub>/mo</sub></div>
+  <div class="plan-tagline">For serious sellers who want it all</div>
+  <ul class="features-list">
+    <li class="included"><span class="check" style="color:var(--gold);">✓</span> Unlimited campaigns</li>
+    <li class="included"><span class="check" style="color:var(--gold);">✓</span> Everything in Growth</li>
+    <li class="included"><span class="check" style="color:var(--gold);">✓</span> 🛡️ Buy Box Guard (unlimited)</li>
+    <li class="included"><span class="check" style="color:var(--gold);">✓</span> Auto-repricing (unlimited)</li>
+    <li class="included"><span class="check" style="color:var(--gold);">✓</span> 💬 WhatsApp Business API</li>
+    <li class="included"><span class="check" style="color:var(--gold);">✓</span> AI product recommendations</li>
+    <li class="included"><span class="check" style="color:var(--gold);">✓</span> Multi-store management</li>
+    <li class="included"><span class="check" style="color:var(--gold);">✓</span> Dedicated account manager</li>
+  </ul>
+  <button class="btn-gold plan-btn" id="business-btn" onclick="selectPlan('pro')">Go Pro →</button>
+</div>
 
     <!-- COMPARISON TABLE -->
     <div class="card" style="padding:28px;margin-bottom:48px;">
@@ -202,16 +200,19 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td>Campaigns / month</td><td>3</td><td>12</td><td>Unlimited</td></tr>
-          <tr><td>AI Ad Generator</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-          <tr><td>Ad Templates</td><td>Preview only</td><td class="yes">✓ All</td><td class="yes">✓ + Custom</td></tr>
-          <tr><td>Takealot Store Sync</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-          <tr><td>Shopify Store Sync</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-          <tr><td>WhatsApp Business API</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td></tr>
-          <tr><td>Analytics Dashboard</td><td>Basic</td><td>Advanced</td><td>Advanced + ROI</td></tr>
-          <tr><td>Multi-store Management</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td></tr>
-          <tr><td>Support</td><td>Email</td><td>Priority Email</td><td>Dedicated</td></tr>
-        </tbody>
+  <tr><td>Campaigns / month</td><td>10</td><td>25</td><td>Unlimited</td></tr>
+  <tr><td>AI Ad Generator</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+  <tr><td>Buy Box Guard</td><td>5 products</td><td>Unlimited</td><td>Unlimited</td></tr>
+  <tr><td>Auto-pause losing ads</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+  <tr><td>Auto-repricing</td><td>5 products</td><td>10 products</td><td>Unlimited</td></tr>
+  <tr><td>Takealot + Shopify sync</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+  <tr><td>Advanced analytics</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+  <tr><td>A/B Testing</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+  <tr><td>WhatsApp Business API</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td></tr>
+  <tr><td>AI Product Recommendations</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td></tr>
+  <tr><td>Dedicated account manager</td><td class="no">✕</td><td class="no">✕</td><td class="yes">✓</td></tr>
+  <tr><td>Price</td><td>R499/mo</td><td style="color:var(--blue-bright);">R899/mo</td><td style="color:var(--gold);">R1200/mo</td></tr>
+</tbody>
       </table>
     </div>
 

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terms of Service — AdSync Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --border: #1e1e2e;
+      --blue: #3b82f6;
+      --blue-glow: rgba(59,130,246,0.15);
+      --gold: #f59e0b;
+      --text: #e2e8f0;
+      --muted: #64748b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(10,10,15,0.95);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--blue); }
+
+    nav a.back-btn {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    nav a.back-btn:hover {
+      color: var(--blue);
+      border-color: var(--blue);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 80px 24px 60px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 300px;
+      background: radial-gradient(ellipse, rgba(245,158,11,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(245,158,11,0.3);
+      background: rgba(245,158,11,0.08);
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span { color: var(--gold); }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 64px 24px 100px;
+    }
+
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 56px;
+    }
+
+    .toc h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .toc ol {
+      list-style: none;
+      counter-reset: toc;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 24px;
+    }
+
+    .toc ol li { counter-increment: toc; }
+
+    .toc ol li a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+
+    .toc ol li a::before {
+      content: counter(toc, decimal-leading-zero);
+      font-size: 0.7rem;
+      color: var(--gold);
+      font-weight: 600;
+      min-width: 24px;
+    }
+
+    .toc ol li a:hover { color: var(--gold); }
+
+    .section {
+      margin-bottom: 56px;
+      scroll-margin-top: 100px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .section-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--gold);
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.2);
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .section h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .section p {
+      color: #94a3b8;
+      margin-bottom: 14px;
+      font-size: 0.95rem;
+    }
+
+    .section ul {
+      list-style: none;
+      margin: 14px 0;
+    }
+
+    .section ul li {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      padding: 6px 0 6px 20px;
+      position: relative;
+    }
+
+    .section ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: 0.8rem;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin-bottom: 56px;
+    }
+
+    .highlight-box {
+      background: rgba(245,158,11,0.06);
+      border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+
+    .highlight-box p {
+      color: #fcd34d;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .blue-box {
+      background: var(--blue-glow);
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+
+    .blue-box p {
+      color: #93c5fd;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    footer p { color: var(--muted); font-size: 0.85rem; }
+    footer a { color: var(--blue); text-decoration: none; font-size: 0.85rem; }
+
+    @media (max-width: 640px) {
+      nav { padding: 16px 20px; }
+      .toc ol { grid-template-columns: 1fr; }
+      footer { padding: 32px 20px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">AdSync<span>Pro</span></a>
+    <a href="index.html" class="back-btn">← Back to Home</a>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-badge">Legal</div>
+    <h1>Terms of <span>Service</span></h1>
+    <p>Last updated: March 14, 2026. Please read these terms carefully before using AdSync Pro.</p>
+  </div>
+
+  <div class="container">
+
+    <div class="toc">
+      <h3>Contents</h3>
+      <ol>
+        <li><a href="#s1">Acceptance of Terms</a></li>
+        <li><a href="#s2">Description of Service</a></li>
+        <li><a href="#s3">Account Registration</a></li>
+        <li><a href="#s4">Subscription & Billing</a></li>
+        <li><a href="#s5">Acceptable Use</a></li>
+        <li><a href="#s6">Third-Party Platforms</a></li>
+        <li><a href="#s7">Intellectual Property</a></li>
+        <li><a href="#s8">Limitation of Liability</a></li>
+        <li><a href="#s9">Termination</a></li>
+        <li><a href="#s10">Contact Us</a></li>
+      </ol>
+    </div>
+
+    <div class="section" id="s1">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Acceptance of Terms</h2>
+      </div>
+      <p>By accessing or using AdSync Pro ("the Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.</p>
+      <p>These terms apply to all users of AdSync Pro, including sellers, businesses, and any other persons who access the platform.</p>
+      <div class="highlight-box">
+        <p>By creating an account, you confirm that you are at least 18 years old and have the legal authority to enter into this agreement.</p>
+      </div>
+    </div>
+    <hr class="divider"/>
+
+    <div class="section" id="s2">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Description of Service</h2>
+      </div>
+      <p>AdSync Pro is a SaaS (Software as a Service) platform that provides South African e-commerce sellers with tools to:</p>
+      <ul>
+        <li>Create AI-powered ad copy for multiple platforms</li>
+        <li>Manage advertising campaigns across Meta (Facebook/Instagram), TikTok, and other platforms</li>
+        <li>Integrate with e-commerce platforms including Shopify and Takealot</li>
+        <li>Track campaign performance and analytics</li>
+      </ul>
+      <p>We reserve the right to modify, suspend, or discontinue any part of the Service at any time with reasonable notice to users.</p>
+    </div>
+    <hr class="divider"/>
+
+    <div class="section" id="s3">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Account Registration</h2>
+      </div>
+      <p>To use AdSync Pro, you must create an account by providing accurate and complete information. You are responsible for:</p>
+      <ul>
+        <li>Maintaining the confidentiality of your account credentials</li>
+        <li>All activity that occurs under your account</li>
+        <li>Notifying us immediately of any unauthorized use of your account</li>
+        <li>Ensuring your account information remains accurate and up to date</li>
+      </ul>
+      <p>AdSync Pro reserves the right to suspend or terminate accounts that provide false information or violate these terms.</p>
+    </div>
+    <hr class="divider"/>
+
+    <div class="section" id="s4">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Subscription & Billing</h2>
+      </div>
+      <p>AdSync Pro offers the following subscription plans:</p>
+      <ul>
+        <li><strong>Free — $0/month:</strong> Up to 3 campaigns, basic features</li>
+        <li><strong>Pro — $29/month:</strong> Up to 12 campaigns, full AI features</li>
+        <li><strong>Business — $99/month:</strong> Unlimited campaigns, priority support</li>
+      </ul>
+      <p>Payments are processed securely via Paystack. By subscribing to a paid plan, you authorize AdSync Pro to charge your payment method on a recurring monthly basis.</p>
+      <div class="blue-box">
+        <p>Subscriptions auto-renew monthly. You may cancel at any time from your account settings. Cancellations take effect at the end of the current billing period — no refunds are issued for partial months.</p>
+      </div>
+    </div>
+    <hr class="divider"/>
+
+    <div class="section" id="s5">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2>Acceptable Use</h2>
+      </div>
+      <p>You agree to use AdSync Pro only for lawful purposes. You must not:</p>
+      <ul>
+        <li>Use the Service to create misleading, fraudulent, or deceptive advertisements</li>
+        <li>Violate any applicable laws or regulations, including advertising standards</li>
+        <li>Attempt to gain unauthorized access to any part of the Service or its infrastructure</li>
+        <li>Use the Service to spam, harass, or harm any individual or business</li>
+        <li>Reverse engineer, decompile, or attempt to extract the source code of the platform</li>
+        <li>Resell or sublicense access to AdSync Pro without written permission</li>
+      </ul>
+      <p>Violation of these terms may result in immediate account termination without refund.</p>
+    </div>
+    <hr class="divider"/>
+
+    <div class="section" id="s6">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2>Third-Party Platforms</h2>
+      </div>
+      <p>AdSync Pro integrates with third-party platforms including Meta, Shopify, Takealot, and others. By connecting these platforms you agree that:</p>
+      <ul>
+        <li>You have the legal right to connect and authorize access to those accounts</li>
+        <li>You will comply with the terms of service of each connected platform</li>
+        <li>AdSync Pro is not responsible for actions taken by third-party platforms, including account suspensions or policy changes</li>
+        <li>You can revoke access to any connected platform at any time from your dashboard</li>
+      </ul>
+      <p>AdSync Pro does not guarantee the availability or functionality of any third-party integration, as these are subject to changes by the respective platform providers.</p>
+    </div>
+    <hr class="divider"/>
+
+    <div class="section" id="s7">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <h2>Intellectual Property</h2>
+      </div>
+      <p>All content, features, and functionality of AdSync Pro — including but not limited to the software, design, logos, and AI-generated outputs — are owned by AdSync Pro and protected by applicable intellectual property laws.</p>
+      <p>Ad copy and creative content generated by our AI tools on your behalf belongs to you. However, AdSync Pro retains the right to use anonymized, aggregated data to improve the Service.</p>
+      <div class="highlight-box">
+        <p>You retain full ownership of your store data, product information, and any content you upload to AdSync Pro.</p>
+      </div>
+    </div>
+    <hr class="divider"/>
+
+    <div class="section" id="s8">
+      <div class="section-header">
+        <span class="section-num">08</span>
+        <h2>Limitation of Liability</h2>
+      </div>
+      <p>AdSync Pro is provided "as is" without warranties of any kind, express or implied. To the fullest extent permitted by law:</p>
+      <ul>
+        <li>We do not guarantee that the Service will be uninterrupted, error-free, or completely secure</li>
+        <li>We are not liable for any loss of revenue, profits, or data resulting from your use of the Service</li>
+        <li>We are not responsible for the performance of your advertising campaigns on third-party platforms</li>
+        <li>Our total liability to you shall not exceed the amount you paid to us in the 3 months prior to the claim</li>
+      </ul>
+    </div>
+    <hr class="divider"/>
+
+    <div class="section" id="s9">
+      <div class="section-header">
+        <span class="section-num">09</span>
+        <h2>Termination</h2>
+      </div>
+      <p>You may terminate your AdSync Pro account at any time by contacting us or using the account deletion option in your settings.</p>
+      <p>AdSync Pro may suspend or terminate your account immediately if you:</p>
+      <ul>
+        <li>Violate any provision of these Terms of Service</li>
+        <li>Engage in fraudulent or illegal activity through the platform</li>
+        <li>Fail to pay outstanding subscription fees</li>
+      </ul>
+      <p>Upon termination, your right to use the Service ceases immediately. We may retain certain data as required by law or for legitimate business purposes as outlined in our Privacy Policy.</p>
+    </div>
+    <hr class="divider"/>
+
+    <div class="section" id="s10">
+      <div class="section-header">
+        <span class="section-num">10</span>
+        <h2>Contact Us</h2>
+      </div>
+      <p>If you have any questions about these Terms of Service, please contact us:</p>
+      <ul>
+        <li><strong>Email:</strong> khwezimart@gmail.com</li>
+        <li><strong>Platform:</strong> AdSync Pro — Built for African sellers. Ready for the world.</li>
+        <li><strong>Response time:</strong> We aim to respond within 2 business days</li>
+      </ul>
+      <div class="blue-box">
+        <p>These terms may be updated from time to time. We will notify you of significant changes via email. Continued use of AdSync Pro after changes constitutes acceptance of the updated terms.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2026 AdSync Pro. Built for African sellers. Ready for the world.</p>
+    <a href="mailto:khwezimart@gmail.com">khwezimart@gmail.com</a>
+  </footer>
+
+</body>
+</html>
