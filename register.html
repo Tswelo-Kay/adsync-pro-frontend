@@ -367,7 +367,8 @@
       const res = await fetch(`${API}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, email, password })
+       body: JSON.stringify({ firstName, lastName, email, password, businessName: firstName + ' ' + lastName + ' Store' })
+
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Registration failed');
