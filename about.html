@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | AdSync Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .about-hero {
+            padding: 120px 20px 60px;
+            text-align: center;
+            background: linear-gradient(135deg, #0a0a0a 0%, #0d1117 100%);
+        }
+        .about-hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        .about-hero h1 span { color: #00d4ff; }
+        .about-hero p {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            color: #8b949e;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .about-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        .about-card {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        .about-card h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+        .about-card h2 span { color: #00d4ff; }
+        .about-card p {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            color: #8b949e;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+        .company-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+        .detail-item {
+            background: #161b22;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        .detail-item label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            color: #00d4ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .detail-item span {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            color: #fff;
+            font-weight: 500;
+        }
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+        .value-item {
+            background: #161b22;
+            border-radius: 10px;
+            padding: 24px;
+            text-align: center;
+        }
+        .value-item .icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+        .value-item h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .value-item p {
+            font-size: 0.85rem;
+            color: #8b949e;
+            margin: 0;
+        }
+        .tagline-banner {
+            background: linear-gradient(135deg, #00d4ff15, #ffd70015);
+            border: 1px solid #00d4ff30;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .tagline-banner h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .tagline-banner p {
+            font-family: 'Space Grotesk', sans-serif;
+            color: #8b949e;
+            font-size: 1rem;
+        }
+        @media (max-width: 600px) {
+            .company-details { grid-template-columns: 1fr; }
+            .about-hero h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAV - reuse your existing nav -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">AdSync<span class="logo-accent">Pro</span></span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="about.html" class="active">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="register.html" class="btn-primary-nav">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="about-hero">
+        <h1>About <span>AdSync Pro</span></h1>
+        <p>Built for African sellers. Ready for the world.</p>
+    </section>
+
+    <!-- CONTENT -->
+    <div class="about-section">
+
+        <!-- Who We Are -->
+        <div class="about-card">
+            <h2>Who We <span>Are</span></h2>
+            <p>AdSync Pro is a South African SaaS platform developed by <strong style="color:#fff">Infinite Select (Pty) Ltd</strong>, a technology company focused on e-commerce automation tools for the African market.</p>
+            <p>We help small and medium online retailers compete through smarter advertising automation — connecting their stores to TikTok, Meta, and Google Ads from a single, unified dashboard.</p>
+            <p>Founded in 2023 and headquartered in Midrand, Johannesburg, we understand the unique challenges of selling online in South Africa — from Takealot marketplace dynamics to ZAR billing and local logistics.</p>
+        </div>
+
+        <!-- Company Details -->
+        <div class="about-card">
+            <h2>Company <span>Information</span></h2>
+            <div class="company-details">
+                <div class="detail-item">
+                    <label>Company Name</label>
+                    <span>Infinite Select (Pty) Ltd</span>
+                </div>
+                <div class="detail-item">
+                    <label>Product</label>
+                    <span>AdSync Pro</span>
+                </div>
+                <div class="detail-item">
+                    <label>Enterprise Number</label>
+                    <span>2023/260646/07</span>
+                </div>
+                <div class="detail-item">
+                    <label>Registered In</label>
+                    <span>South Africa (CIPC)</span>
+                </div>
+                <div class="detail-item">
+                    <label>Location</label>
+                    <span>2658 Ebony Park, Midrand, Johannesburg</span>
+                </div>
+                <div class="detail-item">
+                    <label>Contact</label>
+                    <span>admin@adsyncpro.com</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- What We Do -->
+        <div class="about-card">
+            <h2>What We <span>Do</span></h2>
+            <p>AdSync Pro connects your e-commerce stores to your advertising platforms and automates the heavy lifting:</p>
+            <div class="values-grid">
+                <div class="value-item">
+                    <div class="icon">🤖</div>
+                    <h3>AI Ad Generation</h3>
+                    <p>Generate high-converting ad copy for TikTok, Meta & Google instantly</p>
+                </div>
+                <div class="value-item">
+                    <div class="icon">📊</div>
+                    <h3>Unified Analytics</h3>
+                    <p>See all your campaign performance in one dashboard</p>
+                </div>
+                <div class="value-item">
+                    <div class="icon">🔗</div>
+                    <h3>Store Sync</h3>
+                    <p>Connect Takealot and Shopify stores seamlessly</p>
+                </div>
+                <div class="value-item">
+                    <div class="icon">🇿🇦</div>
+                    <h3>Built Local</h3>
+                    <p>ZAR billing, local support, SA e-commerce focused</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tagline -->
+        <div class="tagline-banner">
+            <h2>Built for African Sellers. Ready for the World. 🌍</h2>
+            <p>We believe every South African seller deserves enterprise-grade advertising tools — at local prices.</p>
+        </div>
+
+    </div>
+
+    <!-- FOOTER - reuse your existing footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2025 Infinite Select (Pty) Ltd. All rights reserved. | AdSync Pro</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="contact.html">Contact</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
