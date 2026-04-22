@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & Support | AdSync Pro</title>
+    <link rel="stylesheet" href="styles.css"/>
+    <style>
+        .help-layout { display: flex; height: 100vh; }
+        .help-main { flex: 1; display: flex; flex-direction: column; margin-left: 248px; }
+        .help-header { padding: 24px 32px; border-bottom: 1px solid var(--border); }
+        .help-header h1 { font-family: var(--font-display); font-size: 24px; font-weight: 800; color: var(--text-primary); }
+        .help-header p { color: var(--text-secondary); font-size: 13px; margin-top: 4px; }
+        .chat-container { flex: 1; display: flex; flex-direction: column; padding: 24px 32px; max-width: 800px; width: 100%; margin: 0 auto; }
+        .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding-bottom: 16px; }
+        .message { display: flex; gap: 12px; align-items: flex-start; }
+        .message.user { flex-direction: row-reverse; }
+        .message-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .message.assistant .message-avatar { background: var(--blue); }
+        .message.user .message-avatar { background: var(--gold); }
+        .message-bubble { max-width: 70%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.6; }
+        .message.assistant .message-bubble { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); border-radius: 4px 16px 16px 16px; }
+        .message.user .message-bubble { background: var(--blue); color: #fff; border-radius: 16px 4px 16px 16px; }
+        .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 12px 16px; }
+        .typing-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); animation: typing 1.2s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-8px); } }
+        .chat-input-area { border-top: 1px solid var(--border); padding-top: 16px; display: flex; gap: 12px; align-items: flex-end; }
+        .chat-input { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; color: var(--text-primary); font-family: var(--font-body); font-size: 14px; resize: none; min-height: 48px; max-height: 120px; outline: none; transition: border-color 0.2s; }
+        .chat-input:focus { border-color: var(--blue); }
+        .chat-send-btn { width: 48px; height: 48px; background: var(--blue); border: none; border-radius: 12px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: opacity 0.2s; flex-shrink: 0; }
+        .chat-send-btn:hover { opacity: 0.85; }
+        .chat-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .quick-questions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .quick-btn { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; color: var(--text-secondary); font-size: 12px; cursor: pointer; transition: all 0.2s; }
+        .quick-btn:hover { border-color: var(--blue); color: var(--blue); }
+    </style>
+</head>
+<body>
+<div class="help-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">⚡</div>
+            <div class="sidebar-logo-text">AdSync<span>Pro</span></div>
+        </div>
+        <nav>
+            <div class="nav-section-label">Main</div>
+            <a href="dashboard.html" class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a href="create-campaign.html" class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                New Campaign
+            </a>
+            <a href="ai-generator.html" class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                AI Ad Generator
+            </a>
+            <div class="nav-section-label">Store</div>
+            <a href="integrations.html" class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                Integrations
+            </a>
+            <div class="nav-section-label">Account</div>
+            <a href="pricing.html" class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
+                Upgrade Plan
+            </a>
+            <a href="help.html" class="nav-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Help & Support
+            </a>
+            <a href="settings.html" class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                Settings
+            </a>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="help-main">
+        <div class="help-header">
+            <h1>💬 Help & Support</h1>
+            <p>Ask our AI assistant anything about AdSync Pro — available 24/7</p>
+        </div>
+
+        <div class="chat-container">
+            <!-- Quick Questions -->
+            <div class="quick-questions">
+                <button class="quick-btn" onclick="askQuick('How do I connect my Takealot store?')">🔗 Connect Takealot</button>
+                <button class="quick-btn" onclick="askQuick('How does the AI Ad Generator work?')">🤖 AI Ad Generator</button>
+                <button class="quick-btn" onclick="askQuick('What is Buy Box Guard?')">🛡️ Buy Box Guard</button>
+                <button class="quick-btn" onclick="askQuick('How do I upgrade my plan?')">💳 Upgrade Plan</button>
+                <button class="quick-btn" onclick="askQuick('How do I create a campaign?')">📢 Create Campaign</button>
+                <button class="quick-btn" onclick="askQuick('What platforms does AdSync Pro support?')">🌐 Platforms</button>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="message assistant">
+                    <div class="message-avatar">⚡</div>
+                    <div class="message-bubble">
+                        Hi! I'm AdSync Pro's support assistant. I can help you with connecting your stores, creating campaigns, using the AI Ad Generator, understanding your pricing plan, and anything else about AdSync Pro. What can I help you with today? 🚀
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input -->
+            <div class="chat-input-area">
+                <textarea class="chat-input" id="chatInput" placeholder="Ask me anything about AdSync Pro..." rows="1"
+                    onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendMessage()}"
+                    oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+                <button class="chat-send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API = 'https://adsync-pro-backend-production.up.railway.app';
+    let conversationHistory = [];
+
+    async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        addMessage('user', text);
+        conversationHistory.push({ role: 'user', content: text });
+        input.value = '';
+        input.style.height = 'auto';
+
+        const sendBtn = document.getElementById('sendBtn');
+        sendBtn.disabled = true;
+        showTyping();
+
+        try {
+            const res = await fetch(`${API}/api/help-chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ messages: conversationHistory })
+            });
+            const data = await res.json();
+            removeTyping();
+
+            const reply = data.reply || 'Sorry, I had trouble responding. Please email admin@adsyncpro.com';
+            addMessage('assistant', reply);
+            conversationHistory.push({ role: 'assistant', content: reply });
+        } catch (err) {
+            removeTyping();
+            addMessage('assistant', '⚠️ Connection error. Please check your internet or email admin@adsyncpro.com');
+        }
+        sendBtn.disabled = false;
+    }
+
+    function askQuick(question) {
+        document.getElementById('chatInput').value = question;
+        sendMessage();
+    }
+
+    function addMessage(role, text) {
+        const messages = document.getElementById('chatMessages');
+        const div = document.createElement('div');
+        div.className = `message ${role}`;
+        div.innerHTML = `
+            <div class="message-avatar">${role === 'assistant' ? '⚡' : '👤'}</div>
+            <div class="message-bubble">${text.replace(/\n/g, '<br>')}</div>
+        `;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    function showTyping() {
+        const messages = document.getElementById('chatMessages');
+        const div = document.createElement('div');
+        div.className = 'message assistant';
+        div.id = 'typingIndicator';
+        div.innerHTML = `
+            <div class="message-avatar">⚡</div>
+            <div class="message-bubble typing-indicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        `;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    function removeTyping() {
+        const indicator = document.getElementById('typingIndicator');
+        if (indicator) indicator.remove();
+    }
+</script>
+</body>
+</html>
