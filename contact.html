@@ -7,6 +7,17 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+       * { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a0a; color: #fff; font-family: 'Space Grotesk', sans-serif; }
+.navbar { background: #0a0a0a; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; width: 100%; z-index: 100; border-bottom: 1px solid #21262d; box-sizing: border-box; }
+.nav-logo { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: #fff; text-decoration: none; }
+.nav-logo .logo-accent { color: #00d4ff; }
+.nav-links { display: flex; gap: 24px; align-items: center; list-style: none; }
+.nav-links a { color: #888 !important; text-decoration: none !important; font-size: 0.95rem; transition: color 0.2s; }
+.nav-links a:hover { color: #fff !important; }
+.nav-links a:visited { color: #888 !important; }
+.nav-links a:active { color: #00d4ff !important; }
+.btn-primary-nav { background: linear-gradient(135deg, #00d4ff, #0099cc) !important; color: #fff !important; padding: 8px 20px !important; border-radius: 8px; font-weight: 600; } 
         .contact-hero {
             padding: 120px 20px 60px;
             text-align: center;
