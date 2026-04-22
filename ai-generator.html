@@ -201,6 +201,24 @@
   <div id="imagePreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
   <div id="imageCount" style="font-size:11px;color:#8888aa;margin-top:4px;"></div>
 </div>
+<!-- VIDEO UPLOAD -->
+<div class="fgroup">
+  <label class="flabel">Upload Product Videos
+    <span class="tip">— up to 3 videos, max 2 used per ad</span>
+  </label>
+  <div id="videoUploadZone" style="border:2px dashed rgba(255,215,0,0.4);border-radius:10px;padding:24px;text-align:center;cursor:pointer;background:rgba(255,255,255,0.02);transition:all 0.2s;"
+    onclick="document.getElementById('videoUpload').click()"
+    ondragover="event.preventDefault();this.style.borderColor='#ffd700'"
+    ondragleave="this.style.borderColor='rgba(255,215,0,0.4)'"
+    ondrop="handleVideoDrop(event)">
+    <div style="font-size:2rem;margin-bottom:8px;">🎬</div>
+    <div style="color:#fff;font-size:13px;font-weight:600;">Click to upload or drag & drop</div>
+    <div style="color:#8888aa;font-size:11px;margin-top:4px;">MP4, MOV, AVI • Max 3 videos</div>
+  </div>
+  <input type="file" id="videoUpload" multiple accept="video/*" style="display:none" onchange="handleVideoUpload(event)">
+  <div id="videoPreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
+  <div id="videoCount" style="font-size:11px;color:#8888aa;margin-top:4px;"></div>
+</div>
 
           <!-- PRICE -->
           <div class="fgroup">
@@ -347,6 +365,7 @@ function renderPreviews() {
       <img src="${img.dataUrl}" style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.1);">
       <button onclick="removeImage(${i})" style="position:absolute;top:-6px;right:-6px;background:#ff4466;border:none;border-radius:50%;width:20px;height:20px;color:#fff;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;">×</button>
     </div>
+
   `).join('');
   count.textContent = uploadedImages.length > 0 ? `${uploadedImages.length}/10 images uploaded` : '';
 }
@@ -355,6 +374,50 @@ function removeImage(index) {
   uploadedImages.splice(index, 1);
   renderPreviews();
 }
+    // VIDEO UPLOAD HANDLER
+let uploadedVideos = [];
+
+function handleVideoUpload(event) {
+  const files = Array.from(event.target.files);
+  addVideos(files);
+}
+
+function handleVideoDrop(event) {
+  event.preventDefault();
+  document.getElementById('videoUploadZone').style.borderColor = 'rgba(255,215,0,0.4)';
+  const files = Array.from(event.dataTransfer.files).filter(f => f.type.startsWith('video/'));
+  addVideos(files);
+}
+
+function addVideos(files) {
+  const remaining = 3 - uploadedVideos.length;
+  const toAdd = files.slice(0, remaining);
+  toAdd.forEach(file => {
+    const url = URL.createObjectURL(file);
+    uploadedVideos.push({ file, url });
+    renderVideoPreviews();
+  });
+}
+
+function renderVideoPreviews() {
+  const preview = document.getElementById('videoPreview');
+  const count = document.getElementById('videoCount');
+  preview.innerHTML = uploadedVideos.map((vid, i) => `
+    <div style="position:relative;width:120px;">
+      <video src="${vid.url}" style="width:120px;height:72px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,215,0,0.3);" muted></video>
+      <div style="font-size:10px;color:#8888aa;text-align:center;margin-top:2px;">${vid.file.name.slice(0,15)}...</div>
+      <button onclick="removeVideo(${i})" style="position:absolute;top:-6px;right:-6px;background:#ff4466;border:none;border-radius:50%;width:20px;height:20px;color:#fff;cursor:pointer;font-size:12px;">×</button>
+    </div>
+  `).join('');
+  count.textContent = uploadedVideos.length > 0 ? `${uploadedVideos.length}/3 videos uploaded • Max 2 will be used per ad` : '';
+}
+
+function removeVideo(index) {
+  URL.revokeObjectURL(uploadedVideos[index].url);
+  uploadedVideos.splice(index, 1);
+  renderVideoPreviews();
+}
+
 // STATE
 let selectedTone = 'energetic';
 let selectedPlatforms = ['fb', 'ig', 'tt'];
