@@ -370,16 +370,36 @@
       </div>
 
       <!-- IMAGE UPLOAD -->
-      <div class="fgroup">
-        <label class="flabel">Ad Image <span class="hint">— JPG, PNG or GIF · Max 5MB</span></label>
-        <div class="upload-zone" id="upload-zone" onclick="document.getElementById('imageFile').click()">
-          <div class="upload-icon">🖼️</div>
-          <div class="upload-title">Click to upload your ad image</div>
-          <div class="upload-sub">Or drag and drop here</div>
-          <img id="image-preview" src="" alt="Preview"/>
-        </div>
-        <input type="file" id="imageFile" accept="image/*" style="display:none;" onchange="previewImage(this)"/>
-      </div>
+      <!-- IMAGE & VIDEO UPLOAD -->
+<div class="fgroup">
+  <label class="flabel">Ad Images <span class="hint">— up to 10 images</span></label>
+  <div class="upload-zone" onclick="document.getElementById('campImageUpload').click()"
+    ondragover="event.preventDefault();this.style.borderColor='#0066ff'"
+    ondragleave="this.style.borderColor=''"
+    ondrop="handleCampImageDrop(event)">
+    <div class="upload-icon">📸</div>
+    <div class="upload-title">Click to upload or drag & drop</div>
+    <div class="upload-sub">JPG, PNG, WEBP • Max 10 images</div>
+  </div>
+  <input type="file" id="campImageUpload" multiple accept="image/*" style="display:none" onchange="handleCampImageUpload(event)">
+  <div id="campImagePreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
+  <div id="campImageCount" style="font-size:11px;color:#8888aa;margin-top:4px;"></div>
+</div>
+
+<div class="fgroup">
+  <label class="flabel">Ad Videos <span class="hint">— up to 3 videos</span></label>
+  <div class="upload-zone" style="border-color:rgba(255,215,0,0.4);" onclick="document.getElementById('campVideoUpload').click()"
+    ondragover="event.preventDefault();this.style.borderColor='#ffd700'"
+    ondragleave="this.style.borderColor='rgba(255,215,0,0.4)'"
+    ondrop="handleCampVideoDrop(event)">
+    <div class="upload-icon">🎬</div>
+    <div class="upload-title">Click to upload or drag & drop</div>
+    <div class="upload-sub">MP4, MOV, AVI • Max 3 videos</div>
+  </div>
+  <input type="file" id="campVideoUpload" multiple accept="video/*" style="display:none" onchange="handleCampVideoUpload(event)">
+  <div id="campVideoPreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
+  <div id="campVideoCount" style="font-size:11px;color:#8888aa;margin-top:4px;"></div>
+</div>
 
       <div class="form-nav">
         <span></span>
@@ -456,3 +476,65 @@
 
       <div class="fgroup">
         <label class="flabel">Target 
+          Audience</label>
+              <input type="text" class="finput" id="targetAudience" placeholder="e.g. Women 25-45 who love fashion"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// CAMPAIGN IMAGE & VIDEO UPLOAD
+let campImages = [], campVideos = [];
+
+function handleCampImageUpload(e) { addCampImages(Array.from(e.target.files)); }
+function handleCampImageDrop(e) {
+  e.preventDefault();
+  addCampImages(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
+}
+function addCampImages(files) {
+  const toAdd = files.slice(0, 10 - campImages.length);
+  toAdd.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => { campImages.push({ file, dataUrl: e.target.result }); renderCampImages(); };
+    reader.readAsDataURL(file);
+  });
+}
+function renderCampImages() {
+  document.getElementById('campImagePreview').innerHTML = campImages.map((img, i) => `
+    <div style="position:relative;width:72px;height:72px;">
+      <img src="${img.dataUrl}" style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.1);">
+      <button onclick="removeCampImage(${i})" style="position:absolute;top:-6px;right:-6px;background:#ff4466;border:none;border-radius:50%;width:20px;height:20px;color:#fff;cursor:pointer;font-size:12px;">×</button>
+    </div>`).join('');
+  document.getElementById('campImageCount').textContent = campImages.length > 0 ? `${campImages.length}/10 images` : '';
+}
+function removeCampImage(i) { campImages.splice(i, 1); renderCampImages(); }
+
+function handleCampVideoUpload(e) { addCampVideos(Array.from(e.target.files)); }
+function handleCampVideoDrop(e) {
+  e.preventDefault();
+  addCampVideos(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('video/')));
+}
+function addCampVideos(files) {
+  const toAdd = files.slice(0, 3 - campVideos.length);
+  toAdd.forEach(file => {
+    const url = URL.createObjectURL(file);
+    campVideos.push({ file, url });
+    renderCampVideos();
+  });
+}
+function renderCampVideos() {
+  document.getElementById('campVideoPreview').innerHTML = campVideos.map((vid, i) => `
+    <div style="position:relative;width:120px;">
+      <video src="${vid.url}" style="width:120px;height:72px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,215,0,0.3);" muted></video>
+      <button onclick="removeCampVideo(${i})" style="position:absolute;top:-6px;right:-6px;background:#ff4466;border:none;border-radius:50%;width:20px;height:20px;color:#fff;cursor:pointer;font-size:12px;">×</button>
+    </div>`).join('');
+  document.getElementById('campVideoCount').textContent = campVideos.length > 0 ? `${campVideos.length}/3 videos` : '';
+}
+function removeCampVideo(i) { URL.revokeObjectURL(campVideos[i].url); campVideos.splice(i, 1); renderCampVideos(); }
+</script>
+</body>
+</html>
