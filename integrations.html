@@ -130,10 +130,15 @@
     <div class="integration-card">
       <div class="integration-header">
         <div class="integration-logo" style="background:linear-gradient(135deg,#4285F4,#34A853);">🎯</div>
-        <div><div class="integration-title">Google Ads</div><span class="integration-status status-coming-soon">Pending Approval</span></div>
-      </div>
-      <p class="integration-desc">Run Google Search and Shopping campaigns to reach buyers actively searching for your products.</p>
-      <button class="btn-disabled" disabled>Pending API Approval</button>
+        <div class="integration-title">Google Ads</div><span class="integration-status" id="google-status-badge">Not Connected</span>
+
+<p class="integration-desc" id="google-desc">Run Google Search and Shopping campaigns to reach buyers actively searching for your products.</p>
+<div class="account-info" style="display:none; margin-bottom:10px; font-size:0.85rem; color:#a0aec0;">
+<strong id="google-account-name"></strong>
+</div>
+
+<button class="btn-connect" id="google-btn" onclick="connectGoogleAds()">Connect Google Ads</button>
+<button class="btn-disabled" id="google-disconnect-btn" style="display:none;" onclick="disconnectGoogleAds()">Disconnect</button>
     </div>
 
     <div class="integration-card">
@@ -485,6 +490,61 @@ if (metaUrlParams.get('meta') === 'success') {
 }
 
 // Check status on page load
+async function connectGoogleAds() {
+  try {
+    const res = await fetch('https://adsync-pro-backend-production.up.railway.app/api/google-ads/connect');
+    const data = await res.json();
+    window.location.href = data.authUrl;
+  } catch (err) {
+    alert('❌ Failed to start Google Ads connection. Please try again.');
+    console.error('Google Ads connect failed:', err);
+  }
+}
+
+function disconnectGoogleAds() {
+  alert('Disconnect for Google Ads is coming soon.');
+}
+
+async function checkGoogleAdsStatus() {
+  try {
+    const res = await fetch('https://adsync-pro-backend-production.up.railway.app/api/google-ads/status');
+    const data = await res.json();
+
+    const badge = document.getElementById('google-status-badge');
+    const btn = document.getElementById('google-btn');
+    const disconnectBtn = document.getElementById('google-disconnect-btn');
+    const accountInfo = document.getElementById('google-account-info');
+
+    if (data.connected) {
+      badge.textContent = 'Connected';
+      badge.className = 'integration-status status-connected';
+      btn.style.display = 'none';
+      disconnectBtn.style.display = 'block';
+      if (accountInfo) accountInfo.style.display = 'block';
+    } else {
+      badge.textContent = 'Not Connected';
+      badge.className = 'integration-status status-disconnected';
+      btn.style.display = 'block';
+      disconnectBtn.style.display = 'none';
+      if (accountInfo) accountInfo.style.display = 'none';
+    }
+  } catch (err) {
+    console.error('Google Ads status check failed:', err);
+  }
+}
+
+// Handle redirect back from Google
+const googleUrlParams = new URLSearchParams(window.location.search);
+if (googleUrlParams.get('google') === 'connected') {
+  alert('✅ Google Ads account connected successfully!');
+  window.history.replaceState({}, '', '/integrations.html');
+} else if (googleUrlParams.get('google') === 'error') {
+  alert('❌ Google Ads connection failed. Please try again.');
+  window.history.replaceState({}, '', '/integrations.html');
+}
+
+// Check status on page load
+checkGoogleAdsStatus();
 checkMetaStatus();
 </script>
 </body>
