@@ -484,11 +484,33 @@
       </div>
     </div>
   </div>
+  <div class="form-nav">
+  <button class="btn-secondary" onclick="goTo(1)">← Back</button>
+  <button class="btn-primary" onclick="goTo(3)">Next: Budget →</button>
+</div>
 </div>
 
 <script>
 // CAMPAIGN IMAGE & VIDEO UPLOAD
 let campImages = [], campVideos = [];
+// STEP 2: Platforms & Objective
+let selectedPlatforms = [];
+let selectedObjective = null;
+
+function togglePlatform(el, name) {
+  el.classList.toggle('selected');
+  if (selectedPlatforms.includes(name)) {
+    selectedPlatforms = selectedPlatforms.filter(p => p !== name);
+  } else {
+    selectedPlatforms.push(name);
+  }
+}
+
+function selectObjective(el) {
+  document.querySelectorAll('.objective-card').forEach(card => card.classList.remove('active'));
+  el.classList.add('active');
+  selectedObjective = el.querySelector('.objective-title').textContent;
+}
 
 function handleCampImageUpload(e) { addCampImages(Array.from(e.target.files)); }
 function handleCampImageDrop(e) {
