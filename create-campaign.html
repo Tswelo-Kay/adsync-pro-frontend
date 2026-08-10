@@ -6,6 +6,8 @@
   <title>Create Campaign — AdSync Pro</title>
   <link rel="stylesheet" href="styles.css"/>
   <style>
+  
+
     body { display: flex; }
 
     /* ── STEPPER ── */
@@ -147,6 +149,16 @@
       color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
     }
     .budget-preset:hover { border-color: var(--blue); color: var(--blue-bright); }
+
+    /* — REVIEW — */
+.review-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+.review-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+.review-row:last-child { border-bottom: none; }
+.review-label { color: var(--text-secondary); }
+.review-value { font-weight: 600; text-align: right; }
+.launch-btn { width: 100%; padding: 16px; font-size: 16px; margin-top: 12px; }
+.launch-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
 
     /* ── SCHEDULE ── */
     .date-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -489,6 +501,49 @@
   <button class="btn-primary" onclick="goTo(3)">Next: Budget →</button>
 </div>
 </div>
+<!-- STEP 3: BUDGET & SCHEDULE -->
+<div class="form-section" id="step-3">
+
+  <div class="fgroup">
+    <div class="budget-display" id="budgetDisplay">R100</div>
+    <div class="budget-display-sub">per day</div>
+    <input type="range" class="budget-slider" id="budgetSlider" min="20" max="2000" step="10" value="100" oninput="updateBudgetSlider(this.value)">
+    <div class="budget-presets">
+      <div class="budget-preset" onclick="setBudgetPreset(50)">R50/day</div>
+      <div class="budget-preset" onclick="setBudgetPreset(100)">R100/day</div>
+      <div class="budget-preset" onclick="setBudgetPreset(250)">R250/day</div>
+      <div class="budget-preset" onclick="setBudgetPreset(500)">R500/day</div>
+    </div>
+  </div>
+
+  <div class="fgroup">
+    <label class="flabel">Campaign Dates</label>
+    <div class="date-row">
+      <input type="date" class="finput" id="startDate">
+      <input type="date" class="finput" id="endDate">
+    </div>
+  </div>
+
+  <div class="form-nav">
+    <button class="btn-secondary" onclick="goTo(2)">← Back</button>
+   <button class="btn-primary" onclick="populateReview(); goTo(4)">Next: Review →</button>
+  </div>
+  <!-- STEP 4: REVIEW -->
+<div class="form-section" id="step-4">
+  <div class="review-card">
+    <div class="review-row"><span class="review-label">Campaign Name</span><span class="review-value" id="reviewName"></span></div>
+    <div class="review-row"><span class="review-label">Product</span><span class="review-value" id="reviewProduct"></span></div>
+    <div class="review-row"><span class="review-label">Platforms</span><span class="review-value" id="reviewPlatforms"></span></div>
+    <div class="review-row"><span class="review-label">Objective</span><span class="review-value" id="reviewObjective"></span></div>
+    <div class="review-row"><span class="review-label">Daily Budget</span><span class="review-value" id="reviewBudget"></span></div>
+    <div class="review-row"><span class="review-label">Dates</span><span class="review-value" id="reviewDates"></span></div>
+  </div>
+  <div class="form-nav">
+    <button class="btn-secondary" onclick="goTo(3)">← Back</button>
+  </div>
+  <button class="btn-primary launch-btn" id="launchBtn" onclick="launchCampaign()">🚀 Launch Campaign</button>
+</div>
+</div>
 
 <script>
 // CAMPAIGN IMAGE & VIDEO UPLOAD
@@ -511,7 +566,127 @@ function selectObjective(el) {
   el.classList.add('active');
   selectedObjective = el.querySelector('.objective-title').textContent;
 }
+function populateReview() {
+  document.getElementById('reviewName').textContent = document.querySelector('[placeholder], #campaignName')?.value || document.querySelector('.finput')?.value || '';
+  document.getElementById('reviewProduct').textContent = document.getElementById('productService')?.value || '';
+  document.getElementById('reviewPlatforms').textContent = selectedPlatforms.join(', ') || 'None selected';
+  document.getElementById('reviewObjective').textContent = selectedObjective || 'None selected';
+  document.getElementById('reviewBudget').textContent = 'R' + dailyBudget + '/day';
+  const start = document.getElementById('startDate')?.value || '—';
+  const end = document.getElementById('endDate')?.value || '—';
+  document.getElementById('reviewDates').textContent = start + ' to ' + end;
+}
 
+async function launchCampaign() {
+  const btn = document.getElementById('launchBtn');
+  btn.disabled = true;
+  btn.textContent = 'Launching...';
+
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Please log in again.');
+    window.location.href = 'login.html';
+    return;
+  }
+
+  const payload = {
+    name: document.getElementById('reviewName').textContent,
+    product: document.getElementById('reviewProduct').textContent,
+    platforms: selectedPlatforms,
+    objective: selectedObjective,
+    dailyBudget: dailyBudget,
+    startDate: document.getElementById('startDate')?.value,
+    endDate: document.getElementById('endDate')?.value
+  };
+
+  try {
+    const res = await fetch('https://adsync-pro-backend-production.up.railway.app/campaigns/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (res.ok) {
+      alert('Campaign created successfully!');
+      window.location.href = 'dashboard.html';
+    } else {
+      alert(data.error || 'Failed to create campaign.');
+      btn.disabled = false;
+      btn.textContent = '🚀 Launch Campaign';
+    }
+  } catch (err) {
+    alert('Connection error. Please try again.');
+    btn.disabled = false;
+    btn.textContent = '🚀 Launch Campaign';
+  }
+}
+// STEP 3: Budget & Schedule
+let dailyBudget = 100;
+
+function updateBudgetSlider(val) {
+  dailyBudget = parseInt(val);
+  document.getElementById('budgetDisplay').textContent = 'R' + dailyBudget;
+}
+
+function setBudgetPreset(amount) {
+  dailyBudget = amount;
+  document.getElementById('budgetSlider').value = amount;
+  document.getElementById('budgetDisplay').textContent = 'R' + amount;
+}
+// STEP 4: Review & Launch
+function populateReview() {
+  document.getElementById('reviewName').textContent = document.querySelector('[placeholder], #campaignName')?.value || document.querySelector('.finput')?.value || '';
+  document.getElementById('reviewProduct').textContent = document.getElementById('productService')?.value || '';
+  document.getElementById('reviewPlatforms').textContent = selectedPlatforms.join(', ') || 'None selected';
+  document.getElementById('reviewObjective').textContent = selectedObjective || 'None selected';
+  document.getElementById('reviewBudget').textContent = 'R' + dailyBudget + '/day';
+  const start = document.getElementById('startDate')?.value || '—';
+  const end = document.getElementById('endDate')?.value || '—';
+  document.getElementById('reviewDates').textContent = start + ' to ' + end;
+}
+
+async function launchCampaign() {
+  const btn = document.getElementById('launchBtn');
+  btn.disabled = true;
+  btn.textContent = 'Launching...';
+
+  const payload = {
+    name: document.getElementById('reviewName').textContent,
+    product: document.getElementById('reviewProduct').textContent,
+    platforms: selectedPlatforms,
+    objective: selectedObjective,
+    dailyBudget: dailyBudget,
+    startDate: document.getElementById('startDate')?.value,
+    endDate: document.getElementById('endDate')?.value
+  };
+
+  try {
+    const res = await fetch(BACKEND + '/campaigns/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + getToken()
+      },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (res.ok) {
+      alert('Campaign created successfully!');
+      window.location.href = 'dashboard.html';
+    } else {
+      alert(data.error || 'Failed to create campaign.');
+      btn.disabled = false;
+      btn.textContent = '🚀 Launch Campaign';
+    }
+  } catch (err) {
+    alert('Connection error. Please try again.');
+    btn.disabled = false;
+    btn.textContent = '🚀 Launch Campaign';
+  }
+}
 function handleCampImageUpload(e) { addCampImages(Array.from(e.target.files)); }
 function handleCampImageDrop(e) {
   e.preventDefault();
