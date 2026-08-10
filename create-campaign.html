@@ -535,6 +535,13 @@ function renderCampVideos() {
   document.getElementById('campVideoCount').textContent = campVideos.length > 0 ? `${campVideos.length}/3 videos` : '';
 }
 function removeCampVideo(i) { URL.revokeObjectURL(campVideos[i].url); campVideos.splice(i, 1); renderCampVideos(); }
+function goTo(step) {
+  document.querySelectorAll('.form-section').forEach(function(section) {
+    section.classList.remove('active');
+  });
+  document.getElementById('step-' + step).classList.add('active');
+  window.scrollTo(0, 0);
+}
 </script>
 </body>
 </html>
